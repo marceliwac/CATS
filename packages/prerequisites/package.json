@@ -1,0 +1,12 @@
+{
+  "name": "@wls/prerequisites",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy --stage=${STAGE}",
+    "remove": "serverless remove --stage=${STAGE}"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED"
+}

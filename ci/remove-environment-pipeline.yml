@@ -1,0 +1,37 @@
+image: node:14
+
+stages:
+  - remove services
+  - remove infrastructure
+  - remove prerequisites
+
+include:
+  - local: /ci/base-configuration.yml
+  - local: /ci/job-templates.yml
+
+remove website:
+  stage: remove services
+  extends: .remove
+  variables:
+    PACKAGE: website
+
+remove api:
+  stage: remove services
+  extends: .remove
+  variables:
+    PACKAGE: api
+
+remove infrastructure:
+  stage: remove infrastructure
+  extends: .remove
+  when: always
+  variables:
+    PACKAGE: infrastructure
+
+remove prerequisites:
+  stage: remove prerequisites
+  extends: .remove
+  when: manual
+  variables:
+    PACKAGE: prerequisites
+  needs: ['remove infrastructure', 'remove api', 'remove website']

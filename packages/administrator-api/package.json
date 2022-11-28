@@ -1,0 +1,35 @@
+{
+  "name": "@wls/administrator-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "validate-api": "./node_modules/.bin/swagger-cli validate ./openapi/openapi.yml",
+    "bundle-api": "./node_modules/.bin/swagger-cli bundle -o ./openapi/bundled.yml -r -f 2 -t yaml ./openapi/openapi.yml",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "local": "IS_LOCAL=true LOCAL_CONNECTION_STRING='pg://postgres:postgres@localhost:5432/wls' serverless offline --useChildProcesses --prefix=administrator --noPrependStageInUrl --httpPort=4000 --lambdaPort=4001",
+    "deploy": "serverless deploy --stage=${STAGE}",
+    "remove": "serverless remove --stage=${STAGE}"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@wls/log": "1.0.0",
+    "@wls/middleware": "1.0.0",
+    "@wls/models": "1.0.0",
+    "@wls/user-service": "1.0.0",
+    "objection": "^3.0.1",
+    "prettier": "^2.2.1"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-cli": "^4.0.4",
+    "@wls/eslint-config": "1.0.0",
+    "serverless-bundle": "^5.0.2",
+    "serverless-domain-manager": "^5.1.0",
+    "serverless-iam-roles-per-function": "^3.1.0",
+    "serverless-offline": "^8.7.0",
+    "serverless-plugin-common-excludes": "^4.0.0",
+    "serverless-plugin-include-dependencies": "^5.0.0"
+  }
+}

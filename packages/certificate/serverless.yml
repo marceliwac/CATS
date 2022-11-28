@@ -1,0 +1,35 @@
+service: ${file(../../configuration.js):serviceNames.certificate}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 128
+  timeout: 10
+  region: ${self:custom.config.certificateRegion}
+  stage: ${opt:stage, 'development'}
+  logRetentionInDays: 14
+
+resources:
+  Resources:
+    Certificate:
+      Type: AWS::CertificateManager::Certificate
+      Properties:
+        DomainName: ${self:custom.config.domain.website}
+        SubjectAlternativeNames:
+          - ${self:custom.config.domain.api}
+        DomainValidationOptions:
+          - DomainName: ${self:custom.config.domain.website}
+            HostedZoneId: ${self:custom.config.cloudformation.hostedZoneId}
+          - DomainName: ${self:custom.config.domain.api}
+            HostedZoneId: ${self:custom.config.cloudformation.hostedZoneId}
+        ValidationMethod: DNS
+
+  Outputs:
+    Certificate:
+      Value:
+        Ref: Certificate

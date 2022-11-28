@@ -1,0 +1,67 @@
+.topBar{
+  width: 100%;
+  height: 4em;
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-bottom: $border;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .breadcrumbs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    position: relative;
+
+    .left {
+      background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,1), rgba(255,255,255,0));
+      width: 2em;
+      min-width: 2em;
+      height: 2em;
+      min-height: 2em;
+      position: relative;
+      z-index: 10;
+    }
+
+    .right {
+      background: linear-gradient(270deg, rgba(255,255,255,1), rgba(255,255,255,1), rgba(255,255,255,0));
+      width: 2em;
+      min-width: 2em;
+      height: 2em;
+      min-height: 2em;
+      z-index: 10;
+      position: relative;
+      right: 4em;
+    }
+
+    .breadcrumbsInner {
+      display: flex;
+      flex-direction: row;
+      //overflow-x: scroll;
+      width: 100%;
+      max-width: 100%;
+      z-index: 5;
+      padding: 0 2em;
+      box-sizing: border-box;
+      position: relative;
+      right: 2em;
+
+      nav {
+        padding-left: 1em;
+
+        ol {
+          flex-wrap: nowrap;
+
+          li {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}

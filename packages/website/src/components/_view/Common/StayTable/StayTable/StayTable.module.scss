@@ -1,0 +1,111 @@
+.table {
+  overflow: hidden;
+
+  .tableRow {
+  }
+
+  tr:nth-child(even) {
+    background-color: #ffffff;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #f7fbf7;
+  }
+
+  .tableCell {
+    position: relative;
+    border-right: 1px solid #ddd;
+  }
+
+  .parameterCell {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+    padding-right: 2em;
+    min-width: 16em;
+  }
+
+  .valueCell {
+
+  }
+
+  .labelCell {
+    padding: .2em;
+  }
+
+  .labelRow {
+    background-color: #ffffff !important;
+
+    &>td:not(:last-child) {
+      border-bottom: none !important;
+    }
+  }
+
+  tr td:first-child.labelCell {
+    border-right: 1px solid #ddd;
+  }
+
+  tr:nth-child(even) {
+    .tableCell {
+      background-color: #ffffff;
+    }
+  }
+
+  tr:nth-child(odd) {
+    .tableCell {
+      background-color: #f7fbf7;
+    }
+  }
+}
+
+.label1 {
+  background-color: #ff7575
+}
+
+.label2 {
+  background-color: #c17cec
+}
+
+.label3 {
+  background-color: #8187e1
+}
+
+.label4 {
+  background-color: #86c2d5
+}
+
+.label5 {
+  background-color: #81e1b4
+}
+
+.label6 {
+  background-color: #8fec7c
+}
+
+.label7 {
+  background-color: #e6f678
+}
+
+.label8 {
+  background-color: #ffaf75
+}
+
+//.label1 { background-color: #5BAF82}
+//.label2 { background-color: #5FABB3}
+//.label3 { background-color: #647CB6}
+//.label4 { background-color: #8368BA}
+//.label5 { background-color: #BA6DBD}
+//.label6 { background-color: #C17193}
+//.label7 { background-color: #C48576}
+//.label8 { background-color: #C7BA7A}
+//.label9 { background-color: #A9CA7F}
+
+.label1 { background-color: #5BAF82}
+.label2 { background-color: #647CB6}
+.label3 { background-color: #BA6DBD}
+.label4 { background-color: #C48576}
+.label5 { background-color: #A9CA7F}
+.label6 { background-color: #5FABB3}
+.label7 { background-color: #8368BA}
+.label8 { background-color: #C17193}
+.label9 { background-color: #C7BA7A}

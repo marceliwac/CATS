@@ -1,0 +1,22 @@
+{
+  "name": "@wls/middleware",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@wls/log": "1.0.0",
+    "@wls/models": "1.0.0",
+    "@wls/models-mimic": "1.0.0",
+    "micro-aws-lambda": "^5.3.3",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

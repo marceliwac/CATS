@@ -1,0 +1,21 @@
+{
+  "name": "@wls/knexfile-mimic",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.5.0",
+    "@wls/log": "1.0.0",
+    "knex": "^2.1.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

@@ -1,0 +1,225 @@
+service: ${file(../../configuration.js):serviceNames.prerequisites}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 128
+  timeout: 10
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  logRetentionInDays: 14
+
+resources:
+  Resources:
+    VPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: 10.0.0.0/16
+        EnableDnsHostnames: true
+        EnableDnsSupport: true
+        Tags:
+          - Key: Name
+            Value: ${self:service}-${self:provider.stage}
+
+    PublicSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1a
+        CidrBlock: 10.0.11.0/24
+        VpcId:
+          Ref: VPC
+
+    PublicSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1b
+        CidrBlock: 10.0.12.0/24
+        VpcId:
+          Ref: VPC
+
+    PublicSubnet3:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1c
+        CidrBlock: 10.0.13.0/24
+        VpcId:
+          Ref: VPC
+
+    PrivateSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1a
+        CidrBlock: 10.0.1.0/24
+        VpcId:
+          Ref: VPC
+
+    PrivateSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1b
+        CidrBlock: 10.0.2.0/24
+        VpcId:
+          Ref: VPC
+
+    PrivateSubnet3:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: eu-west-1c
+        CidrBlock: 10.0.3.0/24
+        VpcId:
+          Ref: VPC
+
+    InternetGateway:
+      Type: AWS::EC2::InternetGateway
+
+    VPCInternetGatewayAttachment:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+        VpcId:
+          Ref: VPC
+        InternetGatewayId:
+          Ref: InternetGateway
+
+    PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId:
+          Ref: VPC
+
+    PublicRoute:
+      Type: AWS::EC2::Route
+      Properties:
+        RouteTableId:
+          Ref: PublicRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId:
+          Ref: InternetGateway
+
+    PrivateRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId:
+          Ref: VPC
+
+    SubnetRouteTableAssociationPrivate1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PrivateSubnet1
+        RouteTableId:
+          Ref: PrivateRouteTable
+
+    SubnetRouteTableAssociationPrivate2:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PrivateSubnet2
+        RouteTableId:
+          Ref: PrivateRouteTable
+
+    SubnetRouteTableAssociationPrivate3:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PrivateSubnet3
+        RouteTableId:
+          Ref: PrivateRouteTable
+
+    SubnetRouteTableAssociationPublic1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PublicSubnet1
+        RouteTableId:
+          Ref: PublicRouteTable
+
+    SubnetRouteTableAssociationPublic2:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PublicSubnet2
+        RouteTableId:
+          Ref: PublicRouteTable
+
+    SubnetRouteTableAssociationPublic3:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        SubnetId:
+          Ref: PublicSubnet3
+        RouteTableId:
+          Ref: PublicRouteTable
+
+    NATElasticIP:
+      Type: AWS::EC2::EIP
+      Properties:
+        Domain: vpc
+
+    NatGateway:
+      Type: AWS::EC2::NatGateway
+      Properties:
+        SubnetId:
+          Ref: PublicSubnet1
+        AllocationId:
+          Fn::GetAtt:
+            - NATElasticIP
+            - AllocationId
+
+    PrivateRoute:
+      Type: AWS::EC2::Route
+      Properties:
+        NatGatewayId:
+          Ref: NatGateway
+        RouteTableId:
+          Ref: PrivateRouteTable
+        DestinationCidrBlock: 0.0.0.0/0
+
+    GeneralSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: ${self:service}-${self:provider.stage}
+        GroupDescription: Allow all outbound traffic, self security-group inbound only
+        VpcId:
+          Ref: VPC
+
+    GeneralSecurityGroupIngressSelf:
+      Type: AWS::EC2::SecurityGroupIngress
+      Properties:
+        IpProtocol: -1
+        GroupId:
+          Fn::GetAtt:
+            - GeneralSecurityGroup
+            - GroupId
+        SourceSecurityGroupId:
+          Ref: GeneralSecurityGroup
+
+  Outputs:
+    VPC:
+      Value:
+        Ref: VPC
+
+    PrivateSubnet1:
+      Value:
+        Ref: PrivateSubnet1
+
+    PrivateSubnet2:
+      Value:
+        Ref: PrivateSubnet2
+
+    PrivateSubnet3:
+      Value:
+        Ref: PrivateSubnet3
+
+    GeneralSecurityGroup:
+      Value:
+        Ref: GeneralSecurityGroup
+
+    GeneralSecurityGroupId:
+      Value:
+        Fn::GetAtt:
+          - GeneralSecurityGroup
+          - GroupId

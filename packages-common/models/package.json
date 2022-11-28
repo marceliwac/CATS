@@ -1,0 +1,22 @@
+{
+  "name": "@wls/models",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@wls/knexfile": "1.0.0",
+    "@wls/log": "1.0.0",
+    "ajv-formats": "^2.1.1",
+    "knex": "^2.1.0",
+    "objection": "^3.0.1"
+  },
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

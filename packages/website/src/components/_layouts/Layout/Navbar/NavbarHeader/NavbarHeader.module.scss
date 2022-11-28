@@ -1,0 +1,30 @@
+.navbarHeader {
+  padding: 1em;
+  border-bottom: $border;
+
+  img {
+    width: 10em;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 10em;
+    margin: .5em 0;
+
+    &:first-of-type {
+      margin-top: 1em;
+    }
+
+    .header,
+    .value {
+      font-size: .8em;
+    }
+
+    .value {
+      text-align: right;
+    }
+  }
+}

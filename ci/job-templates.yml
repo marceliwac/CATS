@@ -1,0 +1,56 @@
+.deployment-environments:
+  only:
+    refs:
+      - development
+      - staging
+      - production
+
+.build:
+  extends: .deployment-environments
+  artifacts:
+    name: '$PACKAGE-$CI_COMMIT_REF_NAME'
+    paths:
+      - packages/${PACKAGE}/build
+  script:
+    - lerna run build --scope ${PACKAGE_PREFIX}/${PACKAGE}
+
+.build-with-docker:
+  services:
+    - docker:18.09-dind
+  variables:
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  extends: .deployment-environments
+  artifacts:
+    name: '$PACKAGE-$CI_COMMIT_REF_NAME'
+    paths:
+      - packages/${PACKAGE}/build
+  script:
+    # Install docker
+    - apt-get update
+    - apt-get install ca-certificates curl gnupg lsb-release -y
+    - curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    - apt-get update
+    - apt-get install docker-ce=5:19.03.15~3-0~debian-stretch docker-ce-cli=5:19.03.15~3-0~debian-stretch containerd.io -y
+    # Run the build script
+    - lerna run build --scope ${PACKAGE_PREFIX}/${PACKAGE}
+
+.deploy:
+  extends: .deployment-environments
+  artifacts:
+    name: '$PACKAGE-$CI_COMMIT_REF_NAME'
+    paths:
+      - packages/${PACKAGE}/.serverless
+  script:
+    - lerna run deploy --scope ${PACKAGE_PREFIX}/${PACKAGE}
+
+.remove:
+  extends: .deployment-environments
+  artifacts:
+    name: '$PACKAGE-$CI_COMMIT_REF_NAME'
+    paths:
+      - packages/${PACKAGE}/.serverless
+  script:
+    - lerna run remove --scope ${PACKAGE_PREFIX}/${PACKAGE}

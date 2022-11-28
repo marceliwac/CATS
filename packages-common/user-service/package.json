@@ -1,0 +1,19 @@
+{
+  "name": "@wls/user-service",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.85.0",
+    "@wls/log": "1.0.0"
+  },
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

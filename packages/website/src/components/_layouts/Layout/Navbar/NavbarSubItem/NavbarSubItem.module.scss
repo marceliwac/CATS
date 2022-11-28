@@ -1,0 +1,25 @@
+.navbarSubItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 .5em 0 1em;
+
+  &:hover {
+    background-color: $highlight;
+  }
+
+  .label {
+    font-size: .95em;
+    padding: .5em 0 .5em 1em;
+    border-left: $border;
+  }
+}
+
+.activeItem {
+  //color: $primary;
+
+  p {
+    font-weight: 500;
+  }
+}

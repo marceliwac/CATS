@@ -1,0 +1,146 @@
+service: ${file(../../configuration.js):serviceNames.website}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+  s3Sync:
+    - bucketNameKey: WebsiteBucketId
+      localDir: build
+      deleteRemoved: true
+
+plugins:
+  - serverless-s3-sync
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 128
+  timeout: 10
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  lambdaHashingVersion: 20201221
+  logRetentionInDays: 14
+
+resources:
+  Resources:
+    OriginAccessIdentity:
+      Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+      Properties:
+        CloudFrontOriginAccessIdentityConfig:
+          Comment: ${self:custom.config.domain.website}-OAI
+
+    WebsiteBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.config.domain.website}
+        AccessControl: Private
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+
+    WebsiteBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: WebsiteBucket
+        PolicyDocument:
+          Statement:
+            - Action: 's3:Get*'
+              Effect: Allow
+              Resource:
+                Fn::Join:
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - Ref: WebsiteBucket
+                    - '/*'
+              Principal:
+                CanonicalUser:
+                  Fn::GetAtt:
+                    - OriginAccessIdentity
+                    - S3CanonicalUserId
+
+    WebsiteCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName:
+                Fn::Join:
+                  - '.'
+                  - - Ref: WebsiteBucket
+                    - 's3'
+                    - ${self:provider.region}
+                    - 'amazonaws.com'
+              Id: Website
+              S3OriginConfig:
+                OriginAccessIdentity:
+                  Fn::Join:
+                    - ''
+                    - - 'origin-access-identity/cloudfront/'
+                      - Ref: OriginAccessIdentity
+          PriceClass: ${self:custom.config.cloudfront.priceClass}
+          IPV6Enabled: true
+          HttpVersion: http2
+          Enabled: true
+          Aliases:
+            - ${self:custom.config.domain.website}
+          DefaultRootObject: index.html
+          CustomErrorResponses:
+            - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+            - ErrorCode: 403
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            TargetOriginId: Website
+            ForwardedValues:
+              QueryString: 'false'
+              Cookies:
+                Forward: none
+            ViewerProtocolPolicy: redirect-to-https
+          ViewerCertificate:
+            AcmCertificateArn: ${cf(${self:custom.config.certificateRegion}):${self:custom.config.stackName.certificate}.Certificate}
+            MinimumProtocolVersion: TLSv1.2_2019
+            SslSupportMethod: sni-only
+
+    WebsiteARecord:
+      Type: AWS::Route53::RecordSet
+      Properties:
+        HostedZoneName: ${self:custom.config.cloudformation.hostedZoneName}
+        Name: ${self:custom.config.domain.website}
+        Type: A
+        AliasTarget:
+          HostedZoneId: ${self:custom.config.cloudformation.cloudfrontDistributionHostedZoneId}
+          DNSName:
+            Fn::GetAtt:
+              - WebsiteCloudFrontDistribution
+              - DomainName
+
+    WebsiteAAAARecord:
+      Type: AWS::Route53::RecordSet
+      Properties:
+        HostedZoneName: ${self:custom.config.cloudformation.hostedZoneName}
+        Name: ${self:custom.config.domain.website}
+        Type: AAAA
+        AliasTarget:
+          HostedZoneId: ${self:custom.config.cloudformation.cloudfrontDistributionHostedZoneId}
+          DNSName:
+            Fn::GetAtt:
+              - WebsiteCloudFrontDistribution
+              - DomainName
+  Outputs:
+    WebsiteBucketId:
+      Value:
+        Ref: WebsiteBucket

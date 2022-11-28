@@ -1,0 +1,23 @@
+.profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1em;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    .icon {
+      color: $text-primary;
+      margin-right: .5em;
+    }
+  }
+}

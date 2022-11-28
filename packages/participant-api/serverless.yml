@@ -1,0 +1,81 @@
+service: ${file(../../configuration.js):serviceNames.participantApi}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+  customDomain:
+    domainName: ${self:custom.config.domain.api}
+    hostedZoneId: ${self:custom.config.cloudformation.hostedZoneId}
+    basePath: ''
+    autoDomain: true
+    autoDomainWaitFor: 60
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+    certificateArn: ${cf(${self:custom.config.certificateRegion}):${self:custom.config.stackName.certificate}.Certificate}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-domain-manager
+  - serverless-plugin-include-dependencies
+  - serverless-plugin-common-excludes
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: ${self:custom.config.lambda.memorySize}
+  timeout: ${self:custom.config.lambda.timeout}
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  lambdaHashingVersion: 20201221
+  iam:
+    role: ${cf:${self:custom.config.stackName.infrastructure}.LambdaApiRoleArn}
+  apiGateway:
+    restApiId: ${cf:${self:custom.config.stackName.infrastructure}.ApiRestAPIId}
+    restApiRootResourceId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayParticipantResourceId}
+  logRetentionInDays: 14
+  environment: ${self:custom.config.lambdaEnvironment}
+  tracing:
+    lambda: true
+
+functions:
+  # STAYS
+  listAssignedStays:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stays.list
+    events:
+      - http:
+          method: GET
+          path: /stays
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  getAssignedStay:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stays.get
+    events:
+      - http:
+          method: GET
+          path: /stays/{stayAssignmentId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}

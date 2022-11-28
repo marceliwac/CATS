@@ -1,0 +1,7 @@
+.select {
+  margin: 1em 0;
+
+  & > * {
+    width: 100%;
+  }
+}

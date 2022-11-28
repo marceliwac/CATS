@@ -1,0 +1,52 @@
+image: node:14
+
+stages:
+  - deploy functions
+  - run migrations
+  - remove functions
+
+include:
+  - local: /ci/base-configuration.yml
+  - local: /ci/job-templates.yml
+
+variables:
+  MIGRATIONS_PACKAGE: migrations
+
+deploy lambda functions:
+  stage: deploy functions
+  extends: .deploy
+  variables:
+    PACKAGE: ${MIGRATIONS_PACKAGE}
+
+migrate to latest:
+  stage: run migrations
+  extends: .deploy
+  variables:
+    PACKAGE: ${MIGRATIONS_PACKAGE}
+  script:
+    - lerna exec "serverless invoke --function migrateLatest --stage ${STAGE} --region ${REGION}" --scope=${PACKAGE_PREFIX}/${PACKAGE}
+
+rollback most recent migrations:
+  stage: run migrations
+  extends: .deploy
+  when: manual
+  variables:
+    PACKAGE: ${MIGRATIONS_PACKAGE}
+  script:
+    - lerna exec "serverless invoke --function migrateRollback --stage ${STAGE} --region ${REGION}" --scope=${PACKAGE_PREFIX}/${PACKAGE}
+
+rollback all migrations:
+  stage: run migrations
+  extends: .deploy
+  when: manual
+  variables:
+    PACKAGE: ${MIGRATIONS_PACKAGE}
+  script:
+    - lerna exec "serverless invoke --function migrateRollbackAll --stage ${STAGE} --region ${REGION}" --scope=${PACKAGE_PREFIX}/${PACKAGE}
+
+remove lambda functions:
+  stage: remove functions
+  extends: .remove
+  when: manual
+  variables:
+    PACKAGE: ${MIGRATIONS_PACKAGE}

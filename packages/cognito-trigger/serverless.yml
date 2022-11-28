@@ -1,0 +1,32 @@
+service: ${file(../../configuration.js):serviceNames.cognitoTrigger}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+
+plugins:
+  - serverless-plugin-include-dependencies
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: ${self:custom.config.lambda.memorySize}
+  timeout: ${self:custom.config.lambda.cognitoTriggerTimeout}
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  lambdaHashingVersion: 20201221
+  environment: ${self:custom.config.cognitoTriggerLambdaEnvironment}
+  iam:
+    role: ${cf:${self:custom.config.stackName.infrastructure}.LambdaApiRoleArn}
+  logRetentionInDays: 14
+
+functions:
+  cognitoCustomMessage:
+    handler: src/customMessage.handler
+    events:
+      - cognitoUserPool:
+          pool: ${self:custom.config.cognito.userPoolName}
+          trigger: CustomMessage
+          existing: true

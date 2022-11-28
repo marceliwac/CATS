@@ -1,0 +1,14 @@
+{
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "run": {
+      "stream": true
+    },
+    "exec": {
+      "stream": true
+    }
+  },
+  "packages": ["packages/*", "packages-common/*"],
+  "version": "independent"
+}

@@ -1,0 +1,23 @@
+.table {
+
+  // Linked column values (i.e. name column linking to /entities/${id}) via rowLinks mapping
+  .link {
+    text-decoration: underline;
+  }
+
+  .buttonLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #aaaaaa;
+
+    &:hover, &:active {
+      color: #666666;
+    }
+  }
+
+  .linkIcon {
+    color: $text-primary;
+  }
+}

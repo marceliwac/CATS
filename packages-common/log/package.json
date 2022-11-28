@@ -1,0 +1,15 @@
+{
+  "name": "@wls/log",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

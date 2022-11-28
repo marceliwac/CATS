@@ -1,0 +1,341 @@
+service: ${file(../../configuration.js):serviceNames.infrastructure}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+  secrets: ${file(../../secrets.js)}
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: 128
+  timeout: 10
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  logRetentionInDays: 14
+  lambdaHashingVersion: 20201221
+  tracing:
+    apiGateway: true
+    lambda: true
+
+resources:
+  Resources:
+    ApiGatewayRestApi:
+      Type: AWS::ApiGateway::RestApi
+      Properties:
+        Name: ${self:service}-${self:provider.stage}
+        DisableExecuteApiEndpoint: true
+
+    ApiGatewayAdministratorResource:
+      Type: AWS::ApiGateway::Resource
+      Properties:
+        ParentId:
+          Fn::GetAtt:
+            - ApiGatewayRestApi
+            - RootResourceId
+        PathPart: 'administrator'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    ApiGatewayParticipantResource:
+      Type: AWS::ApiGateway::Resource
+      Properties:
+        ParentId:
+          Fn::GetAtt:
+            - ApiGatewayRestApi
+            - RootResourceId
+        PathPart: 'participant'
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        IdentitySource: method.request.header.Authorization
+        Name: CognitoAuthorizer
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt:
+              - CognitoUserPoolUserPool
+              - Arn
+
+    ApiGatewayCloudwatchLogsRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - apigateway.amazonaws.com
+              Action: sts:AssumeRole
+        Path: /
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+
+    DbSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: ${self:service}-${self:provider.stage}-database
+        GroupDescription: Allow PostgreSQL connections.
+        SecurityGroupIngress:
+          - SourceSecurityGroupId: ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroupId}
+            IpProtocol: tcp
+            FromPort: 5432
+            ToPort: 5432
+        SecurityGroupEgress:
+          - IpProtocol: -1
+            CidrIp: 127.0.0.1/32
+        VpcId: ${cf:${self:custom.config.stackName.prerequisites}.VPC}
+
+    DbSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties:
+        DBSubnetGroupName: ${self:service}-${self:provider.stage}
+        DBSubnetGroupDescription: Private database subnet group.
+        SubnetIds:
+          - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+          - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+          - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+
+    MIMICDatabaseSecret:
+      Type: AWS::SecretsManager::Secret
+      Properties:
+        Description: Database credentials for external database hosting MIMIC-IV.
+        Name: ${self:custom.config.cloudformation.mimicDatabaseSecretName}
+        SecretString: ${self:custom.secrets.mimic.connectionString}
+
+    DatabaseSecret:
+      Type: AWS::SecretsManager::Secret
+      Properties:
+        Description: Database credentials for ${self:service}-${self:provider.stage}.
+        Name: ${self:custom.config.cloudformation.databaseSecretName}
+        GenerateSecretString:
+          SecretStringTemplate:
+            Fn::Join:
+              - ''
+              - - '{"username": "'
+                - ${self:custom.config.database.user}
+                - '"}'
+          GenerateStringKey: 'password'
+          PasswordLength: 30
+          ExcludeCharacters: '"@/\'
+
+    Database:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        DBInstanceIdentifier: ${self:service}-database-${self:provider.stage}
+        Engine: postgres
+        DBName: postgres
+        AllocatedStorage: 20
+        EngineVersion: 14.4
+        DBInstanceClass: db.t3.micro
+        MasterUsername: ${self:custom.config.database.user}
+        MasterUserPassword:
+          Fn::Join:
+            - ''
+            - - '{{resolve:secretsmanager:'
+              - Ref: DatabaseSecret
+              - ':SecretString:password}}'
+        DBSubnetGroupName:
+          Ref: DbSubnetGroup
+        VPCSecurityGroups:
+          - Ref: DbSecurityGroup
+      DeletionPolicy: ${self:custom.config.cloudformation.databaseDeletionPolicy}
+
+    DatabaseSecretAttachment:
+      Type: AWS::SecretsManager::SecretTargetAttachment
+      Properties:
+        SecretId:
+          Ref: DatabaseSecret
+        TargetId:
+          Ref: Database
+        TargetType: AWS::RDS::DBInstance
+
+    LambdaApiRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Path: /
+        Policies:
+          - PolicyName: AllowDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: DatabaseSecret
+          - PolicyName: AllowMIMICDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: MIMICDatabaseSecret
+          - PolicyName: AllowCognitoOperations
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - cognito-idp:AdminAddUserToGroup
+                    - cognito-idp:AdminEnableUser
+                    - cognito-idp:AdminDisableUser
+                    - cognito-idp:AdminGetUser
+                    - cognito-idp:AdminListGroupsForUser
+                    - cognito-idp:AdminCreateUser
+                    - cognito-idp:ListUsers
+                    - cognito-idp:ListUsersInGroup
+                  Resource:
+                    Fn::GetAtt:
+                      - CognitoUserPoolUserPool
+                      - Arn
+          - PolicyName: AllowXRayTracePush
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - xray:PutTraceSegments
+                    - xray:PutTelemetryRecords
+                    - xray:GetSamplingRules
+                    - xray:GetSamplingTargets
+                    - xray:GetSamplingStatisticSummaries
+                  Resource: '*'
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
+    CognitoUserPoolUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        AutoVerifiedAttributes:
+          - email
+        EmailConfiguration:
+          EmailSendingAccount: DEVELOPER
+          From: ${self:custom.config.ses.fromEmailAddress}
+          ReplyToEmailAddress: ${self:custom.config.ses.replyToEmailAddress}
+          SourceArn: ${self:custom.config.ses.sourceArn}
+        UserPoolName: ${self:custom.config.cognito.userPoolName}
+        Schema:
+          - AttributeDataType: String
+            Name: email
+            Required: true
+            Mutable: true
+          - AttributeDataType: String
+            Name: family_name
+            Required: true
+            Mutable: true
+          - AttributeDataType: String
+            Name: given_name
+            Required: true
+            Mutable: true
+        UsernameAttributes:
+          - email
+        UsernameConfiguration:
+          CaseSensitive: False
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireLowercase: false
+            RequireUppercase: false
+            RequireNumbers: false
+            RequireSymbols: false
+            TemporaryPasswordValidityDays: 30
+
+    AdministratorsUserGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: administrators
+        UserPoolId:
+          Ref: CognitoUserPoolUserPool
+
+    ParticipantsUserGroup:
+      Type: AWS::Cognito::UserPoolGroup
+      Properties:
+        GroupName: participants
+        UserPoolId:
+          Ref: CognitoUserPoolUserPool
+
+    UserPoolClientWebsite:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthScopes:
+          - openid
+          - email
+          - profile
+        CallbackURLs: ${self:custom.config.cognito.callbackUrls}
+        IdTokenValidity: 24
+        LogoutURLs: ${self:custom.config.cognito.logoutUrls}
+        SupportedIdentityProviders:
+          - COGNITO
+        UserPoolId:
+          Ref: CognitoUserPoolUserPool
+
+  Outputs:
+    ApiRestAPIId:
+      Value:
+        Ref: ApiGatewayRestApi
+
+    ApiGatewayAuthorizerId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayAuthorizer
+          - AuthorizerId
+
+    ApiRootResourceId:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayRestApi
+          - RootResourceId
+
+    ApiGatewayAdministratorResourceId:
+      Value:
+        Ref: ApiGatewayAdministratorResource
+
+    ApiGatewayParticipantResourceId:
+      Value:
+        Ref: ApiGatewayParticipantResource
+
+    LambdaApiRoleArn:
+      Value:
+        Fn::GetAtt:
+          - LambdaApiRole
+          - Arn
+
+    ApiGatewayCloudwatchLogsRoleArn:
+      Value:
+        Fn::GetAtt:
+          - ApiGatewayCloudwatchLogsRole
+          - Arn
+
+    UserPoolArn:
+      Value:
+        Fn::GetAtt:
+          - CognitoUserPoolUserPool
+          - Arn

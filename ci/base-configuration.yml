@@ -1,0 +1,20 @@
+#Use 'default' keyword if this does not work
+
+variables:
+  REGION: eu-west-1
+  STAGE: $CI_COMMIT_REF_NAME
+  GIT_STRATEGY: fetch
+  GIT_CLEAN_FLAGS: -ffdx -e .npm
+  PACKAGE_PREFIX: '@wls'
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  policy: pull
+  paths:
+    - .npm
+
+before_script:
+  - ./scripts/display_env_info.sh
+  - yarn install
+  - export PATH=$PATH:$(pwd)/node_modules/.bin
+  - lerna bootstrap

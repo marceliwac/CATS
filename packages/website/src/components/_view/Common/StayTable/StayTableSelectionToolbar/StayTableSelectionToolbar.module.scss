@@ -1,0 +1,34 @@
+.tableSelectionToolbar {
+  height: 3em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+
+  .title {
+    font-size: 1.5em;
+    color: $text-primary;
+    font-weight: 500;
+  }
+
+  .countIndicator {
+    color: $text-primary;
+    margin-right: 1em;
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .buttonGroup {
+    display: flex;
+
+    & > * {
+      margin: 0 .5em;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

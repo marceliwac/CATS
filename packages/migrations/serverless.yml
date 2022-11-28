@@ -1,0 +1,58 @@
+service: ${file(../../configuration.js):serviceNames.migrations}
+
+projectDir: '../..'
+
+custom:
+  config: ${file(../../configuration.js):stage.${self:provider.stage}}
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-include-dependencies
+  - serverless-plugin-common-excludes
+
+package:
+  patterns:
+    # Include since it's not used by any of the handlers and can't be bundled automatically
+    - '../../node_modules/@wls/models'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  memorySize: ${self:custom.config.lambda.migrations.memorySize}
+  timeout: ${self:custom.config.lambda.migrations.timeout}
+  region: ${self:custom.config.region}
+  stage: ${opt:stage, 'development'}
+  lambdaHashingVersion: 20201221
+  iam:
+    role: ${cf:${self:custom.config.stackName.infrastructure}.LambdaApiRoleArn}
+  vpc:
+    securityGroupIds:
+      - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+    subnetIds:
+      - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+      - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+      - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+  apiGateway:
+    restApiId: ${cf:${self:custom.config.stackName.infrastructure}.ApiRestAPIId}
+    restApiRootResourceId: ${cf:${self:custom.config.stackName.infrastructure}.ApiRootResourceId}
+  logRetentionInDays: 14
+  environment: ${self:custom.config.lambdaEnvironment}
+  tracing:
+    lambda: true
+
+functions:
+  migrateList:
+    name: ${self:service}-${self:provider.stage}-migrateList
+    handler: handlers/migrations.list
+
+  migrateLatest:
+    name: ${self:service}-${self:provider.stage}-migrateLatest
+    handler: handlers/migrations.latest
+
+  migrateRollback:
+    name: ${self:service}-${self:provider.stage}-migrateRollback
+    handler: handlers/migrations.rollback
+
+  migrateRollbackAll:
+    name: ${self:service}-${self:provider.stage}-migrateRollbackAll
+    handler: handlers/migrations.rollbackAll

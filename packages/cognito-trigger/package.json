@@ -1,0 +1,23 @@
+{
+  "name": "@wls/cognito-trigger",
+  "private": true,
+  "version": "1.0.0",
+  "main": "handler.js",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "deploy": "serverless deploy --stage=${STAGE}",
+    "remove": "serverless remove --stage=${STAGE}"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@wls/log": "1.0.0",
+    "serverless-offline": "^8.7.0",
+    "serverless-plugin-include-dependencies": "^5.0.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.81.0"
+  },
+  "devDependencies": {
+    "@wls/eslint-config": "1.0.0"
+  }
+}

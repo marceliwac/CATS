@@ -1,0 +1,47 @@
+.tableHeaderTopLeft {
+  position: sticky !important;
+  z-index: 30 !important;
+  left: 0;
+  background-color: rgba(222, 238, 259, 1) !important;
+  border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
+  border-right: 1px solid #ddd;
+}
+
+.tableHeaderCell {
+  border-bottom: none  !important;
+  background-color: #ffffff  !important;
+  z-index: 10 !important;
+
+  .header {
+    font-family: monospace;
+    padding: 1em;
+    text-align: center;
+    position: relative;
+    background-color: rgba(222, 238, 259, 1) !important;
+    border-bottom: 3px solid rgba(134, 173, 232, 1);
+    border-right: 1px solid #ddd;
+
+    &:hover {
+
+      &:after {
+        content: "";
+        position: absolute;
+        background-color: #ffff00;
+        opacity: .1;
+        left: 0;
+        top: -5000px;
+        height: 10000px;
+        width: 100%;
+        z-index: -100;
+      }
+    }
+
+    .date {
+      font-weight: bold;
+    }
+
+    .time {
+
+    }
+  }
+}
