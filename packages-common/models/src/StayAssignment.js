@@ -17,7 +17,7 @@ module.exports = class StayAssignment extends BaseModel {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
     const Label = require('./Label');
 
     return {
@@ -25,8 +25,8 @@ module.exports = class StayAssignment extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Label,
         join: {
-          from: ['stay_assignments.cognito_id', 'stay_assignments.stay_id'],
-          to: ['labels.cognito_id', 'labels.stay_id'],
+          from: 'stay_assignments.id',
+          to: 'labels.stay_assignment_id',
         },
       },
     };

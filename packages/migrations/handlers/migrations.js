@@ -13,7 +13,8 @@ async function initialiseDatabaseConnection() {
   return knex({
     ...{
       client: 'pg',
-      connection: () => knexfile.getConnectionString(process.env.DATABASE_SECRET_NAME),
+      connection: () =>
+        knexfile.getConnectionString(process.env.DATABASE_SECRET_NAME),
     },
     ...knexSnakeCaseMappers(),
   });
@@ -50,6 +51,7 @@ module.exports.latest = async function latest() {
         .map((migration) => migration.file)
         .join('\n')}`
   );
+  const applied = [];
   let result = [null];
   if (pending.length === 0) {
     log.info('Already up to date');
@@ -59,12 +61,13 @@ module.exports.latest = async function latest() {
       // eslint-disable-next-line no-await-in-loop
       [, result] = await db.migrate.up();
       if (result.length > 0) {
+        applied.push(result[0]);
         log.info(`Migration ${result[0]} applied.`);
       }
     }
   }
   await db.destroy();
-  return result;
+  return applied;
 };
 
 module.exports.rollback = async function rollback() {

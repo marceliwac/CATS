@@ -53,7 +53,7 @@ functions:
     events:
       - http:
           method: GET
-          path: /stays
+          path: /stayAssignments
           cors:
             origin: '*'
             allowCredentials: true
@@ -72,7 +72,28 @@ functions:
     events:
       - http:
           method: GET
-          path: /stays/{stayAssignmentId}
+          path: /stayAssignments/{stayAssignmentId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  # LABELS
+  submitLabels:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/labels.post
+    events:
+      - http:
+          method: POST
+          path: /stayAssignments/{stayAssignmentId}/labels
           cors:
             origin: '*'
             allowCredentials: true

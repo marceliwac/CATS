@@ -1,3 +1,3 @@
 SELECT *
-FROM mimiciv_derived.wsl_stage_1
+FROM mimiciv_derived.wls_stage_2
 WHERE stay_id = ??;

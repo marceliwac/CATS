@@ -8,10 +8,9 @@ module.exports = class Label extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['cognitoId', 'stayId'],
+      required: ['stayAssignmentId'],
       properties: {
-        cognitoId: { type: 'string' },
-        stayId: { type: 'integer' },
+        stayAssignmentId: { type: 'string' },
         startTime: { type: 'string', format: 'date-time' },
         endTime: { type: 'string', format: 'date-time' },
         additionalDataJson: { type: 'string' },
@@ -19,7 +18,7 @@ module.exports = class Label extends BaseModel {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
     const StayAssignment = require('./StayAssignment');
 
     return {
@@ -27,8 +26,8 @@ module.exports = class Label extends BaseModel {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: StayAssignment,
         join: {
-          from: ['labels.cognito_id', 'labels.stay_id'],
-          to: ['stay_assignments.cognito_id', 'stay_assignments.stay_id'],
+          from: 'labels.stay_assignment_id',
+          to: 'stay_assignments.id',
         },
       },
     };

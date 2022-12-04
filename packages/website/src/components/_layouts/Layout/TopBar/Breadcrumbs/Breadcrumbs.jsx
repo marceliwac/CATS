@@ -3,15 +3,15 @@ import { Link, useLocation } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import styles from './Breadcrumbs.module.scss';
 
-const ROOT_BREADCRUMB_WHITELIST = ['administrator', 'researcher'];
-const ROOT_BREADCRUMB_BLACKLIST = ['administrator', 'researcher'];
+// Only render breadcrumbs if the first crumb is one of the below.
+const ROOT_BREADCRUMB_WHITELIST = ['administrator', 'participant'];
+
+// Skip the following breadcrumbs if they are at the root
+const ROOT_BREADCRUMB_BLACKLIST = ['administrator', 'participant'];
 
 const BREADCRUMB_LUT = {
-  studies: 'Studies',
-  questionnaires: 'Questionnaires',
-  schedules: 'Schedules',
+  stays: 'Stays',
   administrators: 'Administrators',
-  researchers: 'Researchers',
   participants: 'Participants',
   create: 'Create new',
   invite: 'Invite',

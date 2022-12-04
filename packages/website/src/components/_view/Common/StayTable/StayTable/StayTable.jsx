@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import styles from './StayTable.module.scss';
 import TableSelectionToolbar from '../StayTableSelectionToolbar/StayTableSelectionToolbar';
 import StayTableHeader from '../StayTableHeader/StayTableHeader';
+import useLabeller from '../../../../../hooks/useLabeller';
 
 function getLabelClassName(number) {
   const n = (number % 9) + 1;
@@ -15,14 +16,23 @@ function getLabelClassName(number) {
 }
 
 export default function StayTable(props) {
-  const { title, rows, columns, topButtons, selectDate, labels } = props;
+  const { title, rows, columns } = props;
+  const { labels, addDateToLabel } = useLabeller();
 
   function getLabelRows() {
-    return labels.map((label, labelNumber) => {
+    return labels.map((label, labelNumber, labelArray) => {
       let reachedStartTime = false;
       let reachedEndTime = false;
       return (
-        <TableRow key={label.id} className={styles.labelRow}>
+        <TableRow
+          key={label.id}
+          className={`${styles.labelRow} ${
+            labelNumber === labelArray.length - 1 ? styles.lastLabel : ''
+          }`}
+          style={{
+            top: `${4.75 + labelNumber * 0.4}em`,
+          }}
+        >
           {columns.map((column, columnIndex) => {
             if (columnIndex === 0) {
               return (
@@ -64,12 +74,18 @@ export default function StayTable(props) {
     });
   }
 
+  // TODO: Make the dates selectable based on the value of the isCreatingLabel from the useLabeller hook.
+
   return (
     <div className={styles.table}>
-      <TableSelectionToolbar title={title} topButtons={topButtons} />
-      <TableContainer sx={{ maxHeight: '70vh' }}>
+      {!!title && <TableSelectionToolbar title={title} />}
+      <TableContainer className={styles.tableContainer}>
         <MuiTable aria-labelledby="tableTitle" size="medium" stickyHeader>
-          <StayTableHeader columns={columns} selectDate={selectDate} />
+          <StayTableHeader
+            columns={columns}
+            selectDate={addDateToLabel}
+            displayBottomBorder={labels.length === 0}
+          />
           <TableBody>
             {getLabelRows()}
             {rows.map((row) => (
@@ -95,7 +111,7 @@ export default function StayTable(props) {
                   return (
                     <TableCell
                       key={`${row.id}-${column.id}`}
-                      align={column.numeric ? 'center' : 'left'}
+                      align="right"
                       className={`${styles.valueCell} ${styles.tableCell}`}
                     >
                       {value}

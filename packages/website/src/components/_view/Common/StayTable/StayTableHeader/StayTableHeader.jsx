@@ -23,11 +23,11 @@ function formatTableHeader(timestamp, selectDate) {
 }
 
 export default function StayTableHeader(props) {
-  const { columns, selectDate } = props;
+  const { columns, selectDate, displayBottomBorder } = props;
 
   return (
     <TableHead>
-      <TableRow className={styles.tableHeaderRow}>
+      <TableRow className={`${displayBottomBorder ? styles.bottomBorder : ''}`}>
         {columns.map((column, i) => {
           if (i === 0) {
             return (

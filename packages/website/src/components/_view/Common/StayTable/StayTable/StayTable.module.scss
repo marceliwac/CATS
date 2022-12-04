@@ -1,15 +1,19 @@
 .table {
   overflow: hidden;
 
-  .tableRow {
+  .tableContainer {
+    border: 1px solid #dddddd;
+    max-height: 70vh;
   }
 
-  tr:nth-child(even) {
-    background-color: #ffffff;
-  }
+  tr {
+    &:nth-child(even) {
+      background-color: #ffffff;
+    }
 
-  tr:nth-child(odd) {
-    background-color: #f7fbf7;
+    &:nth-child(odd) {
+      background-color: #f7fbf7;
+    }
   }
 
   .tableCell {
@@ -20,24 +24,41 @@
   .parameterCell {
     position: sticky;
     left: 0;
-    z-index: 20;
+    z-index: 25;
     padding-right: 2em;
     min-width: 16em;
   }
 
   .valueCell {
-
+    font-family: monospace;
+    text-align: right;
+    min-width: 8em;
+    max-width: 8em;
+    word-break: break-word;
   }
 
   .labelCell {
+    font-size: 1em;
     padding: .2em;
+    border-bottom: 0 solid ;
+    border-right: 1px solid #dddddd;
+
+    &.parameterCell {
+      background-color: rgba(222, 238, 259, 1);
+      z-index: 40;
+    }
   }
 
   .labelRow {
-    background-color: #ffffff !important;
+    position: sticky;
+    z-index: 30;
+    background-color: rgba(222, 238, 259, 1) !important;
+  }
 
-    &>td:not(:last-child) {
-      border-bottom: none !important;
+  .lastLabel {
+    .parameterCell,
+    .labelCell {
+      border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
     }
   }
 
@@ -58,38 +79,6 @@
   }
 }
 
-.label1 {
-  background-color: #ff7575
-}
-
-.label2 {
-  background-color: #c17cec
-}
-
-.label3 {
-  background-color: #8187e1
-}
-
-.label4 {
-  background-color: #86c2d5
-}
-
-.label5 {
-  background-color: #81e1b4
-}
-
-.label6 {
-  background-color: #8fec7c
-}
-
-.label7 {
-  background-color: #e6f678
-}
-
-.label8 {
-  background-color: #ffaf75
-}
-
 //.label1 { background-color: #5BAF82}
 //.label2 { background-color: #5FABB3}
 //.label3 { background-color: #647CB6}
@@ -100,12 +89,23 @@
 //.label8 { background-color: #C7BA7A}
 //.label9 { background-color: #A9CA7F}
 
-.label1 { background-color: #5BAF82}
-.label2 { background-color: #647CB6}
-.label3 { background-color: #BA6DBD}
-.label4 { background-color: #C48576}
-.label5 { background-color: #A9CA7F}
-.label6 { background-color: #5FABB3}
-.label7 { background-color: #8368BA}
-.label8 { background-color: #C17193}
-.label9 { background-color: #C7BA7A}
+
+.labelCell:has( + .label1) { border-right: 1px solid #5BAF82 !important; }
+.labelCell:has( + .label2) { border-right: 1px solid #647CB6 !important; }
+.labelCell:has( + .label3) { border-right: 1px solid #BA6DBD !important; }
+.labelCell:has( + .label4) { border-right: 1px solid #C48576 !important; }
+.labelCell:has( + .label5) { border-right: 1px solid #A9CA7F !important; }
+.labelCell:has( + .label6) { border-right: 1px solid #5FABB3 !important; }
+.labelCell:has( + .label7) { border-right: 1px solid #8368BA !important; }
+.labelCell:has( + .label8) { border-right: 1px solid #C17193 !important; }
+.labelCell:has( + .label9) { border-right: 1px solid #C7BA7A !important; }
+
+.label1 { background-color: #5BAF82; border-right: 1px solid #5BAF82 !important; }
+.label2 { background-color: #647CB6; border-right: 1px solid #647CB6 !important; }
+.label3 { background-color: #BA6DBD; border-right: 1px solid #BA6DBD !important; }
+.label4 { background-color: #C48576; border-right: 1px solid #C48576 !important; }
+.label5 { background-color: #A9CA7F; border-right: 1px solid #A9CA7F !important; }
+.label6 { background-color: #5FABB3; border-right: 1px solid #5FABB3 !important; }
+.label7 { background-color: #8368BA; border-right: 1px solid #8368BA !important; }
+.label8 { background-color: #C17193; border-right: 1px solid #C17193 !important; }
+.label9 { background-color: #C7BA7A; border-right: 1px solid #C7BA7A !important; }

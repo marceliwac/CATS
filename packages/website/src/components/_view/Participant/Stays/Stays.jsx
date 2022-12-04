@@ -1,6 +1,5 @@
 import React from 'react';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Table from '../../Common/Table/Table/Table';
 import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
@@ -8,9 +7,11 @@ import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import styles from './Stays.module.scss';
 
 export default function Stays() {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const { data, error, isLoading } = useApiData({
-    path: '/participant/stays',
+    path: '/participant/stayAssignments',
   });
 
   if (isLoading) {
@@ -19,6 +20,19 @@ export default function Stays() {
 
   if (error || data === null) {
     return getErrorComponentFromHttpError(error);
+  }
+
+  const unLabelledData = data.filter(
+    (assignedStay) => !assignedStay.isLabelled
+  );
+  if (unLabelledData.length === 0) {
+    // Display alert - everything is labelled!
+  }
+
+  if (searchParams.get('navigateToNext')) {
+    if (unLabelledData.length > 0) {
+      navigate(unLabelledData[0].id);
+    }
   }
 
   return (

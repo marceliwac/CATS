@@ -3,14 +3,23 @@
   z-index: 30 !important;
   left: 0;
   background-color: rgba(222, 238, 259, 1) !important;
-  border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
   border-right: 1px solid #ddd;
+  border-bottom: none !important;
+}
+
+.bottomBorder {
+  .tableHeaderTopLeft,
+  .tableHeaderCell {
+    border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
+  }
 }
 
 .tableHeaderCell {
-  border-bottom: none  !important;
+  border-bottom: none !important;
   background-color: #ffffff  !important;
   z-index: 10 !important;
+  min-height: 5em;
+  max-height: 5em;
 
   .header {
     font-family: monospace;
@@ -18,7 +27,6 @@
     text-align: center;
     position: relative;
     background-color: rgba(222, 238, 259, 1) !important;
-    border-bottom: 3px solid rgba(134, 173, 232, 1);
     border-right: 1px solid #ddd;
 
     &:hover {

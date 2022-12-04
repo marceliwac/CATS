@@ -209,7 +209,7 @@ export default function Table(props) {
     [];
 
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('orderNo');
+  const [orderBy, setOrderBy] = React.useState('id');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(

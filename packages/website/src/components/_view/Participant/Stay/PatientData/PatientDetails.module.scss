@@ -1,0 +1,33 @@
+.patientDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+
+    .detail {
+      width: 25%;
+      box-sizing: border-box;
+      padding: 1em;
+      margin-bottom: 1em;
+
+      .label {
+        font-weight: 600;
+        color: #666;
+        margin-bottom: .4em;
+      }
+
+      .value {
+        color: #666;
+      }
+    }
+  }
+}

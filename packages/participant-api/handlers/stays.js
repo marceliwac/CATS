@@ -81,38 +81,48 @@ module.exports.get = lambda(
       async operation({ event, shared }) {
         const userId = event.requestContext.authorizer.claims.sub;
 
-        const stayAssignment = await StayAssignment.query().findById(
-          event.pathParameters.stayAssignmentId
-        );
-        const knex = Row.knex();
+        const stayAssignmentQuery = StayAssignment.query().findOne({
+          id: event.pathParameters.stayAssignmentId,
+          cognitoId: userId,
+        });
 
-        const { stayId } = stayAssignment;
+        const knex = Row.knex();
 
         if (event.queryStringParameters) {
           if (event.queryStringParameters.includeLabels) {
-            const labels = await Label.query().where({
-              stayId,
-              cognitoId: userId,
-            });
-            if (labels) {
-              stayAssignment.labels = labels.map((label) => ({
-                ...label,
-                additionalData: label.additionalDataJson
-                  ? JSON.parse(label.additionalDataJson)
-                  : null,
-              }));
-            }
+            stayAssignmentQuery.withGraphFetched('labels');
           }
+        }
+
+        const stayAssignment = await stayAssignmentQuery;
+
+        if (!stayAssignment) {
+          // eslint-disable-next-line no-param-reassign
+          shared.statusCode = 404;
+          return;
+        }
+
+        if (stayAssignment.labels) {
+          stayAssignment.labels = stayAssignment.labels.map((label) => ({
+            ...label,
+            additionalData: label.additionalDataJson
+              ? JSON.parse(label.additionalDataJson)
+              : null,
+          }));
+        }
+
+        if (event.queryStringParameters) {
           if (event.queryStringParameters.includeStayDetails) {
-            const details = await RawQuery.stayDetails(knex, stayId);
-            console.log({ details });
+            const details = await RawQuery.stayDetails(
+              knex,
+              stayAssignment.stayId
+            );
             if (details) {
               stayAssignment.details = details;
             }
           }
           if (event.queryStringParameters.includeStayData) {
-            const data = await RawQuery.stayData(knex, stayId);
-            console.log({ data });
+            const data = await RawQuery.stayData(knex, stayAssignment.stayId);
             if (data) {
               stayAssignment.data = data;
             }

@@ -1,0 +1,16 @@
+.instructions {
+  display: flex;
+  margin-bottom: 2em;
+  overflow: hidden;
+  flex-direction: column;
+
+  & > p {
+    margin-bottom: 1em;
+    line-height: 1.3em;
+  }
+
+  .targetLabel {
+    font-weight: 500;
+    text-decoration: underline;
+  }
+}
