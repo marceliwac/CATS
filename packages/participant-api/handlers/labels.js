@@ -8,24 +8,23 @@ module.exports.post = lambda(
       path: yup.object().shape({
         stayAssignmentId: yup.customValidators.guid(),
       }),
-      body: yup.object().shape({
-        labels: yup
-          .array()
-          .of(
-            yup.object().shape({
-              startTime: yup.date().required(),
-              endTime: yup.date().required(),
-              additionalData: yup.object().nullable(true),
-            })
-          )
-          .required(),
-      }),
+      body: yup.array().of(
+        yup.object().shape({
+          startTime: yup.date().required(),
+          endTime: yup.date().required(),
+          additionalData: yup.object().shape({
+            confidence: yup.number(),
+          }),
+        })
+      ),
       response: yup.array().of(
         yup.object().shape({
           id: yup.customValidators.guid(),
           startTime: yup.date(),
           endTime: yup.date(),
-          additionalData: yup.object().nullable(true),
+          additionalData: yup.object().shape({
+            confidence: yup.number(),
+          }),
         })
       ),
     },
@@ -48,13 +47,13 @@ module.exports.post = lambda(
           return;
         }
 
-        const labels = event.body.labels.map((label) => {
+        const labels = event.body.map((label) => {
           const labelObject = {
             startTime: label.startTime.toISOString(),
             endTime: label.endTime.toISOString(),
             stayAssignmentId,
           };
-          if (label.additionalData) {
+          if (typeof label.additionalData === 'object') {
             labelObject.additionalDataJson = JSON.stringify(
               label.additionalData
             );

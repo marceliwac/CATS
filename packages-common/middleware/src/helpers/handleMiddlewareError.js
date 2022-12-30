@@ -24,6 +24,8 @@ function buildHttpErrorResponseOptions(httpResponseOptions) {
 }
 
 function handleMiddlewareError({ error, message, httpResponseOptions }) {
+  console.debug('Error has been thrown by middleware:', error);
+
   if (message) {
     log.error(message);
   }

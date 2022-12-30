@@ -1,5 +1,5 @@
 const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment, Label } = require('@wls/models');
+const { StayAssignment } = require('@wls/models');
 const { Row, RawQuery } = require('@wls/models-mimic');
 
 module.exports.list = lambda(
@@ -17,14 +17,13 @@ module.exports.list = lambda(
   },
   [
     {
-      purpose: 'list assigned stays',
+      purpose: 'list stay assignments',
       async operation({ event, shared }) {
         const userId = event.requestContext.authorizer.claims.sub;
 
         const stayAssignments = await StayAssignment.query().where({
           cognitoId: userId,
         });
-        console.log(stayAssignments);
 
         // eslint-disable-next-line no-param-reassign
         shared.body = stayAssignments;
@@ -56,7 +55,9 @@ module.exports.get = lambda(
             id: yup.customValidators.guid(),
             startTime: yup.date(),
             endTime: yup.date(),
-            additionalData: yup.object().nullable(true),
+            additionalData: yup.object().shape({
+              confidence: yup.number(),
+            }),
           })
         ),
         details: yup.object().shape({
@@ -77,7 +78,7 @@ module.exports.get = lambda(
   },
   [
     {
-      purpose: 'get assigned stay',
+      purpose: 'get stay assignment',
       async operation({ event, shared }) {
         const userId = event.requestContext.authorizer.claims.sub;
 

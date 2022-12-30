@@ -10,12 +10,15 @@ const ROOT_BREADCRUMB_WHITELIST = ['administrator', 'participant'];
 const ROOT_BREADCRUMB_BLACKLIST = ['administrator', 'participant'];
 
 const BREADCRUMB_LUT = {
-  stays: 'Stays',
+  users: 'Users',
   administrators: 'Administrators',
   participants: 'Participants',
-  create: 'Create new',
   invite: 'Invite',
-  users: 'Users',
+  stayAssignments: 'Stay Assignments',
+  groupAssignments: 'Group Assignments',
+  assign: 'Assign',
+  create: 'Create new',
+  edit: 'Edit',
   signin: 'Sign In',
   signup: 'Sign Up',
 };
@@ -37,10 +40,7 @@ export default function TopBar() {
 
   // Split the path by fragments and remove empty parts (empty strings for first and last slash if
   // present), bring to lower case.
-  const breadcrumbs = location.pathname
-    .split('/')
-    .filter((crumb) => !!crumb)
-    .map((crumb) => crumb.toLowerCase());
+  const breadcrumbs = location.pathname.split('/').filter((crumb) => !!crumb);
 
   // Only display breadcrumbs if the path begins at one of the whitelisted roots
   if (!ROOT_BREADCRUMB_WHITELIST.includes(breadcrumbs[0])) {
@@ -60,7 +60,11 @@ export default function TopBar() {
     let label = '?';
     if (UUID_REGEX.test(crumb) && index !== 0) {
       label = crumb.substring(0, 8);
-    } else if (Object.keys(BREADCRUMB_LUT).includes(crumb)) {
+    } else if (
+      Object.keys(BREADCRUMB_LUT)
+        .map((c) => c.toLowerCase())
+        .includes(crumb.toLowerCase())
+    ) {
       label = BREADCRUMB_LUT[crumb];
     }
     return (

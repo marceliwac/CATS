@@ -5,19 +5,24 @@ import { LabellerProvider } from '../../../../hooks/useLabeller';
 import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
-import styles from './Stay.module.scss';
+import styles from './StayAssignment.module.scss';
 import StayTable from '../../Common/StayTable/StayTable/StayTable';
 import Instructions from './Instructions/Instructions';
 import PatientDetails from './PatientData/PatientDetails';
 import Section from './Section/Section';
 
+function getParameters(data) {
+  const rows = data.data;
+  const blacklistedKeys = ['charttime', 'stay_id'];
+  return Array.from(new Set(rows.map((row) => Object.keys(row)).flat())).filter(
+    (key) => !blacklistedKeys.includes(key)
+  );
+}
+
 function formatData(data) {
   const rows = data.data;
   const columns = rows.map((row) => row.charttime);
-  const blacklistedKeys = ['charttime', 'stay_id'];
-  const parameters = Array.from(
-    new Set(rows.map((row) => Object.keys(row)).flat())
-  ).filter((key) => !blacklistedKeys.includes(key));
+  const parameters = getParameters(data);
   const frames = parameters.map((parameter) => {
     const frame = { id: parameter, parameter: parameter.split('_').join(' ') };
     columns.forEach((charttime) => {
@@ -41,7 +46,7 @@ function formatData(data) {
   };
 }
 
-export default function Stay() {
+export default function StayAssignment() {
   const { stayAssignmentId } = useParams();
   const { data, error, isLoading } = useApiData({
     path: `/participant/stayAssignments/${stayAssignmentId}`,
@@ -73,7 +78,7 @@ export default function Stay() {
           <PatientDetails details={data.details} />
         </Section>
         <Section title="Labels">
-          <LabelList />
+          <LabelList parameters={getParameters(data)} />
         </Section>
         <Section title="Time-series data">
           <div className={styles.tableWrapper}>

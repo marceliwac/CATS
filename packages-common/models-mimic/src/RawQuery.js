@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SQL_DIR_PATH = './sql';
+const STAYS_QUERY = 'stays.sql';
 const STAY_DETAILS_QUERY = 'stay_details.sql';
 const STAY_DATA_QUERY = 'stay_data.sql';
 
@@ -13,6 +14,16 @@ function readFile(filename) {
 
 function floatStringTo2SF(text) {
   return Number.parseFloat(Number.parseFloat(text).toFixed(2));
+}
+
+async function stays(knex) {
+  const result = await knex.raw(readFile(STAYS_QUERY));
+  if (Array.isArray(result.rows)) {
+    return result.rows.map((row) => ({
+      stayId: row.stay_id,
+    }));
+  }
+  return null;
 }
 
 async function stayDetails(knex, stayId) {
@@ -60,4 +71,5 @@ async function stayData(knex, stayId, simplify = true) {
 module.exports = {
   stayDetails,
   stayData,
+  stays,
 };

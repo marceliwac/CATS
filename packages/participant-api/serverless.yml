@@ -41,7 +41,7 @@ provider:
 
 functions:
   # STAYS
-  listAssignedStays:
+  listStayAssignments:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -49,7 +49,7 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/stays.list
+    handler: handlers/stayAssignments.list
     events:
       - http:
           method: GET
@@ -60,7 +60,7 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-  getAssignedStay:
+  getStayAssignment:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -68,7 +68,7 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/stays.get
+    handler: handlers/stayAssignments.get
     events:
       - http:
           method: GET

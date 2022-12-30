@@ -1,0 +1,21 @@
+
+
+.field {
+  width: 100%;
+  padding: .5em 1em;
+  box-sizing: border-box;
+  min-width: 8em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .label {
+    width: 35%;
+    margin-top: 0;
+  }
+
+  .input {
+    width: 60%;
+  }
+}

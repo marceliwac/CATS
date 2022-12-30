@@ -33,4 +33,5 @@ module.exports = {
   destroyConnection,
   Label: require('./src/Label'),
   StayAssignment: require('./src/StayAssignment'),
+  Group: require('./src/Group'),
 };

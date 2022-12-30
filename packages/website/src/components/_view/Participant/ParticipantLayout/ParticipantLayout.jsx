@@ -1,17 +1,17 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Stays from '../Stays/Stays';
-import Stay from '../Stay/Stay';
+import StayAssignment from '../StayAssignment/StayAssignment';
 import NotFound from '../../Common/NotFound/NotFound';
 import AuthenticatedParticipantRoute from '../../../_functional/AuthenticatedParticipantRoute';
 
 function ParticipantLayout() {
   return (
     <Routes>
-      <Route index element={<Navigate to="stays" />} />
-      <Route path="stays/*">
+      <Route index element={<Navigate to="stayAssignments" />} />
+      <Route path="stayAssignments/*">
         <Route index element={<Stays />} />
-        <Route path=":stayAssignmentId" element={<Stay />} />
+        <Route path=":stayAssignmentId" element={<StayAssignment />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

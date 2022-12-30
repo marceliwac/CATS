@@ -1,0 +1,128 @@
+.noLabels {
+  width: 100%;
+  margin: 1em 0 2em 0;
+  text-align: center;
+  font-style: italic;
+  color: #999999;
+}
+
+.labelList {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  .labels {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .currentSelection{
+    width: 40em;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    border: 1px solid #dddddd;
+    border-radius: .5em;
+    color: #666666;
+
+    .topRow {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border-bottom: 1px solid #dddddd;
+      padding-bottom: .5em;
+      margin-bottom: .5em;
+
+      h2 {
+        font-size: 1.1em;
+      }
+
+      .icon {
+        color: #999999;
+      }
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 100%;
+
+      &.horizontalSection {
+        flex-direction: row;
+      }
+
+      .halfSection {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 50%;
+      }
+
+
+      h3 {
+        width: 100%;
+        font-weight: 500;
+        margin-top: 1em;
+        padding-bottom: .5em;
+      }
+
+      .slider {
+        min-width: 14em;
+        padding: 1em 3em;
+        display: flex;
+        flex-direction: column;
+
+        .mark {
+          color: #666666 !important;
+        }
+
+        &>h3 {
+          font-weight: 500;
+          margin-top: 1em;
+        }
+      }
+
+      .selection {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 1em;
+
+        .noDate {
+          color: #888888;
+        }
+
+        .fieldSeparator {
+          padding: 0 .5em;
+        }
+      }
+    }
+
+    .buttons {
+      margin-top: 1em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      & > button {
+        width: 18em;
+      }
+    }
+  }
+
+  .buttonRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

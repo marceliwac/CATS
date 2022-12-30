@@ -1,5 +1,5 @@
 const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment, Label } = require('@wls/models');
+const { StayAssignment } = require('@wls/models');
 const { UserService } = require('@wls/user-service');
 
 module.exports.listAdministrators = lambda(
@@ -46,7 +46,7 @@ module.exports.listParticipants = lambda(
     group: 'administrators',
     validators: {
       query: yup.object().shape({
-        includeAssignedStayCount: yup.bool(),
+        includeStayAssignmentCount: yup.bool(),
       }),
       response: yup.array().of(
         yup.object().shape({
@@ -54,7 +54,7 @@ module.exports.listParticipants = lambda(
           givenName: yup.string(),
           familyName: yup.string(),
           email: yup.string(),
-          assignedStayCount: yup.number().integer(),
+          stayAssignmentCount: yup.number().integer(),
           labelledStayCount: yup.number().integer(),
           status: yup.string(),
           isEnabled: yup.bool(),
@@ -74,22 +74,22 @@ module.exports.listParticipants = lambda(
 
         if (
           event.queryStringParameters &&
-          event.queryStringParameters.includeAssignedStayCount
+          event.queryStringParameters.includeStayAssignmentCount
         ) {
-          const assignedStays = await StayAssignment.query().whereIn(
+          const stayAssignments = await StayAssignment.query().whereIn(
             'cognitoId',
             users.map((user) => user.id)
           );
           users = users.map((user) => {
-            const matchingAssignedStays = assignedStays
-              .filter((assignedStay) => assignedStay.cognitoId === user.id)
-              .map((assignedStay) => assignedStay.stayId);
+            const matchingStayAssignments = stayAssignments
+              .filter((stayAssignment) => stayAssignment.cognitoId === user.id)
+              .map((stayAssignment) => stayAssignment.stayId);
 
             return {
               ...user,
-              assignedStayCount: matchingAssignedStays.length,
-              labelledStayCount: matchingAssignedStays.filter(
-                (assignedStay) => assignedStay.isLabelled
+              stayAssignmentCount: matchingStayAssignments.length,
+              labelledStayCount: matchingStayAssignments.filter(
+                (stayAssignment) => stayAssignment.isLabelled
               ).length,
             };
           });
@@ -116,12 +116,12 @@ module.exports.getParticipant = lambda(
           givenName: yup.string(),
           familyName: yup.string(),
           email: yup.string(),
-          assignedStayCount: yup.number().integer(),
+          stayAssignmentCount: yup.number().integer(),
           labelledStayCount: yup.number().integer(),
           status: yup.string(),
           isEnabled: yup.bool(),
         }),
-        assignedStays: yup.array().of(
+        stayAssignments: yup.array().of(
           yup.object().shape({
             stayId: yup.number().integer(),
             isLabelled: yup.bool(),
@@ -141,12 +141,12 @@ module.exports.getParticipant = lambda(
         });
         const user = await userService.getUser(userId);
 
-        const assignedStays = await StayAssignment.query().where({
+        const stayAssignments = await StayAssignment.query().where({
           cognitoId: userId,
         });
 
         // eslint-disable-next-line no-param-reassign
-        shared.body = { user, assignedStays };
+        shared.body = { user, stayAssignments };
 
         // eslint-disable-next-line no-param-reassign
         shared.statusCode = 200;

@@ -3,12 +3,13 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import styles from './StayTableHeader.module.scss';
+import useLabeller from '../../../../../hooks/useLabeller';
 
-function formatTableHeader(timestamp, selectDate) {
+function formatTableHeader(timestamp, isCreatingLabel, selectDate) {
   const date = new Date(timestamp);
   return (
     // eslint-disable-next-line
-    <div className={styles.header} onClick={() => selectDate(timestamp)}>
+    <div className={`${styles.header} ${isCreatingLabel ? styles.isCreatingLabel : ''}`} onClick={isCreatingLabel ? () => selectDate(timestamp) : () => {}}>
       <span className={styles.date}>
         {`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}
       </span>
@@ -23,6 +24,7 @@ function formatTableHeader(timestamp, selectDate) {
 }
 
 export default function StayTableHeader(props) {
+  const { isCreatingLabel } = useLabeller();
   const { columns, selectDate, displayBottomBorder } = props;
 
   return (
@@ -41,7 +43,7 @@ export default function StayTableHeader(props) {
               padding="none"
               className={styles.tableHeaderCell}
             >
-              {formatTableHeader(column.label, selectDate)}
+              {formatTableHeader(column.label, isCreatingLabel, selectDate)}
             </TableCell>
           );
         })}

@@ -15,7 +15,7 @@ export default function Participants() {
   const { data, error, isLoading, reload } = useApiData({
     path: '/administrator/users/groups/participants',
     params: {
-      includeAssignedStayCount: true,
+      includeStayAssignmentCount: true,
     },
   });
 
@@ -59,7 +59,7 @@ export default function Participants() {
           },
         },
       ]}
-      linkFunction={(id) => id}
+      linkFunction={(id) => `/administrator/stayAssignments/${id}`}
       allowSelect
       selectedActions={[
         {
@@ -90,8 +90,8 @@ export default function Participants() {
           numeric: false,
         },
         {
-          id: 'assignedStayCount',
-          label: 'Assigned stays',
+          id: 'stayAssignmentCount',
+          label: 'Stay assignment count',
           numeric: true,
         },
         {

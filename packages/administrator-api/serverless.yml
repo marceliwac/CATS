@@ -136,3 +136,199 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  # STAYS
+  listStays:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stays.list
+    events:
+      - http:
+          method: GET
+          path: /stays
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  # STAY ASSIGNMENTS
+  listStayAssignments:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stayAssignments.list
+    events:
+      - http:
+          method: GET
+          path: /stayAssignments
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  listStayAssignmentsForUser:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stayAssignments.listForUser
+    events:
+      - http:
+          method: GET
+          path: /stayAssignments/participants/{userId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  assignStaysToUser:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stayAssignments.post
+    events:
+      - http:
+          method: POST
+          path: /stayAssignments
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  unassignStaysFromUser:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/stayAssignments.delete
+    events:
+      - http:
+          method: DELETE
+          path: /stayAssignments
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  # GROUPS
+  listGroups:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/groups.list
+    events:
+      - http:
+          method: GET
+          path: /groups
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  getGroup:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/groups.get
+    events:
+      - http:
+          method: GET
+          path: /groups/{groupId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  createGroup:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/groups.post
+    events:
+      - http:
+          method: POST
+          path: /groups
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  updateGroup:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/groups.update
+    events:
+      - http:
+          method: PATCH
+          path: /groups/{groupId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  deleteGroup:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/groups.delete
+    events:
+      - http:
+          method: DELETE
+          path: /groups/{groupId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}

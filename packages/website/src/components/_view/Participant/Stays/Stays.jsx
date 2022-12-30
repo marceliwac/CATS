@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import Table from '../../Common/Table/Table/Table';
 import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
@@ -23,16 +23,14 @@ export default function Stays() {
   }
 
   const unLabelledData = data.filter(
-    (assignedStay) => !assignedStay.isLabelled
+    (stayAssignment) => !stayAssignment.isLabelled
   );
   if (unLabelledData.length === 0) {
     // Display alert - everything is labelled!
   }
 
-  if (searchParams.get('navigateToNext')) {
-    if (unLabelledData.length > 0) {
-      navigate(unLabelledData[0].id);
-    }
+  if (searchParams.get('navigateToNext') && unLabelledData.length > 0) {
+    return <Navigate to={unLabelledData[0].id} />;
   }
 
   return (
@@ -44,8 +42,8 @@ export default function Stays() {
         columns={[
           {
             id: 'stayId',
-            label: 'Stay identifier',
-            numeric: true,
+            label: 'Stay ID',
+            numeric: false,
           },
           {
             id: 'isLabelled',

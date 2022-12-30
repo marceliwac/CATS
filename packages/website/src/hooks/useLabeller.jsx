@@ -47,20 +47,24 @@ export function LabellerProvider(props) {
     setIsCreatingLabel((current) => !current);
   }, []);
 
-  const saveLabel = React.useCallback(() => {
-    if (currentLabel.length === 2) {
-      const firstSmaller = currentLabel[0] < currentLabel[1];
-      const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
-      const endTime = firstSmaller ? currentLabel[1] : currentLabel[0];
-      setLabels((currentLabels) =>
-        [...currentLabels, { id: uuid(), startTime, endTime }].sort(
-          labelComparator
-        )
-      );
-      setCurrentLabel([]);
-      setIsCreatingLabel(false);
-    }
-  }, [currentLabel]);
+  const saveLabel = React.useCallback(
+    (confidence) => {
+      if (currentLabel.length === 2) {
+        const firstSmaller = currentLabel[0] < currentLabel[1];
+        const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
+        const endTime = firstSmaller ? currentLabel[1] : currentLabel[0];
+        setLabels((currentLabels) =>
+          [
+            ...currentLabels,
+            { id: uuid(), startTime, endTime, confidence },
+          ].sort(labelComparator)
+        );
+        setCurrentLabel([]);
+        setIsCreatingLabel(false);
+      }
+    },
+    [currentLabel]
+  );
 
   const resetLabel = React.useCallback(() => {
     setCurrentLabel([]);

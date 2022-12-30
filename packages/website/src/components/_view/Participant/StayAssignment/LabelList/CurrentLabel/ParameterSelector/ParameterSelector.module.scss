@@ -1,0 +1,15 @@
+.parameterSelector {
+  width: 100%;
+
+  .selector {
+    margin: 1em 0;
+  }
+
+  .parameters {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+}

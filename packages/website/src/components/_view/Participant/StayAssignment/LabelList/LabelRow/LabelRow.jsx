@@ -8,6 +8,17 @@ import useLabeller from '../../../../../../hooks/useLabeller';
 export default function LabelRow(props) {
   const { label, number } = props;
   const { deleteLabel, getLabelClassName, formatDate } = useLabeller();
+  let confidence = '-';
+
+  if (
+    label.additionalData &&
+    typeof label.additionalData.confidence === 'number'
+  ) {
+    const confidenceValue = Number.parseFloat(
+      label.additionalData.confidence * 100
+    ).toFixed(0);
+    confidence = `${confidenceValue}%`;
+  }
 
   return (
     <div
@@ -29,6 +40,9 @@ export default function LabelRow(props) {
         </p>
         <p>
           <strong>End time:</strong> {formatDate(label.endTime)}
+        </p>
+        <p>
+          <strong>Confidence:</strong> {confidence}
         </p>
       </div>
     </div>

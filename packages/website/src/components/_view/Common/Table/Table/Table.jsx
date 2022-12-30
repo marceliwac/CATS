@@ -191,7 +191,10 @@ export const PARTICIPANT_PARTICIPATION_STATUS_COLUMN_ENUM = {
 export default function Table(props) {
   const {
     title,
+    allowSort,
     allowSelect,
+    defaultSelected,
+    onSelected,
     selectedActions,
     rowLinks,
     rows,
@@ -201,6 +204,7 @@ export default function Table(props) {
     stickyHeader,
     stickyFirstCell,
     allowPagination,
+    pageSize,
   } = props;
   const rowLinkColumns =
     (typeof rowLinks === 'object' &&
@@ -210,10 +214,12 @@ export default function Table(props) {
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('id');
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(
+    Array.isArray(defaultSelected) ? defaultSelected : []
+  );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(
-    allowPagination ? 25 : rows.length
+    allowPagination ? pageSize || 20 : rows.length
   );
 
   const handleRequestSort = (event, property) => {
@@ -262,6 +268,12 @@ export default function Table(props) {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
+  React.useEffect(() => {
+    if (typeof onSelected === 'function') {
+      onSelected(selected);
+    }
+  }, [onSelected, selected]);
+
   return (
     <div className={styles.table}>
       <TableSelectionToolbar
@@ -271,7 +283,7 @@ export default function Table(props) {
         clearSelected={() => setSelected([])}
         topButtons={topButtons}
       />
-      <TableContainer sx={{ maxHeight: '70vh' }}>
+      <TableContainer>
         <MuiTable
           stickyHeader={stickyHeader}
           aria-labelledby="tableTitle"
@@ -279,6 +291,7 @@ export default function Table(props) {
         >
           <TableHeader
             allowSelect={allowSelect}
+            allowSort={allowSort}
             selectedCount={selected.length}
             order={order}
             orderBy={orderBy}
@@ -399,7 +412,7 @@ export default function Table(props) {
       </TableContainer>
       {allowPagination && (
         <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[10, 20, 25, 50]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

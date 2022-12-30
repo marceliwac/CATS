@@ -31,16 +31,39 @@ export default function Navbar() {
               label="Participants"
             />
           </NavbarItem>
+          <NavbarItem
+            path="/administrator/stayAssignments"
+            icon={<PeopleIcon />}
+            label="Stay assignments"
+          >
+            <NavbarSubItem
+              path="/administrator/stayAssignments"
+              label="All stay assignments"
+            />
+          </NavbarItem>
+          <NavbarItem
+            path="/administrator/groupAssignments"
+            icon={<PeopleIcon />}
+            label="Group assignments"
+          >
+            <NavbarSubItem
+              path="/administrator/groupAssignments"
+              label="All group assignments"
+            />
+          </NavbarItem>
         </>
       )}
       {isParticipant && (
         <>
           <NavbarItem
-            path="/participant/stays"
+            path="/participant/stayAssignments"
             icon={<SchoolIcon />}
-            label="Stays"
+            label="Stay assignments"
           >
-            <NavbarSubItem path="/participant/stays" label="Assigned to me" />
+            <NavbarSubItem
+              path="/participant/stayAssignments"
+              label="Assigned to me"
+            />
           </NavbarItem>
         </>
       )}

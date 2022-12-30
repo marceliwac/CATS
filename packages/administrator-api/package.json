@@ -18,6 +18,7 @@
     "@wls/log": "1.0.0",
     "@wls/middleware": "1.0.0",
     "@wls/models": "1.0.0",
+    "@wls/models-mimic": "1.0.0",
     "@wls/user-service": "1.0.0",
     "objection": "^3.0.1",
     "prettier": "^2.2.1"

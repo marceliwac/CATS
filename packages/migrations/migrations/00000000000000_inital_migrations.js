@@ -1,8 +1,4 @@
-const {
-  StayAssignment,
-  bindDatabase,
-  destroyConnection,
-} = require('@wls/models');
+const { bindDatabase, destroyConnection } = require('@wls/models');
 
 exports.up = async (knex) => {
   await bindDatabase();
@@ -16,7 +12,9 @@ exports.up = async (knex) => {
       .defaultTo(knex.raw('uuid_generate_v4()'));
     table.string('cognito_id').notNullable();
     table.integer('stay_id').notNullable();
+    table.integer('order').defaultTo(0).notNullable();
     table.boolean('is_labelled').notNullable().defaultTo(false);
+    table.uuid('group_id').nullable().defaultTo(null);
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
@@ -40,58 +38,27 @@ exports.up = async (knex) => {
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
   });
-
-  // Insert sample data
-  await StayAssignment.query(knex).insert([
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 33897341,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 39347147,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 36750672,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 38450462,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 36409426,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 31232556,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 39793803,
-      isLabelled: false,
-    },
-    {
-      cognitoId: '0c9871d2-c8dd-41f7-a743-3b9adbf7fa12',
-      stayId: 36415879,
-      isLabelled: false,
-    },
-  ]);
-
-  console.log('STAY ASSIGNMENTS', await StayAssignment.query(knex));
+  await knex.schema.createTable('groups', (table) => {
+    table
+      .uuid('id')
+      .unique()
+      .notNullable()
+      .primary()
+      .defaultTo(knex.raw('uuid_generate_v4()'));
+    table.string('name').notNullable();
+    table.text('cognitoIdsJson').notNullable().defaultTo('[]');
+    table.text('stayIdsJson').notNullable().defaultTo('[]');
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('deleted_at').defaultTo(null);
+  });
 
   await destroyConnection();
 };
 
 exports.down = async (knex) => {
   await bindDatabase();
+  await knex.schema.dropTable('groups');
   await knex.schema.dropTable('labels');
   await knex.schema.dropTable('stay_assignments');
   await knex.raw('DROP EXTENSION IF EXISTS "uuid-ossp";');
