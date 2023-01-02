@@ -33,7 +33,7 @@ exports.up = async (knex) => {
       .notNullable();
     table.timestamp('start_time').defaultTo(null);
     table.timestamp('end_time').defaultTo(null);
-    table.string('additional_data_json').defaultTo(null);
+    table.text('additional_data_json').defaultTo(null);
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);

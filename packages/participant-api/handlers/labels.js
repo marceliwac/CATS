@@ -12,16 +12,20 @@ module.exports.post = lambda(
         yup.object().shape({
           startTime: yup.date().required(),
           endTime: yup.date().required(),
-          additionalData: yup.object().shape({
-            confidence: yup.number(),
-            parameters: yup.array().of(
-              yup.object().shape({
-                name: yup.string(),
-                label: yup.string(),
-                value: yup.string(),
-              })
-            ),
-          }),
+          additionalData: yup
+            .object()
+            .shape({
+              confidence: yup.number().required(),
+              labelType: yup.string().required(),
+              parameters: yup.array().of(
+                yup.object().shape({
+                  name: yup.string(),
+                  label: yup.string(),
+                  value: yup.string(),
+                })
+              ),
+            })
+            .required(),
         })
       ),
       response: yup.array().of(
@@ -31,6 +35,7 @@ module.exports.post = lambda(
           endTime: yup.date(),
           additionalData: yup.object().shape({
             confidence: yup.number(),
+            labelType: yup.string(),
             parameters: yup.array().of(
               yup.object().shape({
                 name: yup.string(),

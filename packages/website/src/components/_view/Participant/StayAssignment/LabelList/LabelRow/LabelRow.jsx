@@ -41,7 +41,9 @@ export default function LabelRow(props) {
       <div className={styles.color} />
       <div className={styles.inner}>
         <div className={styles.topRow}>
-          <h2>Weaning takes place (label {number + 1})</h2>
+          <h2>
+            Weaning ({label.additionalData.labelType}, label {number + 1})
+          </h2>
           <Tooltip title="Delete this label">
             <IconButton onClick={() => deleteLabel(label.id)}>
               <ClearIcon className={styles.icon} />

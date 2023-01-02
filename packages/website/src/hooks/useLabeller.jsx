@@ -3,6 +3,25 @@ import uuid from 'react-uuid';
 import LabellerContext from '../contexts/LabellerContext';
 
 function labelComparator(a, b) {
+  if (
+    a.additionalData &&
+    a.additionalData.labelType &&
+    b.additionalData &&
+    b.additionalData.labelType
+  ) {
+    if (
+      a.additionalData.labelType === 'general' &&
+      b.additionalData.labelType === 'sprint'
+    ) {
+      return -1;
+    }
+    if (
+      a.additionalData.labelType === 'sprint' &&
+      b.additionalData.labelType === 'general'
+    ) {
+      return 1;
+    }
+  }
   if (a.startTime < b.startTime) {
     return -1;
   }
@@ -49,20 +68,30 @@ export function LabellerProvider(props) {
 
   const saveLabel = React.useCallback(
     (additionalData) => {
-      if (currentLabel.length === 2) {
-        const firstSmaller = currentLabel[0] < currentLabel[1];
-        const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
-        const endTime = firstSmaller ? currentLabel[1] : currentLabel[0];
-        setLabels((currentLabels) =>
-          [
-            ...currentLabels,
-            { id: uuid(), startTime, endTime, additionalData },
-          ].sort(labelComparator)
+      if (currentLabel.length !== 2) {
+        throw new Error(
+          'Both "From" and "To" dates are required for the label.'
         );
-        setCurrentLabel([]);
-        setIsCreatingLabel(false);
       }
+      if (!additionalData.confidence) {
+        throw new Error('Confidence value is required.');
+      }
+      if (!additionalData.labelType || additionalData.labelType === '') {
+        throw new Error('Label type is required.');
+      }
+      const firstSmaller = currentLabel[0] < currentLabel[1];
+      const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
+      const endTime = firstSmaller ? currentLabel[1] : currentLabel[0];
+      setLabels((currentLabels) =>
+        [
+          ...currentLabels,
+          { id: uuid(), startTime, endTime, additionalData },
+        ].sort(labelComparator)
+      );
+      setCurrentLabel([]);
+      setIsCreatingLabel(false);
     },
+
     [currentLabel]
   );
 
