@@ -20,9 +20,7 @@ export default function LabelList(props) {
       const data = labels.map((label) => ({
         startTime: label.startTime,
         endTime: label.endTime,
-        additionalData: {
-          confidence: label.confidence,
-        },
+        additionalData: label.additionalData,
       }));
       await APIClient.post(
         `/participant/stayAssignments/${stayAssignmentId}/labels`,

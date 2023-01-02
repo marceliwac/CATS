@@ -57,6 +57,13 @@ module.exports.get = lambda(
             endTime: yup.date(),
             additionalData: yup.object().shape({
               confidence: yup.number(),
+              parameters: yup.array().of(
+                yup.object().shape({
+                  name: yup.string(),
+                  label: yup.string(),
+                  value: yup.string(),
+                })
+              ),
             }),
           })
         ),

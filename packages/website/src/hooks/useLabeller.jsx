@@ -48,7 +48,7 @@ export function LabellerProvider(props) {
   }, []);
 
   const saveLabel = React.useCallback(
-    (confidence) => {
+    (additionalData) => {
       if (currentLabel.length === 2) {
         const firstSmaller = currentLabel[0] < currentLabel[1];
         const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
@@ -56,7 +56,7 @@ export function LabellerProvider(props) {
         setLabels((currentLabels) =>
           [
             ...currentLabels,
-            { id: uuid(), startTime, endTime, confidence },
+            { id: uuid(), startTime, endTime, additionalData },
           ].sort(labelComparator)
         );
         setCurrentLabel([]);

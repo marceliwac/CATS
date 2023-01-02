@@ -9,15 +9,28 @@ export default function LabelRow(props) {
   const { label, number } = props;
   const { deleteLabel, getLabelClassName, formatDate } = useLabeller();
   let confidence = '-';
+  let parameters = '-';
 
-  if (
-    label.additionalData &&
-    typeof label.additionalData.confidence === 'number'
-  ) {
-    const confidenceValue = Number.parseFloat(
-      label.additionalData.confidence * 100
-    ).toFixed(0);
-    confidence = `${confidenceValue}%`;
+  if (label.additionalData) {
+    if (typeof label.additionalData.confidence === 'number') {
+      const confidenceValue = Number.parseFloat(
+        label.additionalData.confidence * 100
+      ).toFixed(0);
+      confidence = `${confidenceValue}%`;
+    }
+
+    if (Array.isArray(label.additionalData.parameters)) {
+      parameters = label.additionalData.parameters.map((parameter) => (
+        <span className={styles.parameterList} key={parameter.name}>
+          <br />- {parameter.label}{' '}
+          {parameter.value ? (
+            <em>({parameter.value})</em>
+          ) : (
+            <em>(no explanation)</em>
+          )}
+        </span>
+      ));
+    }
   }
 
   return (
@@ -43,6 +56,9 @@ export default function LabelRow(props) {
         </p>
         <p>
           <strong>Confidence:</strong> {confidence}
+        </p>
+        <p>
+          <strong>Parameters:</strong> {parameters}
         </p>
       </div>
     </div>

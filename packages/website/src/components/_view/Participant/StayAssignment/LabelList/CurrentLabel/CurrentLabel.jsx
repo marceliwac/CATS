@@ -20,18 +20,28 @@ const confidenceLabelMarks = [
     label: <p className={styles.mark}>Very confident</p>,
   },
 ];
+
+const DEFAULT_CONFIDENCE = 0.5;
+
 export default function CurrentLabel(props) {
   const { parameters } = props;
 
   const {
     currentLabel,
     saveLabel: saveLabelInLabeller,
-    resetLabel,
+    resetLabel: resetLabelInLabeller,
     toggleIsCreatingLabel,
     formatDate,
   } = useLabeller();
 
-  const [confidence, setConfidence] = React.useState(0.5);
+  const [confidence, setConfidence] = React.useState(DEFAULT_CONFIDENCE);
+  const [selectedParameters, setSelectedParameters] = React.useState([]);
+  const [parameterFields, setParameterFields] = React.useState([]);
+
+  const handleSelectChange = (event) => {
+    const value = event.target.value;
+    setSelectedParameters(typeof value === 'string' ? value.split(',') : value);
+  };
 
   const getCurrentLabelStartTime = React.useCallback(() => {
     if (currentLabel.length === 0) {
@@ -53,8 +63,15 @@ export default function CurrentLabel(props) {
     return <p>{formatDate(currentLabel[0])}</p>;
   }, [currentLabel, formatDate]);
 
+  function resetLabel() {
+    setSelectedParameters([]);
+    setParameterFields([]);
+    setConfidence(DEFAULT_CONFIDENCE);
+    resetLabelInLabeller();
+  }
+
   function saveLabel() {
-    saveLabelInLabeller(confidence);
+    saveLabelInLabeller({ confidence, parameters: parameterFields });
   }
 
   return (
@@ -63,7 +80,7 @@ export default function CurrentLabel(props) {
         <div className={styles.topRow}>
           <h2>(New label)</h2>
           <div className={styles.topRowButtons}>
-            <IconButton onClick={resetLabel}>
+            <IconButton onClick={() => resetLabel()}>
               <Tooltip title="Reset current label">
                 <ReplayIcon className={styles.icon} />
               </Tooltip>
@@ -113,7 +130,13 @@ export default function CurrentLabel(props) {
         </div>
         <div className={styles.section}>
           <h3>Parameters suggesting label:</h3>
-          <ParameterSelector parameters={parameters} />
+          <ParameterSelector
+            parameters={parameters}
+            selectedParameters={selectedParameters}
+            handleChange={handleSelectChange}
+            parameterFields={parameterFields}
+            setParameterFields={setParameterFields}
+          />
         </div>
         <div className={styles.buttons}>
           <Button variant="contained" onClick={() => saveLabel()}>

@@ -9,20 +9,19 @@ import styles from './ParameterSelector.module.scss';
 import ParameterInputBox from './ParameterInputBox/ParameterInputBox';
 
 export default function ParameterSelector(props) {
-  const { parameters } = props;
-  const [parameterFields, setParameterFields] = React.useState([]);
+  const {
+    parameters,
+    selectedParameters,
+    handleChange,
+    parameterFields,
+    setParameterFields,
+  } = props;
 
   const selectOptions = parameters.map((parameter) => ({
     key: parameter,
     value: parameter,
     label: parameter.split('_').join(' '),
   }));
-  const [selectedParameters, setSelectedParameters] = React.useState([]);
-
-  const handleSelectChange = (event) => {
-    const value = event.target.value;
-    setSelectedParameters(typeof value === 'string' ? value.split(',') : value);
-  };
 
   const updateField = React.useCallback((fieldName, value) => {
     setParameterFields((currentFields) => {
@@ -61,15 +60,15 @@ export default function ParameterSelector(props) {
           id="parameters-checkbox"
           multiple
           value={selectedParameters}
-          onChange={handleSelectChange}
+          onChange={handleChange}
           input={<OutlinedInput label="Parameters" />}
           renderValue={(selected) => {
             if (selected.length === 0) {
               return 'None selected';
             }
-            return `${selected.length} parameter${
-              selected.length === 1 ? '' : 's'
-            } selected`;
+            return `${selected.length} selected (${selected
+              .map((p) => p.split('_').join(' '))
+              .join(', ')})`;
           }}
           MenuProps={{
             PaperProps: {
