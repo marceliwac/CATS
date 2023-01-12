@@ -79,7 +79,15 @@ export function LabellerProvider(props) {
   const [isCreatingLabel, setIsCreatingLabel] = React.useState(true);
 
   const toggleIsCreatingLabel = React.useCallback(() => {
-    setIsCreatingLabel((current) => !current);
+    setIsCreatingLabel((current) => {
+      if (current) {
+        setStartTime(null);
+        setStartTimeDate(null);
+        setEndTime(null);
+        setEndTimeDate(null);
+      }
+      return !current;
+    });
   }, []);
 
   const saveLabel = React.useCallback(
@@ -136,7 +144,9 @@ export function LabellerProvider(props) {
 
   const resetLabel = React.useCallback(() => {
     setStartTime(null);
+    setStartTimeDate(null);
     setEndTime(null);
+    setEndTimeDate(null);
   }, []);
 
   const deleteLabel = React.useCallback((labelId) => {

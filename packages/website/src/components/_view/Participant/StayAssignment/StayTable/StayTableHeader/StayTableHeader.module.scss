@@ -27,8 +27,13 @@
     min-height: 5em;
     max-height: 5em;
 
+    &:has(.inRange){
+      border-bottom: 1px solid #acd2af;
+    }
+
     &:has(.inRange) .header {
       border-left: 2px solid #f59393;
+      border-right: 1px solid #acd2af;
       border-top: 2px solid #f59393;
     }
 
