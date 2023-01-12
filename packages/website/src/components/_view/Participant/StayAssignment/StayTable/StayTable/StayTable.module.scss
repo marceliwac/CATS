@@ -147,58 +147,23 @@
   }
 }
 
-//.label1 { background-color: #5BAF82}
-//.label2 { background-color: #5FABB3}
-//.label3 { background-color: #647CB6}
-//.label4 { background-color: #8368BA}
-//.label5 { background-color: #BA6DBD}
-//.label6 { background-color: #C17193}
-//.label7 { background-color: #C48576}
-//.label8 { background-color: #C7BA7A}
-//.label9 { background-color: #A9CA7F}
+.labelCell:has( + .label1:not(.inRange)) { border-right: 1px solid #7EDA7B !important; }
+.labelCell:has( + .label2:not(.inRange)) { border-right: 1px solid #F3C673 !important; }
+.labelCell:has( + .label3:not(.inRange)) { border-right: 1px solid #EA8589 !important; }
+.labelCell:has( + .label4:not(.inRange)) { border-right: 1px solid #ED86D0 !important; }
+.labelCell:has( + .label5:not(.inRange)) { border-right: 1px solid #C788F1 !important; }
+.labelCell:has( + .label6:not(.inRange)) { border-right: 1px solid #8A92F4 !important; }
+.labelCell:has( + .label7:not(.inRange)) { border-right: 1px solid #8CDCF7 !important; }
+
+.label1 { background-color: #7EDA7B !important; border-right: 1px solid #7EDA7B !important; }
+.label2 { background-color: #F3C673 !important; border-right: 1px solid #F3C673 !important; }
+.label3 { background-color: #EA8589 !important; border-right: 1px solid #EA8589 !important; }
+.label4 { background-color: #ED86D0 !important; border-right: 1px solid #ED86D0 !important; }
+.label5 { background-color: #C788F1 !important; border-right: 1px solid #C788F1 !important; }
+.label6 { background-color: #8A92F4 !important; border-right: 1px solid #8A92F4 !important; }
+.label7 { background-color: #8CDCF7 !important; border-right: 1px solid #8CDCF7 !important; }
 
 
-.labelCell:has( + .label1:not(.inRange)) { border-right: 1px solid #029D62 !important; }
-.labelCell:has( + .label2:not(.inRange)) { border-right: 1px solid #02AC71 !important; }
-.labelCell:has( + .label3:not(.inRange)) { border-right: 1px solid #01BB81 !important; }
-.labelCell:has( + .label4:not(.inRange)) { border-right: 1px solid #01C992 !important; }
-.labelCell:has( + .label5:not(.inRange)) { border-right: 1px solid #00D8A5 !important; }
-.labelCell:has( + .label6:not(.inRange)) { border-right: 1px solid #28F5C9 !important; }
-.labelCell:has( + .label7:not(.inRange)) { border-right: 1px solid #4FFFE9 !important; }
-.labelCell:has( + .label8:not(.inRange)) { border-right: 1px solid #77FFFF !important; }
-.labelCell:has( + .label9:not(.inRange)) { border-right: 1px solid #9EFFFF !important; }
-
-.label1 { background-color: #029D62 !important; border-right: 1px solid #029D62 !important; }
-.label2 { background-color: #02AC71 !important; border-right: 1px solid #02AC71 !important; }
-.label3 { background-color: #01BB81 !important; border-right: 1px solid #01BB81 !important; }
-.label4 { background-color: #01C992 !important; border-right: 1px solid #01C992 !important; }
-.label5 { background-color: #00D8A5 !important; border-right: 1px solid #00D8A5 !important; }
-.label6 { background-color: #28F5C9 !important; border-right: 1px solid #28F5C9 !important; }
-.label7 { background-color: #4FFFE9 !important; border-right: 1px solid #4FFFE9 !important; }
-.label8 { background-color: #77FFFF !important; border-right: 1px solid #77FFFF !important; }
-.label9 { background-color: #9EFFFF !important; border-right: 1px solid #9EFFFF !important; }
-
-
-
-.labelCell:has( + .labelOther1:not(.inRange)) { border-right: 1px solid #3186FF !important; }
-.labelCell:has( + .labelOther2:not(.inRange)) { border-right: 1px solid #3946FF !important; }
-.labelCell:has( + .labelOther3:not(.inRange)) { border-right: 1px solid #7F43FF !important; }
-.labelCell:has( + .labelOther4:not(.inRange)) { border-right: 1px solid #D150FF !important; }
-.labelCell:has( + .labelOther5:not(.inRange)) { border-right: 1px solid #FF61FF !important; }
-.labelCell:has( + .labelOther6:not(.inRange)) { border-right: 1px solid #FF79E6 !important; }
-.labelCell:has( + .labelOther7:not(.inRange)) { border-right: 1px solid #FF91B6 !important; }
-.labelCell:has( + .labelOther8:not(.inRange)) { border-right: 1px solid #FFAAAA !important; }
-.labelCell:has( + .labelOther9:not(.inRange)) { border-right: 1px solid #FFDBC2 !important; }
-
-.labelOther1 { background-color: #3186FF !important; border-right: 1px solid #3186FF !important; }
-.labelOther2 { background-color: #3946FF !important; border-right: 1px solid #3946FF !important; }
-.labelOther3 { background-color: #7F43FF !important; border-right: 1px solid #7F43FF !important; }
-.labelOther4 { background-color: #D150FF !important; border-right: 1px solid #D150FF !important; }
-.labelOther5 { background-color: #FF61FF !important; border-right: 1px solid #FF61FF !important; }
-.labelOther6 { background-color: #FF79E6 !important; border-right: 1px solid #FF79E6 !important; }
-.labelOther7 { background-color: #FF91B6 !important; border-right: 1px solid #FF91B6 !important; }
-.labelOther8 { background-color: #FFAAAA !important; border-right: 1px solid #FFAAAA !important; }
-.labelOther9 { background-color: #FFDBC2 !important; border-right: 1px solid #FFDBC2 !important; }
 
 
 

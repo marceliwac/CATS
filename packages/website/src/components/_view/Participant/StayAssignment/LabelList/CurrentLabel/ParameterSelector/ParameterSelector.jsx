@@ -18,18 +18,21 @@ export default function ParameterSelector(props) {
   } = props;
 
   const selectOptions = parameters.map((parameter) => ({
-    key: parameter,
-    value: parameter,
-    label: parameter.split('_').join(' '),
+    key: parameter.key,
+    value: parameter.key,
+    label: parameter.label,
   }));
 
-  const updateField = React.useCallback((fieldName, value) => {
-    setParameterFields((currentFields) => {
-      const newFields = [...currentFields];
-      newFields.filter((field) => field.name === fieldName)[0].value = value;
-      return newFields;
-    });
-  }, []);
+  const updateField = React.useCallback(
+    (fieldName, value) => {
+      setParameterFields((currentFields) => {
+        const newFields = [...currentFields];
+        newFields.filter((field) => field.name === fieldName)[0].value = value;
+        return newFields;
+      });
+    },
+    [setParameterFields]
+  );
 
   React.useEffect(() => {
     setParameterFields((currentFields) => {
@@ -49,9 +52,7 @@ export default function ParameterSelector(props) {
         })),
       ];
     });
-    // TODO: Potentially refactor this
-    // eslint-disable-next-line
-  }, [selectedParameters]);
+  }, [selectedParameters, setParameterFields]);
 
   return (
     <div className={styles.parameterSelector}>

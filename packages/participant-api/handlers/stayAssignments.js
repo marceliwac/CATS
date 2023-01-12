@@ -58,7 +58,6 @@ module.exports.get = lambda(
             endTime: yup.date(),
             additionalData: yup.object().shape({
               confidence: yup.number(),
-              labelType: yup.string(),
               parameters: yup.array().of(
                 yup.object().shape({
                   name: yup.string(),
@@ -82,6 +81,12 @@ module.exports.get = lambda(
           seqIcu: yup.number().integer(),
         }),
         data: yup.array(),
+        parameters: yup.array().of(
+          yup.object().shape({
+            key: yup.string(),
+            label: yup.string(),
+          })
+        ),
       }),
     },
   },
@@ -136,6 +141,7 @@ module.exports.get = lambda(
             if (data) {
               stayAssignment.data = data;
             }
+            stayAssignment.parameters = Row.PARAMETERS;
           }
         }
 

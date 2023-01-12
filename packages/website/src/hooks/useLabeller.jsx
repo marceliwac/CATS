@@ -3,25 +3,6 @@ import uuid from 'react-uuid';
 import LabellerContext from '../contexts/LabellerContext';
 
 function labelComparator(a, b) {
-  if (
-    a.additionalData &&
-    a.additionalData.labelType &&
-    b.additionalData &&
-    b.additionalData.labelType
-  ) {
-    if (
-      a.additionalData.labelType === 'general' &&
-      b.additionalData.labelType === 'sprint'
-    ) {
-      return -1;
-    }
-    if (
-      a.additionalData.labelType === 'sprint' &&
-      b.additionalData.labelType === 'general'
-    ) {
-      return 1;
-    }
-  }
   if (a.startTime < b.startTime) {
     return -1;
   }
@@ -32,13 +13,12 @@ function labelComparator(a, b) {
 }
 
 function getLabelNumber(number) {
-  const n = (number % 9) + 1;
+  const n = (number % 7) + 1;
 
   return `${n}`;
 }
 
-function formatDate(timestamp) {
-  const date = new Date(timestamp);
+function formatDate(date) {
   return (
     // eslint-disable-next-line
     <>
@@ -100,9 +80,6 @@ export function LabellerProvider(props) {
       }
       if (!additionalData.confidence) {
         throw new Error('Confidence value is required.');
-      }
-      if (!additionalData.labelType || additionalData.labelType === '') {
-        throw new Error('Label type is required.');
       }
       setLabels((currentLabels) =>
         [

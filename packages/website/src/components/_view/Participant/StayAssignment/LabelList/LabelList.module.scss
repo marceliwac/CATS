@@ -16,15 +16,6 @@
   .labels {
     display: flex;
     flex-direction: column;
-
-    .labelTypeHeader {
-      color: $text-primary-lighter;
-      font-size: 1.1em;
-      margin: 1em 0;
-      padding-bottom: .5em;
-      width: 100%;
-      border-bottom: 1px solid #eee;
-    }
   }
 
   .currentSelection{
@@ -104,32 +95,12 @@
         }
       }
 
-      .selection {
+      .fields {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
         margin-bottom: 1em;
-
-        .field {
-          p, h4 {
-            display: inline-block;
-          }
-
-          h4 {
-            width: 3.5em;
-            font-weight: 500;
-            margin: 0 .5em .5em .25em;
-
-          }
-        }
-        .noDate {
-          color: #888888;
-        }
-
-        .fieldSeparator {
-          padding: 0 .5em;
-        }
       }
     }
 

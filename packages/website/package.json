@@ -22,11 +22,11 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "react-uuid": "^1.0.2",
-    "sass": "^1.45.2"
+    "sass": "^1.45.2",
+    "@wls/eslint-config": "^1.0.0"
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
-    "@wls/eslint-config": "^1.0.0",
     "serverless-s3-sync": "^1.17.3"
   },
   "scripts": {

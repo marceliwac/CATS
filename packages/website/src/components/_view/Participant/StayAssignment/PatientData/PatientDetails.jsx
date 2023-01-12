@@ -22,13 +22,13 @@ export default function PatientDetails(props) {
     ? `${details.lengthOfStayIcu} days`
     : 'Unknown';
   const displayAdmissionTime = details.admissionTime
-    ? formatDate(details.admissionTime)
+    ? formatDate(new Date(details.admissionTime))
     : 'Unknown';
   const displayDischargeTime = details.dischargeTime
-    ? formatDate(details.dischargeTime)
+    ? formatDate(new Date(details.dischargeTime))
     : 'Unknown';
   const displayDeathTime = details.deathTime
-    ? formatDate(details.deathTime)
+    ? formatDate(new Date(details.deathTime))
     : '-';
 
   return (

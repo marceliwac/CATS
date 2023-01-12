@@ -5,7 +5,6 @@ import styles from './Navbar.module.scss';
 import AuthenticationContext from '../../../../contexts/AuthenticationContext';
 import NavbarItem from './NavbarItem/NavbarItem';
 import NavbarSubItem from './NavbarSubItem/NavbarSubItem';
-import NavbarHeader from './NavbarHeader/NavbarHeader';
 
 export default function Navbar() {
   const { isParticipant, isAdministrator } = React.useContext(
@@ -14,7 +13,6 @@ export default function Navbar() {
 
   return (
     <div className={styles.navbar}>
-      {/* <NavbarHeader /> */}
       {isAdministrator && (
         <>
           <NavbarItem

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './GroupAssignments.module.scss';
 import useApiData from '../../../../../hooks/useApiData';
 import Table from '../../../Common/Table/Table/Table';
 import Loading from '../../../Common/Loading/Loading';

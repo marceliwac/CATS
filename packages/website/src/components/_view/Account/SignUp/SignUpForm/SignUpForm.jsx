@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import styles from '../SignUp.module.scss';
 import FormTextField from '../../../Common/FormTextField/FormTextField';
 import { equalValidator } from '../../../../../util/FormValidatorFunctions';

@@ -1,0 +1,33 @@
+.field {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 .5em .5em .25em;
+
+  h4 {
+    width: 3.5em;
+    font-weight: 500;
+  }
+}
+.noDate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    position: relative;
+    top: .1em;
+    margin-left: .5em;
+    visibility: hidden;
+  }
+
+  &.isWarning {
+    color: #d05454;
+
+    .icon {
+      visibility: visible;
+    }
+  }
+}

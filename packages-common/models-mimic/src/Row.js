@@ -5,6 +5,88 @@ module.exports = class Row extends BaseModel {
     return 'mimiciv_derived.wsl_stage_1';
   }
 
+  static get PARAMETERS() {
+    return [
+      { key: 'heart_rate', label: 'Heart rate' },
+      {
+        key: 'arterial_bp_systolic',
+        label: 'Blood pressure (arterial, systolic)',
+      },
+      {
+        key: 'arterial_bp_diastolic',
+        label: 'Blood pressure (arterial, diastolic)',
+      },
+      { key: 'arterial_bp_mean', label: 'Blood pressure (arterial, mean)' },
+      {
+        key: 'bp_systolic_non_invasive',
+        label: 'Blood pressure (non-invasive, systolic)',
+      },
+      {
+        key: 'bp_diastolic_non_invasive',
+        label: 'Blood pressure (non-invasive, diastolic)',
+      },
+      {
+        key: 'bp_mean_non_invasive',
+        label: 'Blood pressure (non-invasive, mean)',
+      },
+      {
+        key: 'cardiac_output_thermodilution',
+        label: 'Thermodilution cardiac output',
+      },
+      { key: 'respiratory_rate', label: 'Respiratory rate' },
+      { key: 'arterial_o2_pressure', label: 'O2 pressure (arterial)' },
+      { key: 'arterial_o2_saturation', label: 'O2 saturation (arterial)' },
+      {
+        key: 'o2_saturation_pulseoxymetry',
+        label: 'O2 saturation (pulse oximetry)',
+      },
+      { key: 'peep_set_cleaned', label: 'PEEP (set)' },
+      { key: 'temperature', label: 'Temperature' },
+      { key: 'pcwp', label: 'PCWP' },
+      { key: 'inspired_o2_fraction', label: 'FiO2' },
+      { key: 'ventilator_mode', label: 'Ventilator mode' },
+      { key: 'cuff_pressure', label: 'Cuff pressure' },
+      { key: 'tidal_volume_set', label: 'Vt (set)' },
+      { key: 'tidal_volume_observed', label: 'Vt (observed)' },
+      { key: 'tidal_volume_spontaneous', label: 'Vt (spontaneous)' },
+      { key: 'minute_volume', label: 'Minute volume' },
+      { key: 'percentage_minute_volume', label: 'Minute volume (%)' },
+      { key: 'respiratory_rate_set', label: 'Respiratory rate (set)' },
+      {
+        key: 'respiratory_rate_spontaneous',
+        label: 'Respiratory rate (spontaneous)',
+      },
+      { key: 'respiratory_rate_total', label: 'Respiratory rate (total)' },
+      { key: 'peak_inspiratory_pressure', label: 'Peak inspiratory pressure' },
+      { key: 'plateau_pressure', label: 'Plateau pressure' },
+      { key: 'mean_airway_pressure', label: 'Mean airway pressure' },
+      { key: 'total_peep_level', label: 'PEEP (total)' },
+      { key: 'sbt_started', label: 'SBT started' },
+      { key: 'sbt_stopped', label: 'SBT stopped' },
+      {
+        key: 'sbt_successfully_completed',
+        label: 'SBT successfully completed',
+      },
+      { key: 'sbt_deferred', label: 'SBT deferred' },
+      { key: 'expiratory_ratio', label: 'Expiratory ratio' },
+      { key: 'inspiratory_ratio', label: 'Inspiratory ratio' },
+      { key: 'p_insp_draeger', label: 'Peak inspiratory pressure (Draeger)' },
+      { key: 'bipap_mode', label: 'BiPAP mode' },
+      { key: 'bipap_epap', label: 'BiPAP EPAP' },
+      { key: 'bipap_ipap', label: 'BiPAP IPAP' },
+      { key: 'bipap_bpm', label: 'BiPAP BPM' },
+      { key: 'etco2', label: 'EtCO2' },
+      { key: 'ventilator_mode_hamilton', label: 'Ventilator mode (Hamilton)' },
+      { key: 'p_insp_hamilton', label: 'Peak inspiratory pressure (Hamilton)' },
+      { key: 'resistance_expiry', label: 'Resistance (expiry)' },
+      { key: 'resistance_inspiry', label: 'Resistance (inspiry)' },
+      { key: 'ventilation_type', label: 'Ventilation type' },
+      { key: 'o2_delivery_devices', label: 'O2 delivery devices' },
+      { key: 'o2_flow', label: 'O2 flow' },
+      { key: 'o2_flow_additional', label: 'O2 flow (additional)' },
+    ];
+  }
+
   static get jsonSchema() {
     return {
       type: 'object',

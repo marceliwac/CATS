@@ -333,7 +333,6 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
 
-
   # ORDERED GROUP ASSIGNMENTS
   listOrderedGroupAssignments:
     vpc:

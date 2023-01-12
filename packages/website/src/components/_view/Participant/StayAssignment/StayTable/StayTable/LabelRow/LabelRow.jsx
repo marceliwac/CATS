@@ -5,14 +5,10 @@ import styles from '../StayTable.module.scss';
 import useLabeller from '../../../../../../../hooks/useLabeller';
 
 export default function LabelRow(props) {
-  const { columns, label, labelNumber, totalLabelNumber, isLast } = props;
+  const { columns, label, labelNumber, isLast } = props;
   const { getLabelNumber, startTimeDate, endTimeDate, isInSelectedRange } =
     useLabeller();
-
-  const labelClassBaseName =
-    label.additionalData.labelType === 'general' ? 'label' : 'labelOther';
-  const labelClassName =
-    styles[`${labelClassBaseName}${getLabelNumber(labelNumber)}`];
+  const labelClassName = styles[`label${getLabelNumber(labelNumber)}`];
   let reachedStartTime = false;
   let reachedEndTime = false;
 
@@ -21,7 +17,7 @@ export default function LabelRow(props) {
       key={label.id}
       className={`${styles.labelRow} ${isLast ? styles.lastLabel : ''}`}
       style={{
-        top: `${4.9375 + totalLabelNumber * 0.4}em`,
+        top: `${4.9375 + labelNumber * 0.4}em`,
       }}
     >
       {columns.map((column, columnIndex) => {
@@ -40,7 +36,7 @@ export default function LabelRow(props) {
           endTimeDate
         );
 
-        if (label.startTime === column.label) {
+        if (label.startTime === column.id) {
           reachedStartTime = true;
         }
 
@@ -55,7 +51,7 @@ export default function LabelRow(props) {
           );
         }
 
-        if (label.endTime === column.label) {
+        if (label.endTime === column.id) {
           reachedEndTime = true;
         }
 

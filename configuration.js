@@ -38,7 +38,8 @@ const config = {
   userPoolClientWebsiteId: '1ik2qjs93h0p4g3ni3advb22v9', // TODO Automate this by moving it to AWS SSM
 
   // ARN of the identity for cognito emails (needs to be manually created)
-  cognitoSourceArn: 'arn:aws:ses:us-east-1:211056341960:identity/wl.marceliwac.com',
+  cognitoSourceArn:
+    'arn:aws:ses:us-east-1:211056341960:identity/wl.marceliwac.com',
 };
 
 const serviceNames = {
@@ -65,7 +66,7 @@ function getDatabaseSecretNames(stage) {
   return {
     application: `DatabaseSecret-${config.stackNamePrefix}-${stage}`,
     mimic: `MimicDatabaseSecret-${config.stackNamePrefix}-${stage}`,
-  }
+  };
 }
 
 function getDomains(stage) {
@@ -210,8 +211,10 @@ const shared = {
       REACT_APP_COGNITO_REDIRECT_SIGN_OUT: logoutUrl,
       REACT_APP_COGNITO_AUTH_COOKIE_DOMAIN: domains.website,
       REACT_APP_COGNITO_AUTH_COOKIE_SECURE: stage !== 'development',
-      REACT_APP_CONSENT_FORM_LINK: 'https://eu1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhDgXGlU5-PuZC8T00AI02tAUc_OECNxi3Vwbg6VopfXT1fDaXAJkWtKyos6vwAm4VA*',
-      REACT_APP_PARTICIPANT_INFORMATION_SHEET_LINK: 'https://acrobat.adobe.com/link/track?uri=urn:aaid:scds:US:0e2b403f-fbc8-4d4c-972f-7432e1c21a25'
+      REACT_APP_CONSENT_FORM_LINK:
+        'https://eu1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhDgXGlU5-PuZC8T00AI02tAUc_OECNxi3Vwbg6VopfXT1fDaXAJkWtKyos6vwAm4VA*',
+      REACT_APP_PARTICIPANT_INFORMATION_SHEET_LINK:
+        'https://acrobat.adobe.com/link/track?uri=urn:aaid:scds:US:0e2b403f-fbc8-4d4c-972f-7432e1c21a25',
     };
   },
 };

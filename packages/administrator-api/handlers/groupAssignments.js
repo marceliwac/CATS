@@ -1,5 +1,4 @@
 const { lambda, yup } = require('@wls/middleware');
-const { v4: uuid } = require('uuid');
 const { GroupAssignment, StayAssignment } = require('@wls/models');
 
 module.exports.list = lambda(

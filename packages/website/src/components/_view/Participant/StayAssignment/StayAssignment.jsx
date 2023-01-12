@@ -11,26 +11,20 @@ import Instructions from './Instructions/Instructions';
 import PatientDetails from './PatientData/PatientDetails';
 import Section from './Section/Section';
 
-function getParameters(data) {
-  const rows = data.data;
-  const blacklistedKeys = ['charttime', 'stay_id'];
-  return Array.from(new Set(rows.map((row) => Object.keys(row)).flat())).filter(
-    (key) => !blacklistedKeys.includes(key)
-  );
-}
-
 function formatData(data) {
   const rows = data.data;
   const columns = rows.map((row) => row.charttime);
-  const parameters = getParameters(data);
+  const parameters = data.parameters;
+
+  // TODO: Refactor the use of parameters
   const frames = parameters.map((parameter) => {
-    const frame = { id: parameter, parameter: parameter.split('_').join(' ') };
+    const frame = { id: parameter.key, parameter: parameter.label };
     columns.forEach((charttime) => {
       const matchingRows = rows.filter((row) => row.charttime === charttime);
       if (matchingRows.length !== 1) {
         return;
       }
-      frame[charttime] = matchingRows[0][parameter];
+      frame[charttime] = matchingRows[0][parameter.key];
     });
     return frame;
   });
@@ -39,7 +33,6 @@ function formatData(data) {
       { id: 'parameter', label: '', numeric: false },
       ...columns.map((charttime) => ({
         id: charttime,
-        label: charttime,
       })),
     ],
     rows: frames,
@@ -78,7 +71,7 @@ export default function StayAssignment() {
           <PatientDetails details={data.details} />
         </Section>
         <Section title="Labels">
-          <LabelList parameters={getParameters(data)} />
+          <LabelList parameters={data.parameters} />
         </Section>
         <Section title="Time-series data">
           <div className={styles.tableWrapper}>

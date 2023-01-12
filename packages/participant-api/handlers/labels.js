@@ -16,7 +16,6 @@ module.exports.post = lambda(
             .object()
             .shape({
               confidence: yup.number().required(),
-              labelType: yup.string().required(),
               parameters: yup.array().of(
                 yup.object().shape({
                   name: yup.string(),
@@ -35,7 +34,6 @@ module.exports.post = lambda(
           endTime: yup.date(),
           additionalData: yup.object().shape({
             confidence: yup.number(),
-            labelType: yup.string(),
             parameters: yup.array().of(
               yup.object().shape({
                 name: yup.string(),

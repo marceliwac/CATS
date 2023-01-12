@@ -43,7 +43,7 @@ export default function StayTableHeader(props) {
             );
           }
 
-          const timestamp = column.label;
+          const timestamp = column.id;
           const date = new Date(timestamp);
           const inRange = isInSelectedRange(date, startTimeDate, endTimeDate);
           function selectStartTime() {

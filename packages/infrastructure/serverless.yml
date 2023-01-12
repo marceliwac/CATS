@@ -19,7 +19,7 @@ provider:
     apiGateway: true
     lambda: true
 
-resources:Z
+resources:
   Resources:
     ApiGatewayRestApi:
       Type: AWS::ApiGateway::RestApi

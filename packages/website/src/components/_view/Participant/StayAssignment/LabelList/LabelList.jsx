@@ -45,15 +45,6 @@ export default function LabelList(props) {
     }
   }, [labels, stayAssignmentId, navigate]);
 
-  const generalLabels = labels.filter(
-    (label) =>
-      label.additionalData && label.additionalData.labelType === 'general'
-  );
-  const sprintLabels = labels.filter(
-    (label) =>
-      label.additionalData && label.additionalData.labelType === 'sprint'
-  );
-
   return (
     <>
       {formAlert && <FormAlert alert={formAlert} />}
@@ -64,24 +55,10 @@ export default function LabelList(props) {
             <p className={styles.noLabels}>
               You have not created any labels yet.
             </p>
-          )) || (
-            <>
-              <p className={styles.labelTypeHeader}>General</p>
-              {generalLabels.map((label, labelNumber) => (
-                <LabelRow key={label.id} label={label} number={labelNumber} />
-              ))}
-              {generalLabels.length === 0 && (
-                <p className={styles.noLabels}>No general labels.</p>
-              )}
-              <p className={styles.labelTypeHeader}>Sprint</p>
-              {sprintLabels.map((label, labelNumber) => (
-                <LabelRow key={label.id} label={label} number={labelNumber} />
-              ))}
-              {sprintLabels.length === 0 && (
-                <p className={styles.noLabels}>No sprint labels.</p>
-              )}
-            </>
-          )}
+          )) ||
+            labels.map((label, labelNumber) => (
+              <LabelRow key={label.id} label={label} number={labelNumber} />
+            ))}
           {(isCreatingLabel && <CurrentLabel parameters={parameters} />) || (
             <Button variant="outlined" onClick={toggleIsCreatingLabel}>
               Create new label

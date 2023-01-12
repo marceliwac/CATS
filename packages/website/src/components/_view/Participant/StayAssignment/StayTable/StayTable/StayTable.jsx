@@ -8,7 +8,6 @@ import styles from './StayTable.module.scss';
 import TableSelectionToolbar from '../StayTableSelectionToolbar/StayTableSelectionToolbar';
 import StayTableHeader from '../StayTableHeader/StayTableHeader';
 import useLabeller from '../../../../../../hooks/useLabeller';
-import LabelRow from './LabelRow/LabelRow';
 import LabelRows from './LabelRows/LabelRows';
 
 export default function StayTable(props) {
@@ -26,7 +25,7 @@ export default function StayTable(props) {
             {rows.map((row) => (
               <TableRow tabIndex={-1} key={row.id} className={styles.tableRow}>
                 {columns.map((column, columnIndex) => {
-                  const timestamp = column.label;
+                  const timestamp = column.id;
                   const date = new Date(timestamp);
                   let value = row[column.id];
                   if (['object', 'undefined'].includes(typeof value)) {

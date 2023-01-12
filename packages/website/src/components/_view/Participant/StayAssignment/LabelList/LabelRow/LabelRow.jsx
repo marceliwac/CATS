@@ -10,11 +10,7 @@ export default function LabelRow(props) {
   const { deleteLabel, getLabelNumber, formatDate } = useLabeller();
   let confidence = '-';
   let parameters = '-';
-  const labelType = label.additionalData.labelType;
-  const labelClassBaseName =
-    label.additionalData.labelType === 'general' ? 'label' : 'labelOther';
-  const labelClassName =
-    styles[`${labelClassBaseName}${getLabelNumber(number)}`];
+  const labelClassName = styles[`label${getLabelNumber(number)}`];
 
   if (label.additionalData) {
     if (typeof label.additionalData.confidence === 'number') {
@@ -43,9 +39,7 @@ export default function LabelRow(props) {
       <div className={styles.color} />
       <div className={styles.inner}>
         <div className={styles.topRow}>
-          <h2>
-            Weaning ({labelType}, label {number + 1})
-          </h2>
+          <h2>Weaning (label {number + 1})</h2>
           <Tooltip title="Delete this label">
             <IconButton onClick={() => deleteLabel(label.id)}>
               <ClearIcon className={styles.icon} />
@@ -53,10 +47,10 @@ export default function LabelRow(props) {
           </Tooltip>
         </div>
         <p>
-          <strong>Start time:</strong> {formatDate(label.startTime)}
+          <strong>Start time:</strong> {formatDate(new Date(label.startTime))}
         </p>
         <p>
-          <strong>End time:</strong> {formatDate(label.endTime)}
+          <strong>End time:</strong> {formatDate(new Date(label.endTime))}
         </p>
         <p>
           <strong>Confidence:</strong> {confidence}
