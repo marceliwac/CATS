@@ -81,9 +81,9 @@ module.exports.listParticipants = lambda(
             users.map((user) => user.id)
           );
           users = users.map((user) => {
-            const matchingStayAssignments = stayAssignments
-              .filter((stayAssignment) => stayAssignment.cognitoId === user.id)
-              .map((stayAssignment) => stayAssignment.stayId);
+            const matchingStayAssignments = stayAssignments.filter(
+              (stayAssignment) => stayAssignment.cognitoId === user.id
+            );
 
             return {
               ...user,

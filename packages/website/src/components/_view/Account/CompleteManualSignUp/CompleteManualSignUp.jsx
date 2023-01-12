@@ -2,11 +2,10 @@ import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Form from '../../Common/Form/Form';
 import styles from './CompleteManualSignUp.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 export default function CompleteManualSignUp() {
   const navigate = useNavigate();
@@ -29,6 +28,7 @@ export default function CompleteManualSignUp() {
 
   return (
     <div className={styles.completeManualSignUp}>
+      <h1>Complete Signup</h1>
       <p className={styles.description}>
         Complete your registration and account using the form below.
       </p>
@@ -63,14 +63,7 @@ export default function CompleteManualSignUp() {
             Complete Sign Up
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

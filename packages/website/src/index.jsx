@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/_layouts/Layout/Layout';
-import AccountLayout from './components/_view/Account/AccountLayout';
+import AccountLayout from './components/_view/Account/AccountLayout/AccountLayout';
 import useAuth, { AuthenticationProvider } from './hooks/useAuth';
 import AdministratorLayout from './components/_view/Administrator/AdministratorLayout/AdministratorLayout';
 import NotFound from './components/_view/Common/NotFound/NotFound';
-import Privacy from './components/_view/Privacy/Privacy';
 import Support from './components/_view/Support/Support';
 import ParticipantLayout from './components/_view/Participant/ParticipantLayout/ParticipantLayout';
 
@@ -31,8 +30,11 @@ ReactDOM.render(
     <AuthenticationProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/privacy" element={<Privacy />} />
           <Route path="/support" element={<Support />} />
+          <Route
+            path="/enroll"
+            element={<Navigate replace to="/account/enroll" />}
+          />
           <Route path="/" element={<Layout />}>
             <Route index element={<RootRedirect />} />
             <Route path="/account/*" element={<AccountLayout />} />

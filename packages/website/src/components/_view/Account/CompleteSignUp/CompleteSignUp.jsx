@@ -2,12 +2,11 @@ import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Form from '../../Common/Form/Form';
 import styles from './CompleteSignUp.module.scss';
 import CompleteSignUpForm from './CompleteSignupForm/CompleteSignupForm';
 import UnauthenticatedRoute from '../../../_functional/UnauthenticatedRoute';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 function CompleteSignUp() {
   const [searchParams] = useSearchParams();
@@ -44,6 +43,7 @@ function CompleteSignUp() {
 
   return (
     <div className={styles.completeSignUp}>
+      <h1>Complete Signup</h1>
       <p className={styles.description}>
         Complete your registration and account using the form below.
       </p>
@@ -54,14 +54,8 @@ function CompleteSignUp() {
             Complete Sign Up
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

@@ -21,7 +21,8 @@
     "@wls/models-mimic": "1.0.0",
     "@wls/user-service": "1.0.0",
     "objection": "^3.0.1",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-cli": "^4.0.4",

@@ -12,8 +12,8 @@ plugins:
 provider:
   name: aws
   runtime: nodejs16.x
-  memorySize: ${self:custom.config.lambda.memorySize}
-  timeout: ${self:custom.config.lambda.cognitoTriggerTimeout}
+  memorySize: ${self:custom.config.lambda.cognitoTrigger.memorySize}
+  timeout: ${self:custom.config.lambda.cognitoTrigger.timeout}
   region: ${self:custom.config.region}
   stage: ${opt:stage, 'development'}
   lambdaHashingVersion: 20201221
@@ -25,8 +25,44 @@ provider:
 functions:
   cognitoCustomMessage:
     handler: src/customMessage.handler
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
     events:
       - cognitoUserPool:
           pool: ${self:custom.config.cognito.userPoolName}
           trigger: CustomMessage
+          existing: true
+  cognitoPostConfirmation:
+    handler: src/postConfirmation.handler
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    events:
+      - cognitoUserPool:
+          pool: ${self:custom.config.cognito.userPoolName}
+          trigger: PostConfirmation
+          existing: true
+
+  cognitoPreSignUp:
+    handler: src/preSignUp.handler
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    events:
+      - cognitoUserPool:
+          pool: ${self:custom.config.cognito.userPoolName}
+          trigger: PreSignUp
           existing: true

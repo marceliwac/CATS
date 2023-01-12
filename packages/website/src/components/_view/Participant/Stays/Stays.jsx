@@ -1,14 +1,15 @@
 import React from 'react';
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import Table from '../../Common/Table/Table/Table';
 import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import styles from './Stays.module.scss';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 export default function Stays() {
+  let formAlert = null;
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const { data, error, isLoading } = useApiData({
     path: '/participant/stayAssignments',
@@ -22,11 +23,24 @@ export default function Stays() {
     return getErrorComponentFromHttpError(error);
   }
 
-  const unLabelledData = data.filter(
-    (stayAssignment) => !stayAssignment.isLabelled
-  );
+  const unLabelledData = data
+    .filter((stayAssignment) => !stayAssignment.isLabelled)
+    .sort((a, b) => {
+      if (a.order < b.order) {
+        return -1;
+      }
+      if (a.order > b.order) {
+        return 1;
+      }
+      return 0;
+    });
   if (unLabelledData.length === 0) {
-    // Display alert - everything is labelled!
+    formAlert = {
+      title: 'All admissions labelled!',
+      message:
+        'All admissions assigned to you are labeled. You can still edit the labels you have created if you wish to do so!',
+      severity: 'success',
+    };
   }
 
   if (searchParams.get('navigateToNext') && unLabelledData.length > 0) {
@@ -35,10 +49,13 @@ export default function Stays() {
 
   return (
     <div className={styles.stays}>
+      {formAlert && <FormAlert alert={formAlert} />}
+
       <Table
         rows={data}
         title="Stays assigned to me"
         linkFunction={(id) => id}
+        defaultSortKey="order"
         columns={[
           {
             id: 'stayId',

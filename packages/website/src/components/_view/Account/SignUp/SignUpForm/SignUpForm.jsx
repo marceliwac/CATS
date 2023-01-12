@@ -1,8 +1,12 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import styles from '../SignUp.module.scss';
 import FormTextField from '../../../Common/FormTextField/FormTextField';
 import { equalValidator } from '../../../../../util/FormValidatorFunctions';
+import FormCheckbox from '../../../Common/FormCheckbox/FormCheckbox';
+
+const CONSENT_FORM_LINK = process.env.REACT_APP_CONSENT_FORM_LINK || '';
 
 export default function SignUpForm() {
   const { getFieldState, getValues, trigger } = useFormContext();
@@ -81,6 +85,38 @@ export default function SignUpForm() {
           },
         }}
       />
+      <FormCheckbox
+        name="confirmConsentFormSignature"
+        label="I have signed the consent form."
+        autocomplete="off"
+        rules={{
+          required: {
+            value: true,
+            message:
+              'You have to confirm that you have signed the consent form.',
+          },
+        }}
+      />
+      <FormCheckbox
+        name="confirmConsentFormVerification"
+        label="I have verified the consent form via e-mail link."
+        autocomplete="off"
+        rules={{
+          required: {
+            value: true,
+            message:
+              'You have to confirm that you have verified the consent form.',
+          },
+        }}
+      />
+      <p className={styles.warning}>
+        It is <span className={styles.bold}>extremely important</span> that you
+        both <span className={styles.bold}>sign</span> and{' '}
+        <span className={styles.bold}>verify</span> the study{' '}
+        <a href={CONSENT_FORM_LINK}>consent form</a>, if you have not done so
+        already. We will not be able to use your data, if the consent form has
+        not been sign prior to the labelling activity.
+      </p>
     </>
   );
 }

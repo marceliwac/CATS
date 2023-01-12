@@ -236,8 +236,8 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
 
-  # GROUPS
-  listGroups:
+  # GROUP ASSIGNMENTS
+  listGroupAssignments:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -245,18 +245,18 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/groups.list
+    handler: handlers/groupAssignments.list
     events:
       - http:
           method: GET
-          path: /groups
+          path: /groupAssignments
           cors:
             origin: '*'
             allowCredentials: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-  getGroup:
+  getGroupAssignment:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -264,18 +264,18 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/groups.get
+    handler: handlers/groupAssignments.get
     events:
       - http:
           method: GET
-          path: /groups/{groupId}
+          path: /groupAssignments/{groupAssignmentId}
           cors:
             origin: '*'
             allowCredentials: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-  createGroup:
+  createGroupAssignment:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -283,18 +283,18 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/groups.post
+    handler: handlers/groupAssignments.post
     events:
       - http:
           method: POST
-          path: /groups
+          path: /groupAssignments
           cors:
             origin: '*'
             allowCredentials: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-  updateGroup:
+  updateGroupAssignment:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -302,18 +302,18 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/groups.update
+    handler: handlers/groupAssignments.update
     events:
       - http:
           method: PATCH
-          path: /groups/{groupId}
+          path: /groupAssignments/{groupAssignmentId}
           cors:
             origin: '*'
             allowCredentials: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-  deleteGroup:
+  deleteGroupAssignment:
     vpc:
       securityGroupIds:
         - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
@@ -321,11 +321,109 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/groups.delete
+    handler: handlers/groupAssignments.delete
     events:
       - http:
           method: DELETE
-          path: /groups/{groupId}
+          path: /groupAssignments/{groupAssignmentId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+
+  # ORDERED GROUP ASSIGNMENTS
+  listOrderedGroupAssignments:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/orderedGroupAssignments.list
+    events:
+      - http:
+          method: GET
+          path: /orderedGroupAssignments
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  getOrderedGroupAssignment:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/orderedGroupAssignments.get
+    events:
+      - http:
+          method: GET
+          path: /orderedGroupAssignments/{orderedGroupAssignmentId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  createOrderedGroupAssignment:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/orderedGroupAssignments.post
+    events:
+      - http:
+          method: POST
+          path: /orderedGroupAssignments
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  updateOrderedGroupAssignment:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/orderedGroupAssignments.update
+    events:
+      - http:
+          method: PATCH
+          path: /orderedGroupAssignments/{orderedGroupAssignmentId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+  deleteOrderedGroupAssignment:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/orderedGroupAssignments.delete
+    events:
+      - http:
+          method: DELETE
+          path: /orderedGroupAssignments/{orderedGroupAssignmentId}
           cors:
             origin: '*'
             allowCredentials: true

@@ -14,7 +14,8 @@ exports.up = async (knex) => {
     table.integer('stay_id').notNullable();
     table.integer('order').defaultTo(0).notNullable();
     table.boolean('is_labelled').notNullable().defaultTo(false);
-    table.uuid('group_id').nullable().defaultTo(null);
+    table.uuid('group_assignment_id').nullable().defaultTo(null);
+    table.uuid('ordered_group_assignment_id').nullable().defaultTo(null);
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
@@ -38,7 +39,7 @@ exports.up = async (knex) => {
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
   });
-  await knex.schema.createTable('groups', (table) => {
+  await knex.schema.createTable('group_assignments', (table) => {
     table
       .uuid('id')
       .unique()
@@ -46,8 +47,26 @@ exports.up = async (knex) => {
       .primary()
       .defaultTo(knex.raw('uuid_generate_v4()'));
     table.string('name').notNullable();
-    table.text('cognitoIdsJson').notNullable().defaultTo('[]');
-    table.text('stayIdsJson').notNullable().defaultTo('[]');
+    table.text('cognito_ids_json').notNullable().defaultTo('[]');
+    table.text('stay_ids_json').notNullable().defaultTo('[]');
+    table.boolean('add_users_by_default').notNullable().defaultTo(false);
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('deleted_at').defaultTo(null);
+  });
+  await knex.schema.createTable('ordered_group_assignments', (table) => {
+    table
+      .uuid('id')
+      .unique()
+      .notNullable()
+      .primary()
+      .defaultTo(knex.raw('uuid_generate_v4()'));
+    table.string('name').notNullable();
+    table.integer('individual_stay_count').notNullable();
+    table.integer('shared_stay_count').notNullable();
+    table.text('cognito_ids_json').notNullable().defaultTo('[]');
+    table.text('shared_stay_ids_json').notNullable().defaultTo('[]');
+    table.boolean('add_users_by_default').notNullable().defaultTo(false);
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
@@ -58,7 +77,8 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
   await bindDatabase();
-  await knex.schema.dropTable('groups');
+  await knex.schema.dropTable('ordered_group_assignments');
+  await knex.schema.dropTable('group_assignments');
   await knex.schema.dropTable('labels');
   await knex.schema.dropTable('stay_assignments');
   await knex.raw('DROP EXTENSION IF EXISTS "uuid-ossp";');

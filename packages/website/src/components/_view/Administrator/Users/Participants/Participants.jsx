@@ -47,9 +47,20 @@ export default function Participants() {
     return getErrorComponentFromHttpError(error);
   }
 
+  const mappedData = data.map((row) => {
+    const percentageComplete =
+      row.stayAssignmentCount === 0
+        ? 0
+        : ((100 * row.labelledStayCount) / row.stayAssignmentCount).toFixed(0);
+    return {
+      ...row,
+      percentageComplete: `${percentageComplete} %`,
+    };
+  });
+
   return (
     <Table
-      rows={data}
+      rows={mappedData}
       title="Participants"
       topButtons={[
         {
@@ -87,6 +98,11 @@ export default function Participants() {
         {
           id: 'email',
           label: 'Email address',
+          numeric: false,
+        },
+        {
+          id: 'percentageComplete',
+          label: 'Completed',
           numeric: false,
         },
         {

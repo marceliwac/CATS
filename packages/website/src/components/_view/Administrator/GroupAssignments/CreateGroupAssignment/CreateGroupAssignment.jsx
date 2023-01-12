@@ -1,26 +1,29 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import { useNavigate } from 'react-router-dom';
 import styles from './CreateGroupAssignment.module.scss';
 import Form from '../../../Common/Form/Form';
 import CreateGroupAssignmentForm from './CreateGroupAssignmentForm/CreateGroupAssignmentForm';
 import APIClient from '../../../../../util/APIClient';
+import FormAlert from '../../../Common/FormAlert/FormAlert';
 
 export default function CreateGroupAssignment() {
   const navigate = useNavigate();
   const [formAlert, setFormAlert] = React.useState(null);
 
   async function onSubmit(data) {
-    const group = {
+    const groupAssignment = {
       name: data.name,
+      addUsersByDefault: data.addUsersByDefault,
       cognitoIds: data.cognitoIds,
       stayIds: data.stayIds,
     };
 
     try {
-      const response = await APIClient.post('/administrator/groups', group);
+      const response = await APIClient.post(
+        '/administrator/groupAssignments',
+        groupAssignment
+      );
       setFormAlert({
         severity: 'success',
         title: 'Group created successfully!',
@@ -33,7 +36,7 @@ export default function CreateGroupAssignment() {
     } catch (e) {
       setFormAlert({
         severity: 'error',
-        title: 'Could not complete sign up!',
+        title: 'Could not create group assignment!',
         message:
           'Something went wrong during group assignment creation. Please contact the administrator for further support.',
       });
@@ -52,14 +55,7 @@ export default function CreateGroupAssignment() {
             Create
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

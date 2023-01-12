@@ -33,5 +33,6 @@ module.exports = {
   destroyConnection,
   Label: require('./src/Label'),
   StayAssignment: require('./src/StayAssignment'),
-  Group: require('./src/Group'),
+  GroupAssignment: require('./src/GroupAssignment'),
+  OrderedGroupAssignment: require('./src/OrderedGroupAssignment'),
 };

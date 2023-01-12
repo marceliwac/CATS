@@ -1,7 +1,6 @@
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import { useParams } from 'react-router-dom';
-import styles from './ParticipantAssignStays.module.scss';
 import Table from '../../../Common/Table/Table/Table';
 import APIClient from '../../../../../util/APIClient';
 import Loading from '../../../Common/Loading/Loading';

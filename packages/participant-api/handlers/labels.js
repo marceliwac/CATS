@@ -88,7 +88,9 @@ module.exports.post = lambda(
             .patch({ isLabelled: true });
         }
 
-        await Label.query().insert(labels);
+        if (labels.length > 0) {
+          await Label.query().insert(labels);
+        }
 
         const labelsToReturn = (
           await Label.query().where({ stayAssignmentId })

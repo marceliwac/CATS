@@ -122,6 +122,15 @@ module.exports = class UserService {
     return user;
   }
 
+  async addUserToGroup(email, group) {
+    const addUserToGroupCommand = new AdminAddUserToGroupCommand({
+      UserPoolId: this.userPoolId,
+      Username: email,
+      GroupName: group,
+    });
+    await this.client.send(addUserToGroupCommand);
+  }
+
   async getUserByEmailIfExists(email, includeGroups) {
     const command = new ListUsersCommand({
       UserPoolId: this.userPoolId,

@@ -16,9 +16,19 @@
   .labels {
     display: flex;
     flex-direction: column;
+
+    .labelTypeHeader {
+      color: $text-primary-lighter;
+      font-size: 1.1em;
+      margin: 1em 0;
+      padding-bottom: .5em;
+      width: 100%;
+      border-bottom: 1px solid #eee;
+    }
   }
 
   .currentSelection{
+    margin-top: 1em;
     width: 40em;
     display: flex;
     flex-direction: column;

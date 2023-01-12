@@ -16,6 +16,7 @@ const BREADCRUMB_LUT = {
   invite: 'Invite',
   stayAssignments: 'Stay Assignments',
   groupAssignments: 'Group Assignments',
+  orderedGroupAssignments: 'Ordered Group Assignments',
   assign: 'Assign',
   create: 'Create new',
   edit: 'Edit',

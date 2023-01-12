@@ -13,6 +13,10 @@ import GroupAssignments from '../GroupAssignments/GroupAssignments/GroupAssignme
 import GroupAssignment from '../GroupAssignments/GroupAssignment/GroupAssignment';
 import CreateGroupAssignment from '../GroupAssignments/CreateGroupAssignment/CreateGroupAssignment';
 import UpdateGroupAssignment from '../GroupAssignments/UpdateGroupAssignment/UpdateGroupAssignment';
+import CreateOrderedGroupAssignment from '../OrderedGroupAssignments/CreateOrderedGroupAssignment/CreateOrderedGroupAssignment';
+import OrderedGroupAssignments from '../OrderedGroupAssignments/OrderedGroupAssignments/OrderedGroupAssignments';
+import OrderedGroupAssignment from '../OrderedGroupAssignments/OrderedGroupAssignment/OrderedGroupAssignment';
+import UpdateOrderedGroupAssignment from '../OrderedGroupAssignments/UpdateOrderedGroupAssignment/UpdateOrderedGroupAssignment';
 
 function AdministratorLayout() {
   return (
@@ -38,11 +42,19 @@ function AdministratorLayout() {
       </Route>
       <Route path="groupAssignments/*">
         <Route index element={<GroupAssignments />} />
-        <Route path=":groupId/*">
+        <Route path=":groupAssignmentId/*">
           <Route index element={<GroupAssignment />} />
           <Route path="edit" element={<UpdateGroupAssignment />} />
         </Route>
         <Route path="create" element={<CreateGroupAssignment />} />
+      </Route>
+      <Route path="orderedGroupAssignments/*">
+        <Route index element={<OrderedGroupAssignments />} />
+        <Route path=":orderedGroupAssignmentId/*">
+          <Route index element={<OrderedGroupAssignment />} />
+          <Route path="edit" element={<UpdateOrderedGroupAssignment />} />
+        </Route>
+        <Route path="create" element={<CreateOrderedGroupAssignment />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

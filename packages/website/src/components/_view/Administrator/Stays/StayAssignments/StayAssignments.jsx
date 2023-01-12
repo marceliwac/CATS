@@ -1,6 +1,5 @@
 import React from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
-import styles from './StayAssignments.module.scss';
 import useApiData from '../../../../../hooks/useApiData';
 import Table from '../../../Common/Table/Table/Table';
 import APIClient from '../../../../../util/APIClient';
@@ -55,7 +54,7 @@ export default function StayAssignments() {
           numeric: false,
         },
         {
-          id: 'orderNumber',
+          id: 'order',
           label: 'Order #',
           numeric: true,
         },

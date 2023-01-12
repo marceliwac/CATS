@@ -26,7 +26,7 @@ const config = {
   hostedZoneId: 'Z0390489281R7LFG1MW09',
 
   // Name of the hosted zone
-  hostedZoneName: 'wl.marceliwac.com', // TODO: If this does not work, add the dot at the end.
+  hostedZoneName: 'wl.marceliwac.com.', // TODO: If this does not work, add the dot at the end.
 
   // API domain prefix
   apiPrefix: 'api',
@@ -144,7 +144,10 @@ const shared = {
   lambda: {
     memorySize: 256,
     timeout: 15,
-    cognitoTriggerTimeout: 5,
+    cognitoTrigger: {
+      timeout: 5,
+      memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
+    },
     migrations: {
       memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
       timeout: 120,
@@ -174,6 +177,8 @@ const shared = {
       REGION: config.region,
       APPLICATION_NAME: config.applicationName,
       WEBSITE_URL: `https://${domains.website}`,
+      DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
+      MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
     };
   },
 
@@ -205,6 +210,8 @@ const shared = {
       REACT_APP_COGNITO_REDIRECT_SIGN_OUT: logoutUrl,
       REACT_APP_COGNITO_AUTH_COOKIE_DOMAIN: domains.website,
       REACT_APP_COGNITO_AUTH_COOKIE_SECURE: stage !== 'development',
+      REACT_APP_CONSENT_FORM_LINK: 'https://eu1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhDgXGlU5-PuZC8T00AI02tAUc_OECNxi3Vwbg6VopfXT1fDaXAJkWtKyos6vwAm4VA*',
+      REACT_APP_PARTICIPANT_INFORMATION_SHEET_LINK: 'https://acrobat.adobe.com/link/track?uri=urn:aaid:scds:US:0e2b403f-fbc8-4d4c-972f-7432e1c21a25'
     };
   },
 };

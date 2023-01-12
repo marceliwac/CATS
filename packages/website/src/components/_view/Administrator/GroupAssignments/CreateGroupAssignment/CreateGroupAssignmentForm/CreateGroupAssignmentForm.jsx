@@ -1,5 +1,4 @@
 import React from 'react';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { useFormContext } from 'react-hook-form';
 import styles from './CreateGroupAssignmentForm.module.scss';
 import useApiData from '../../../../../../hooks/useApiData';
@@ -7,6 +6,7 @@ import Loading from '../../../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../../../Common/Error/Error';
 import Table from '../../../../Common/Table/Table/Table';
 import FormTextField from '../../../../Common/FormTextField/FormTextField';
+import FormCheckbox from '../../../../Common/FormCheckbox/FormCheckbox';
 
 export default function CreateGroupAssignmentForm() {
   const [selectedStayIds, setSelectedStayIds] = React.useState();
@@ -67,6 +67,12 @@ export default function CreateGroupAssignmentForm() {
             required: { value: true, message: 'Name is required.' },
           }}
         />
+
+        <FormCheckbox
+          name="addUsersByDefault"
+          label="Add new users to this group by default"
+          defaultHelperText="Tick this box if you want the newly created users to be automatically added to this group."
+        />
       </div>
       <div className={styles.table}>
         <Table
@@ -100,7 +106,7 @@ export default function CreateGroupAssignmentForm() {
               numeric: false,
             },
             {
-              id: 'lastName',
+              id: 'familyName',
               label: 'Last Name',
               numeric: false,
             },

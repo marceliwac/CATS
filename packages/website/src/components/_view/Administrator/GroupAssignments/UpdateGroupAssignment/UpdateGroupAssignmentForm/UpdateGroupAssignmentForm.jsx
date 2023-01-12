@@ -6,9 +6,10 @@ import Loading from '../../../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../../../Common/Error/Error';
 import Table from '../../../../Common/Table/Table/Table';
 import FormTextField from '../../../../Common/FormTextField/FormTextField';
+import FormCheckbox from '../../../../Common/FormCheckbox/FormCheckbox';
 
 export default function UpdateGroupAssignmentForm(props) {
-  const { name, cognitoIds, stayIds } = props;
+  const { name, addUsersByDefault, cognitoIds, stayIds } = props;
   const [selectedStayIds, setSelectedStayIds] = React.useState();
   const [selectedCognitoIds, setSelectedCognitoIds] = React.useState();
   const { register, setValue } = useFormContext();
@@ -67,6 +68,12 @@ export default function UpdateGroupAssignmentForm(props) {
             required: { value: true, message: 'Name is required.' },
           }}
         />
+        <FormCheckbox
+          name="addUsersByDefault"
+          label="Add new users to this group by default"
+          defaultHelperText="Tick this box if you want the newly created users to be automatically added to this group."
+          defaultValue={addUsersByDefault}
+        />
       </div>
       <div className={styles.table}>
         <Table
@@ -102,7 +109,7 @@ export default function UpdateGroupAssignmentForm(props) {
               numeric: false,
             },
             {
-              id: 'lastName',
+              id: 'familyName',
               label: 'Last Name',
               numeric: false,
             },

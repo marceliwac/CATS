@@ -13,6 +13,7 @@ module.exports.list = lambda(
           id: yup.customValidators.guid(),
           stayId: yup.number().integer(),
           cognitoId: yup.string(),
+          order: yup.number().integer(),
           isLabelled: yup.bool(),
           labelCount: yup.number().integer(),
         })
@@ -67,6 +68,7 @@ module.exports.listForUser = lambda(
         yup.object().shape({
           id: yup.customValidators.guid(),
           stayId: yup.number().integer(),
+          order: yup.number().integer(),
           isLabelled: yup.bool(),
           labelCount: yup.number().integer(),
         })

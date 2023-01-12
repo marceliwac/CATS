@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <div className={styles.navbar}>
-      <NavbarHeader />
+      {/* <NavbarHeader /> */}
       {isAdministrator && (
         <>
           <NavbarItem
@@ -49,6 +49,16 @@ export default function Navbar() {
             <NavbarSubItem
               path="/administrator/groupAssignments"
               label="All group assignments"
+            />
+          </NavbarItem>
+          <NavbarItem
+            path="/administrator/orderedGroupAssignments"
+            icon={<PeopleIcon />}
+            label="Ordered assignments"
+          >
+            <NavbarSubItem
+              path="/administrator/orderedGroupAssignments"
+              label="All ordered group assignments"
             />
           </NavbarItem>
         </>

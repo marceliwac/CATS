@@ -1,0 +1,28 @@
+.topRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2em;
+
+  h1 {
+    font-size: 1.6em;
+    color: #666666;
+    font-weight: 500;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    &>* {
+      margin-left: 1em;
+    }
+  }
+}
+
+.table {
+  margin: 1em 0 2em 0;
+}

@@ -13,6 +13,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@wls/log": "1.0.0",
+    "@wls/models": "1.0.0",
+    "@wls/models-mimic": "1.0.0",
+    "@wls/user-service": "1.0.0",
     "serverless-offline": "^8.7.0",
     "serverless-plugin-include-dependencies": "^5.0.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.81.0"

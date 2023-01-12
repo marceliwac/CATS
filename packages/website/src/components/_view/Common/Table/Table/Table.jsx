@@ -193,6 +193,7 @@ export default function Table(props) {
     title,
     allowSort,
     allowSelect,
+    defaultSortKey,
     defaultSelected,
     onSelected,
     selectedActions,
@@ -213,7 +214,7 @@ export default function Table(props) {
     [];
 
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('id');
+  const [orderBy, setOrderBy] = React.useState(defaultSortKey || 'id');
   const [selected, setSelected] = React.useState(
     Array.isArray(defaultSelected) ? defaultSelected : []
   );

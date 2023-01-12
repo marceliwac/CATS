@@ -31,10 +31,10 @@ function labelComparator(a, b) {
   return 0;
 }
 
-function getLabelClassName(number) {
+function getLabelNumber(number) {
   const n = (number % 9) + 1;
 
-  return `label${n}`;
+  return `${n}`;
 }
 
 function formatDate(timestamp) {
@@ -50,6 +50,19 @@ function formatDate(timestamp) {
   );
 }
 
+function isInSelectedRange(date, startTimeDate, endTimeDate) {
+  if (startTimeDate && endTimeDate) {
+    return date >= startTimeDate && date <= endTimeDate;
+  }
+  if (startTimeDate) {
+    return date >= startTimeDate;
+  }
+  if (endTimeDate) {
+    return date <= endTimeDate;
+  }
+  return false;
+}
+
 export default function useLabeller() {
   return React.useContext(LabellerContext);
 }
@@ -59,7 +72,10 @@ export function LabellerProvider(props) {
   const [labels, setLabels] = React.useState(
     Array.isArray(defaultLabels) ? defaultLabels.sort(labelComparator) : []
   );
-  const [currentLabel, setCurrentLabel] = React.useState([]);
+  const [startTime, setStartTime] = React.useState(null);
+  const [endTime, setEndTime] = React.useState(null);
+  const [startTimeDate, setStartTimeDate] = React.useState(null);
+  const [endTimeDate, setEndTimeDate] = React.useState(null);
   const [isCreatingLabel, setIsCreatingLabel] = React.useState(true);
 
   const toggleIsCreatingLabel = React.useCallback(() => {
@@ -68,10 +84,11 @@ export function LabellerProvider(props) {
 
   const saveLabel = React.useCallback(
     (additionalData) => {
-      if (currentLabel.length !== 2) {
-        throw new Error(
-          'Both "From" and "To" dates are required for the label.'
-        );
+      if (!startTime) {
+        throw new Error('Start time is required.');
+      }
+      if (!endTime) {
+        throw new Error('End time is required.');
       }
       if (!additionalData.confidence) {
         throw new Error('Confidence value is required.');
@@ -79,24 +96,47 @@ export function LabellerProvider(props) {
       if (!additionalData.labelType || additionalData.labelType === '') {
         throw new Error('Label type is required.');
       }
-      const firstSmaller = currentLabel[0] < currentLabel[1];
-      const startTime = firstSmaller ? currentLabel[0] : currentLabel[1];
-      const endTime = firstSmaller ? currentLabel[1] : currentLabel[0];
       setLabels((currentLabels) =>
         [
           ...currentLabels,
           { id: uuid(), startTime, endTime, additionalData },
         ].sort(labelComparator)
       );
-      setCurrentLabel([]);
+      setStartTime(null);
+      setStartTimeDate(null);
+      setEndTime(null);
+      setEndTimeDate(null);
       setIsCreatingLabel(false);
     },
 
-    [currentLabel]
+    [startTime, endTime]
+  );
+
+  const setStartTimeWrapper = React.useCallback(
+    (newStartTime) => {
+      if (!isCreatingLabel) {
+        setIsCreatingLabel(true);
+      }
+      setStartTime(newStartTime);
+      setStartTimeDate(newStartTime ? new Date(newStartTime) : null);
+    },
+    [isCreatingLabel]
+  );
+
+  const setEndTimeWrapper = React.useCallback(
+    (newEndTime) => {
+      if (!isCreatingLabel) {
+        setIsCreatingLabel(true);
+      }
+      setEndTime(newEndTime);
+      setEndTimeDate(newEndTime ? new Date(newEndTime) : null);
+    },
+    [isCreatingLabel]
   );
 
   const resetLabel = React.useCallback(() => {
-    setCurrentLabel([]);
+    setStartTime(null);
+    setEndTime(null);
   }, []);
 
   const deleteLabel = React.useCallback((labelId) => {
@@ -105,33 +145,24 @@ export function LabellerProvider(props) {
     );
   }, []);
 
-  const addDateToLabel = React.useCallback(
-    (value) => {
-      if (currentLabel.length === 2) {
-        // Reset the label to start again.
-        setCurrentLabel([value]);
-      } else {
-        setCurrentLabel((currentCurrentLabel) => [
-          ...currentCurrentLabel,
-          value,
-        ]);
-      }
-    },
-    [currentLabel.length]
-  );
-
   return (
     <LabellerContext.Provider
       value={{
         labels,
-        currentLabel,
+        startTime,
+        startTimeDate,
+        setStartTime: setStartTimeWrapper,
+        endTime,
+        endTimeDate,
+        setEndTime: setEndTimeWrapper,
+        isInSelectedRange,
         toggleIsCreatingLabel,
         isCreatingLabel,
         saveLabel,
         resetLabel,
         deleteLabel,
-        addDateToLabel,
-        getLabelClassName,
+        labelComparator,
+        getLabelNumber,
         formatDate,
       }}
     >

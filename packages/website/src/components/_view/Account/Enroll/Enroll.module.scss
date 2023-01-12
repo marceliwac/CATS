@@ -1,0 +1,100 @@
+.enroll {
+  width: 30em;
+  margin: 2em auto;
+  padding: 2em;
+  border: $border;
+  border-radius: $border-radius;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    color: $text-primary;
+  }
+
+  .description {
+    margin-left: 1em;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  a {
+    color: $primary;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  .process {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 2em;
+
+    .step {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+
+      .header {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        .stepNumber {
+          width: 2em;
+          height: 2em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          border-radius: 1em;
+          border: 1px solid #cccccc;
+          margin-right: 1em;
+
+          h2 {
+            width: 50%;
+            height: 100%;
+            line-height: 2em;
+            text-align: center;
+            position: relative;
+            font-weight: 400;
+            color: $text-primary-lighter;
+          }
+        }
+
+        h2 {
+          color: $text-primary;
+          font-weight: 500;
+        }
+      }
+
+      .content{
+        border-left: 1px solid #cccccc;
+        margin-left: 0.96875em;
+        padding: 1em 0 2em 1.96875em ;
+
+        p {
+          line-height: 1.4;
+          margin-bottom: 1em;
+        }
+
+        .button {
+          margin-bottom: 1em;
+        }
+      }
+
+      &:last-child {
+        .content {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}

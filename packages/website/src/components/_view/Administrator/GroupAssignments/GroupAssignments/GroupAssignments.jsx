@@ -9,7 +9,7 @@ import { getErrorComponentFromHttpError } from '../../../Common/Error/Error';
 export default function GroupAssignments() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useApiData({
-    path: `/administrator/groups`,
+    path: `/administrator/groupAssignments`,
     params: {
       includeParticipantCount: true,
       includeStayCount: true,
@@ -24,7 +24,7 @@ export default function GroupAssignments() {
     return getErrorComponentFromHttpError(error);
   }
 
-  function createGroup() {
+  function createGroupAssignment() {
     navigate('create');
   }
 
@@ -42,9 +42,9 @@ export default function GroupAssignments() {
       linkFunction={(id) => id}
       topButtons={[
         {
-          label: 'Create group',
+          label: 'Create group assignment',
           handler: () => {
-            createGroup();
+            createGroupAssignment();
           },
         },
       ]}
@@ -63,6 +63,11 @@ export default function GroupAssignments() {
           id: 'stayIdCount',
           label: 'Stay count',
           numeric: true,
+        },
+        {
+          id: 'addUsersByDefault',
+          label: 'Add by default',
+          boolean: true,
         },
       ]}
     />

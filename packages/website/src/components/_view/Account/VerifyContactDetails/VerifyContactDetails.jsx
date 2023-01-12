@@ -2,11 +2,10 @@ import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Form from '../../Common/Form/Form';
 import styles from './VerifyContactDetails.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 export default function VerifyContactDetails() {
   const [searchParams] = useSearchParams();
@@ -33,6 +32,7 @@ export default function VerifyContactDetails() {
 
   return (
     <div className={styles.verifyContactDetails}>
+      <h1>Verify contact details</h1>
       <p className={styles.description}>
         Verify your new contact details using the form below.
       </p>
@@ -67,14 +67,7 @@ export default function VerifyContactDetails() {
             Verify new details
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

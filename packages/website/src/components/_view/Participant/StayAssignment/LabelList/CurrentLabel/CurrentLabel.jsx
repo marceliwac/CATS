@@ -42,7 +42,8 @@ export default function CurrentLabel(props) {
   const { parameters } = props;
 
   const {
-    currentLabel,
+    startTime,
+    endTime,
     saveLabel: saveLabelInLabeller,
     resetLabel: resetLabelInLabeller,
     toggleIsCreatingLabel,
@@ -59,26 +60,6 @@ export default function CurrentLabel(props) {
     const value = event.target.value;
     setSelectedParameters(typeof value === 'string' ? value.split(',') : value);
   };
-
-  const getCurrentLabelStartTime = React.useCallback(() => {
-    if (currentLabel.length === 0) {
-      return null;
-    }
-    if (currentLabel.length === 1 || currentLabel[0] < currentLabel[1]) {
-      return <p>{formatDate(currentLabel[0])}</p>;
-    }
-    return <p>{formatDate(currentLabel[1])}</p>;
-  }, [currentLabel, formatDate]);
-
-  const getCurrentLabelEndTime = React.useCallback(() => {
-    if (currentLabel.length === 0 || currentLabel.length === 1) {
-      return null;
-    }
-    if (currentLabel[0] < currentLabel[1]) {
-      return <p>{formatDate(currentLabel[1])}</p>;
-    }
-    return <p>{formatDate(currentLabel[0])}</p>;
-  }, [currentLabel, formatDate]);
 
   function resetLabel() {
     setSelectedParameters([]);
@@ -145,14 +126,13 @@ export default function CurrentLabel(props) {
             <div className={styles.selection}>
               <div className={styles.field}>
                 <h4>From: </h4>
-                {getCurrentLabelStartTime() || (
+                {(startTime && <p>{formatDate(startTime)}</p>) || (
                   <p className={styles.noDate}>not selected</p>
                 )}
               </div>
-              {/* <p className={styles.fieldSeparator}>-</p> */}
               <div className={styles.field}>
                 <h4>To: </h4>
-                {getCurrentLabelEndTime() || (
+                {(endTime && <p>{formatDate(endTime)}</p>) || (
                   <p className={styles.noDate}>not selected</p>
                 )}
               </div>

@@ -1,5 +1,6 @@
 const { lambda, yup } = require('@wls/middleware');
-const { Group, StayAssignment } = require('@wls/models');
+const { v4: uuid } = require('uuid');
+const { GroupAssignment, StayAssignment } = require('@wls/models');
 
 module.exports.list = lambda(
   {
@@ -9,6 +10,7 @@ module.exports.list = lambda(
         yup.object().shape({
           id: yup.customValidators.guid(),
           name: yup.string(),
+          addUsersByDefault: yup.bool(),
           cognitoIds: yup.array().of(yup.string()),
           stayIds: yup.array().of(yup.number().integer()),
         })
@@ -17,19 +19,25 @@ module.exports.list = lambda(
   },
   [
     {
-      purpose: 'list groups',
+      purpose: 'list group assignments',
       async operation({ shared }) {
-        let groups = await Group.query();
+        const groupAssignments = await GroupAssignment.query();
 
-        groups = groups.map((group) => {
-          const newGroup = { ...group };
-          newGroup.cognitoIds = JSON.parse(group.cognitoIdsJson);
-          newGroup.stayIds = JSON.parse(group.stayIdsJson);
-          return newGroup;
-        });
+        const parsedGroupAssignments = groupAssignments.map(
+          (groupAssignment) => {
+            const parsedGroupAssignment = { ...groupAssignment };
+            parsedGroupAssignment.cognitoIds = JSON.parse(
+              groupAssignment.cognitoIdsJson
+            );
+            parsedGroupAssignment.stayIds = JSON.parse(
+              groupAssignment.stayIdsJson
+            );
+            return parsedGroupAssignment;
+          }
+        );
 
         // eslint-disable-next-line no-param-reassign
-        shared.body = groups;
+        shared.body = parsedGroupAssignments;
         // eslint-disable-next-line no-param-reassign
         shared.statusCode = 200;
       },
@@ -42,7 +50,7 @@ module.exports.get = lambda(
     group: 'administrators',
     validators: {
       path: yup.object().shape({
-        groupId: yup.customValidators.guid(),
+        groupAssignmentId: yup.customValidators.guid(),
       }),
       query: yup.object().shape({
         includeStayAssignments: yup.bool(),
@@ -50,6 +58,7 @@ module.exports.get = lambda(
       response: yup.object().shape({
         id: yup.customValidators.guid(),
         name: yup.string(),
+        addUsersByDefault: yup.bool(),
         cognitoIds: yup.array().of(yup.string()),
         stayIds: yup.array().of(yup.number().integer()),
         stayAssignments: yup.array().of(
@@ -64,33 +73,36 @@ module.exports.get = lambda(
   },
   [
     {
-      purpose: 'retrieve a group',
+      purpose: 'retrieve a group assignment',
       async operation({ event, shared }) {
-        const { groupId } = event.pathParameters;
+        const { groupAssignmentId } = event.pathParameters;
 
-        const group = await Group.query().findById(groupId);
-
-        if (!group) {
-          // eslint-disable-next-line no-param-reassign
-          shared.statusCode = 404;
-        }
-
-        const newGroup = { ...group };
-        newGroup.cognitoIds = JSON.parse(group.cognitoIdsJson);
-        newGroup.stayIds = JSON.parse(group.stayIdsJson);
+        const groupAssignmentQuery =
+          GroupAssignment.query().findById(groupAssignmentId);
 
         if (
           event.queryStringParameters &&
           event.queryStringParameters.includeStayAssignments
         ) {
-          const stayAssignments = await StayAssignment.query().where({
-            groupId: group.id,
-          });
-          newGroup.stayAssignments = stayAssignments;
+          groupAssignmentQuery.withGraphFetched('stayAssignments');
         }
 
+        const groupAssignment = await groupAssignmentQuery;
+
+        if (!groupAssignment) {
+          // eslint-disable-next-line no-param-reassign
+          shared.statusCode = 404;
+          return;
+        }
+
+        const parsedGroupAssignment = { ...groupAssignment };
+        parsedGroupAssignment.cognitoIds = JSON.parse(
+          groupAssignment.cognitoIdsJson
+        );
+        parsedGroupAssignment.stayIds = JSON.parse(groupAssignment.stayIdsJson);
+
         // eslint-disable-next-line no-param-reassign
-        shared.body = newGroup;
+        shared.body = parsedGroupAssignment;
         // eslint-disable-next-line no-param-reassign
         shared.statusCode = 200;
       },
@@ -104,10 +116,14 @@ module.exports.post = lambda(
     validators: {
       body: yup.object().shape({
         name: yup.string().required(),
+        addUsersByDefault: yup.bool(),
+        cognitoIds: yup.array().of(yup.string()).required(),
+        stayIds: yup.array().of(yup.number().integer()).required(),
       }),
       response: yup.object().shape({
         id: yup.customValidators.guid(),
         name: yup.string(),
+        addUsersByDefault: yup.bool(),
         cognitoIds: yup.array().of(yup.string()),
         stayIds: yup.array().of(yup.number().integer()),
       }),
@@ -115,20 +131,31 @@ module.exports.post = lambda(
   },
   [
     {
-      purpose: 'create group',
+      purpose: 'create group assignment',
       async operation({ event, shared }) {
-        const { name } = event.body;
+        const { name, addUsersByDefault } = event.body;
 
-        const newGroup = await Group.query().insertAndFetch({
-          name,
-          cognitoIdsJson: '[]',
-          stayIdsJson: '[]',
-        });
-        newGroup.cognitoIds = JSON.parse(newGroup.cognitoIdsJson);
-        newGroup.stayIds = JSON.parse(newGroup.stayIdsJson);
+        const groupAssignment =
+          await GroupAssignment.query().insertGraphAndFetch({
+            name,
+            addUsersByDefault,
+            cognitoIdsJson: JSON.stringify(event.body.cognitoIds),
+            stayIdsJson: JSON.stringify(event.body.stayIds),
+            stayAssignments: event.body.cognitoIds
+              .map((cognitoId) =>
+                event.body.stayIds.map((stayId) => ({
+                  cognitoId,
+                  stayId,
+                }))
+              )
+              .flat(),
+          });
+
+        groupAssignment.cognitoIds = JSON.parse(groupAssignment.cognitoIdsJson);
+        groupAssignment.stayIds = JSON.parse(groupAssignment.stayIdsJson);
 
         // eslint-disable-next-line no-param-reassign
-        shared.body = newGroup;
+        shared.body = groupAssignment;
         // eslint-disable-next-line no-param-reassign
         shared.statusCode = 201;
       },
@@ -140,14 +167,19 @@ module.exports.update = lambda(
   {
     group: 'administrators',
     validators: {
+      path: yup.object().shape({
+        groupAssignmentId: yup.customValidators.guid(),
+      }),
       body: yup.object().shape({
         name: yup.string(),
+        addUsersByDefault: yup.bool(),
         cognitoIds: yup.array().of(yup.string()),
         stayIds: yup.array().of(yup.number().integer()),
       }),
       response: yup.object().shape({
         id: yup.customValidators.guid(),
         name: yup.string(),
+        addUsersByDefault: yup.bool(),
         cognitoIds: yup.array().of(yup.string()),
         stayIds: yup.array().of(yup.number().integer()),
       }),
@@ -155,11 +187,11 @@ module.exports.update = lambda(
   },
   [
     {
-      purpose: 'update group',
+      purpose: 'update group assignment',
       async operation({ event, shared }) {
-        const { groupId } = event.pathParameters;
+        const { groupAssignmentId } = event.pathParameters;
 
-        const group = await Group.query().findById(groupId);
+        const group = await GroupAssignment.query().findById(groupAssignmentId);
 
         if (!group) {
           // eslint-disable-next-line no-param-reassign
@@ -205,7 +237,7 @@ module.exports.update = lambda(
           deleteStayAssignmentStayIds.length > 0
         ) {
           await StayAssignment.query()
-            .where({ groupId: group.id })
+            .where({ groupAssignmentId: group.id })
             .andWhere((q) =>
               q
                 .whereIn('cognitoId', deleteStayAssignmentCognitoIds)
@@ -223,7 +255,7 @@ module.exports.update = lambda(
               event.body.stayIds.map((stayId) => ({
                 cognitoId,
                 stayId,
-                groupId,
+                groupAssignmentId,
               }))
             )
             .flat();
@@ -247,14 +279,17 @@ module.exports.update = lambda(
         if (event.body.name) {
           updateObject.name = event.body.name;
         }
+        if (event.body.addUsersByDefault) {
+          updateObject.addUsersByDefault = event.body.addUsersByDefault;
+        }
         if (event.body.cognitoIds) {
           updateObject.cognitoIdsJson = JSON.stringify(event.body.cognitoIds);
         }
         if (event.body.stayIds) {
           updateObject.stayIdsJson = JSON.stringify(event.body.stayIds);
         }
-        const updatedGroup = await Group.query().patchAndFetchById(
-          groupId,
+        const updatedGroup = await GroupAssignment.query().patchAndFetchById(
+          groupAssignmentId,
           updateObject
         );
 
@@ -275,26 +310,28 @@ module.exports.delete = lambda(
     group: 'administrators',
     validators: {
       path: yup.object().shape({
-        groupId: yup.customValidators.guid(),
+        groupAssignmentId: yup.customValidators.guid(),
       }),
     },
   },
   [
     {
-      purpose: 'delete group',
+      purpose: 'delete group assignment',
       async operation({ event, shared }) {
-        const { groupId } = event.pathParameters;
+        const { groupAssignmentId } = event.pathParameters;
 
         // check if group exists
-        const group = await Group.query().findById(groupId);
+        const group = await GroupAssignment.query().findById(groupAssignmentId);
 
         if (!group) {
           // eslint-disable-next-line no-param-reassign
           shared.statusCode = 404;
           return;
         }
-
-        await Group.query().findById(groupId).delete();
+        await StayAssignment.transaction(async (trx) => {
+          await StayAssignment.query(trx).where({ groupAssignmentId }).delete();
+          await GroupAssignment.query(trx).findById(groupAssignmentId).delete();
+        });
 
         // eslint-disable-next-line no-param-reassign
         shared.statusCode = 204;

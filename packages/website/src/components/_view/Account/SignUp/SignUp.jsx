@@ -2,11 +2,10 @@ import React from 'react';
 import { Auth } from 'aws-amplify';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import Form from '../../Common/Form/Form';
 import styles from './SignUp.module.scss';
 import SignUpForm from './SignUpForm/SignUpForm';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 export default function SignUp() {
   const [formAlert, setFormAlert] = React.useState(null);
@@ -40,14 +39,16 @@ export default function SignUp() {
 
   return (
     <div className={styles.signUp}>
+      <h1>Sign Up</h1>
       <p className={styles.description}>
-        Sign up as a researcher using the form below. Before you will be able to
-        use your account, your administrator will have to activate your account.
+        Sign up as a participant in the study using the form below. Please
+        ensure that you have completed all the steps outlined in the{' '}
+        <Link to="/account/signIn">enrollment process</Link>.
       </p>
-      <p className={styles.description}>
-        Already have an account? <Link to="/account/signIn">Sign in</Link>{' '}
-        instead.
-      </p>
+      {/* <p className={styles.description}> */}
+      {/*  Already have an account? <Link to="/account/signIn">Sign in</Link>{' '} */}
+      {/*  instead. */}
+      {/* </p> */}
       <Form onSubmit={(data) => onSubmit(data)}>
         <SignUpForm />
         <div className={styles.formControls}>
@@ -55,14 +56,7 @@ export default function SignUp() {
             Sign Up
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

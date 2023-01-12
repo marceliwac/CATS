@@ -1,21 +1,20 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import styles from './GroupAssignment.module.scss';
 import useApiData from '../../../../../hooks/useApiData';
 import Table from '../../../Common/Table/Table/Table';
 import Loading from '../../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../../Common/Error/Error';
 import APIClient from '../../../../../util/APIClient';
+import FormAlert from '../../../Common/FormAlert/FormAlert';
 
 export default function GroupAssignments() {
-  const { groupId } = useParams();
+  const { groupAssignmentId } = useParams();
   const navigate = useNavigate();
   const [formAlert, setFormAlert] = React.useState(null);
   const { data, isLoading, error } = useApiData({
-    path: `/administrator/groups/${groupId}`,
+    path: `/administrator/groupAssignments/${groupAssignmentId}`,
     params: {
       includeStayAssignments: true,
     },
@@ -41,13 +40,15 @@ export default function GroupAssignments() {
 
   const stayAssignmentData = data.stayAssignments;
 
-  async function editGroup() {
+  async function editGroupAssignment() {
     navigate(`edit`);
   }
 
-  async function deleteGroup() {
+  async function deleteGroupAssignment() {
     try {
-      await APIClient.delete(`/administrator/groups/${groupId}`);
+      await APIClient.delete(
+        `/administrator/groupAssignments/${groupAssignmentId}`
+      );
       setFormAlert({
         severity: 'success',
         title: 'Group deleted successfully!',
@@ -70,19 +71,19 @@ export default function GroupAssignments() {
   return (
     <>
       <div className={styles.topRow}>
-        <h1>Group Assignment {groupId.substring(0, 8)}</h1>
+        <h1>Group Assignment {groupAssignmentId.substring(0, 8)}</h1>
         <div className={styles.buttons}>
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => editGroup()}
+            onClick={() => editGroupAssignment()}
           >
             Edit
           </Button>
           <Button
             variant="outlined"
             color="error"
-            onClick={() => deleteGroup()}
+            onClick={() => deleteGroupAssignment()}
           >
             Delete
           </Button>
@@ -135,14 +136,7 @@ export default function GroupAssignments() {
           ]}
         />
       </div>
-      {formAlert && (
-        <div className={styles.alert}>
-          <Alert severity={formAlert.severity}>
-            {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-            {formAlert.message}
-          </Alert>
-        </div>
-      )}
+      {formAlert && <FormAlert alert={formAlert} />}
     </>
   );
 }

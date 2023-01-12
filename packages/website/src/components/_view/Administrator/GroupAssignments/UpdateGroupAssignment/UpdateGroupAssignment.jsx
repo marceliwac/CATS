@@ -1,8 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styles from './UpdateGroupAssignment.module.scss';
 import Form from '../../../Common/Form/Form';
 import UpdateGroupAssignmentForm from './UpdateGroupAssignmentForm/UpdateGroupAssignmentForm';
@@ -10,14 +8,14 @@ import APIClient from '../../../../../util/APIClient';
 import useApiData from '../../../../../hooks/useApiData';
 import Loading from '../../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../../Common/Error/Error';
+import FormAlert from '../../../Common/FormAlert/FormAlert';
 
 export default function UpdateGroupAssignment() {
-  const navigate = useNavigate();
-  const { groupId } = useParams();
+  const { groupAssignmentId } = useParams();
   const [formAlert, setFormAlert] = React.useState(null);
 
   const { data, isLoading, error, reload } = useApiData({
-    path: `/administrator/groups/${groupId}`,
+    path: `/administrator/groupAssignments/${groupAssignmentId}`,
   });
 
   if (isLoading) {
@@ -30,13 +28,15 @@ export default function UpdateGroupAssignment() {
 
   async function onSubmit(d) {
     const group = {
+      name: d.name,
+      addUsersByDefault: d.addUsersByDefault,
       cognitoIds: d.cognitoIds,
       stayIds: d.stayIds,
     };
 
     try {
-      const response = await APIClient.patch(
-        `/administrator/groups/${groupId}`,
+      await APIClient.patch(
+        `/administrator/groupAssignments/${groupAssignmentId}`,
         group
       );
       setFormAlert({
@@ -62,11 +62,12 @@ export default function UpdateGroupAssignment() {
   return (
     <div className={styles.completeSignUp}>
       <p className={styles.description}>
-        Create a new group assignment using the form below.
+        Edit the group assignment using the form below.
       </p>
       <Form onSubmit={(d) => onSubmit(d)}>
         <UpdateGroupAssignmentForm
           name={data.name}
+          addUsersByDefault={data.addUsersByDefault}
           cognitoIds={data.cognitoIds}
           stayIds={data.stayIds}
         />
@@ -75,14 +76,7 @@ export default function UpdateGroupAssignment() {
             Update
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

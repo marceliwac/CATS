@@ -6,7 +6,7 @@ import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import styles from './StayAssignment.module.scss';
-import StayTable from '../../Common/StayTable/StayTable/StayTable';
+import StayTable from './StayTable/StayTable/StayTable';
 import Instructions from './Instructions/Instructions';
 import PatientDetails from './PatientData/PatientDetails';
 import Section from './Section/Section';
@@ -84,7 +84,6 @@ export default function StayAssignment() {
           <div className={styles.tableWrapper}>
             <StayTable
               rows={formattedData.rows}
-              // title={`Stay ${data.stayId}`}
               columns={formattedData.columns}
             />
           </div>

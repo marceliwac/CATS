@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CancelIcon from '@mui/icons-material/Cancel';
-import styles from './ParticipantStayAssignments.module.scss';
 import useApiData from '../../../../../hooks/useApiData';
 import Table from '../../../Common/Table/Table/Table';
 import APIClient from '../../../../../util/APIClient';
@@ -64,7 +63,7 @@ export default function ParticipantStayAssignments() {
           numeric: false,
         },
         {
-          id: 'orderNumber',
+          id: 'order',
           label: 'Order #',
           numeric: true,
         },

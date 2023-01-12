@@ -13,12 +13,16 @@ module.exports = class StayAssignment extends BaseModel {
         cognitoId: { type: 'string' },
         stayId: { type: 'integer' },
         isLabelled: { type: 'boolean' },
+        groupAssignmentId: { type: 'string', format: 'uuid' },
+        orderedGroupAssignmentId: { type: 'string', format: 'uuid' },
       },
     };
   }
 
   static get relationMappings() {
     const Label = require('./Label');
+    const GroupAssignment = require('./GroupAssignment');
+    const OrderedGroupAssignment = require('./OrderedGroupAssignment');
 
     return {
       labels: {
@@ -27,6 +31,22 @@ module.exports = class StayAssignment extends BaseModel {
         join: {
           from: 'stay_assignments.id',
           to: 'labels.stay_assignment_id',
+        },
+      },
+      groupAssignment: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: GroupAssignment,
+        join: {
+          from: 'stay_assignments.group_assignment_id',
+          to: 'group_assignments.id',
+        },
+      },
+      orderedGroupAssignment: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: OrderedGroupAssignment,
+        join: {
+          from: 'stay_assignments.ordered_group_assignment_id',
+          to: 'ordered_group_assignments.id',
         },
       },
     };

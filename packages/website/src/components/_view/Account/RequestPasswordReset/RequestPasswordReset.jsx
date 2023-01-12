@@ -2,12 +2,11 @@ import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import styles from './RequestPasswordReset.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
 import Form from '../../Common/Form/Form';
 import UnauthenticatedRoute from '../../../_functional/UnauthenticatedRoute';
+import FormAlert from '../../Common/FormAlert/FormAlert';
 
 function RequestPasswordReset() {
   const [searchParams] = useSearchParams();
@@ -34,6 +33,7 @@ function RequestPasswordReset() {
 
   return (
     <div className={styles.requestPasswordReset}>
+      <h1>Reset Password</h1>
       <p className={styles.description}>
         Reset the password using the form below. The verification code should
         have been sent to you when you requested password reset.
@@ -57,14 +57,7 @@ function RequestPasswordReset() {
             Reset Password
           </Button>
         </div>
-        {formAlert && (
-          <div className={styles.alert}>
-            <Alert severity={formAlert.severity}>
-              {formAlert.title && <AlertTitle>{formAlert.title}</AlertTitle>}
-              {formAlert.message}
-            </Alert>
-          </div>
-        )}
+        {formAlert && <FormAlert alert={formAlert} />}
       </Form>
     </div>
   );

@@ -49,6 +49,8 @@ export default function ParameterSelector(props) {
         })),
       ];
     });
+    // TODO: Potentially refactor this
+    // eslint-disable-next-line
   }, [selectedParameters]);
 
   return (

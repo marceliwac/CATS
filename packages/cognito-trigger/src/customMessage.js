@@ -11,9 +11,9 @@ class CustomMessage {
     const completeSignupBareLink = `${this.domainName}/account/completeSignup`;
     const completeSignupLink = `${completeSignupBareLink}?${codeLinkFragment}`;
     const completeManualSignupBareLink = `${this.domainName}/account/completeManualSignup`;
-    const completeManualSignupLink = `${completeManualSignupBareLink}?${codeLinkFragment}`;
+    const completeManualSignupLink = `${completeManualSignupBareLink}?${userAttributeCodeLinkFragment}`;
     const verifyContactDetailsBareLink = `${this.domainName}/account/verifyContactDetails`;
-    const verifyContactDetailsLink = `${verifyContactDetailsBareLink}?${codeLinkFragment}`;
+    const verifyContactDetailsLink = `${verifyContactDetailsBareLink}?${userAttributeCodeLinkFragment}`;
 
     let headerName = 'User';
     let userAttributesFragment = '';
@@ -103,9 +103,9 @@ class CustomMessage {
         Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following credentials:
         <br />
         <br />
-        <b>E-mail (username):</b> ${this.usernameParameter}
+        <b>E-mail (username):</b> ${this.userAttributes.email}
         <br />
-        <b>Password:</b> ${this.codeParameter}
+        <b>Code:</b> ${this.codeParameter}
         <br />
         <br />
         ${this.signature}`,

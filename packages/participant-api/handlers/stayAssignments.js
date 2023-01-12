@@ -10,6 +10,7 @@ module.exports.list = lambda(
         yup.object().shape({
           id: yup.customValidators.guid(),
           stayId: yup.number().integer(),
+          order: yup.number().integer(),
           isLabelled: yup.bool(),
         })
       ),

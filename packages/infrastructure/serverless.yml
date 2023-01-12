@@ -19,7 +19,7 @@ provider:
     apiGateway: true
     lambda: true
 
-resources:
+resources:Z
   Resources:
     ApiGatewayRestApi:
       Type: AWS::ApiGateway::RestApi
@@ -231,7 +231,7 @@ resources:
             - Name: verified_email
               Priority: 1
         AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
+          AllowAdminCreateUserOnly: false
         AutoVerifiedAttributes:
           - email
         EmailConfiguration:

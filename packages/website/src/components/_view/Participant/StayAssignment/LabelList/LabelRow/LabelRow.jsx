@@ -7,9 +7,14 @@ import useLabeller from '../../../../../../hooks/useLabeller';
 
 export default function LabelRow(props) {
   const { label, number } = props;
-  const { deleteLabel, getLabelClassName, formatDate } = useLabeller();
+  const { deleteLabel, getLabelNumber, formatDate } = useLabeller();
   let confidence = '-';
   let parameters = '-';
+  const labelType = label.additionalData.labelType;
+  const labelClassBaseName =
+    label.additionalData.labelType === 'general' ? 'label' : 'labelOther';
+  const labelClassName =
+    styles[`${labelClassBaseName}${getLabelNumber(number)}`];
 
   if (label.additionalData) {
     if (typeof label.additionalData.confidence === 'number') {
@@ -34,15 +39,12 @@ export default function LabelRow(props) {
   }
 
   return (
-    <div
-      className={`${styles.label} ${styles[getLabelClassName(number)]}`}
-      key={label.id}
-    >
+    <div className={`${styles.label} ${labelClassName}`} key={label.id}>
       <div className={styles.color} />
       <div className={styles.inner}>
         <div className={styles.topRow}>
           <h2>
-            Weaning ({label.additionalData.labelType}, label {number + 1})
+            Weaning ({labelType}, label {number + 1})
           </h2>
           <Tooltip title="Delete this label">
             <IconButton onClick={() => deleteLabel(label.id)}>
