@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import LabelList from './LabelList/LabelList';
 import { LabellerProvider } from '../../../../hooks/useLabeller';
 import useApiData from '../../../../hooks/useApiData';
@@ -41,6 +41,10 @@ function formatData(data) {
 
 export default function StayAssignment() {
   const { stayAssignmentId } = useParams();
+  const [searchParams] = useSearchParams();
+  const isLabellingNextAssignment = searchParams.get(
+    'isLabellingNextAssignment'
+  );
   const { data, error, isLoading } = useApiData({
     path: `/participant/stayAssignments/${stayAssignmentId}`,
     params: {
@@ -51,7 +55,13 @@ export default function StayAssignment() {
   });
 
   if (isLoading) {
-    return <Loading message="Fetching stay..." />;
+    return (
+      <Loading
+        message={`Fetching ${
+          isLabellingNextAssignment ? 'next assigned ' : ''
+        }stay...`}
+      />
+    );
   }
 
   if (error || data === null) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styles from './ResetPassword.module.scss';
 import Form from '../../Common/Form/Form';
 import ResetPasswordForm from './ResetPasswordForm/ResetPasswordForm';
@@ -11,8 +11,10 @@ import FormAlert from '../../Common/FormAlert/FormAlert';
 function ResetPassword() {
   const navigate = useNavigate();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     try {
       await Auth.forgotPasswordSubmit(
         data.email,
@@ -21,6 +23,7 @@ function ResetPassword() {
       );
       navigate('/account/signIn');
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not complete sign up!',
@@ -41,9 +44,14 @@ function ResetPassword() {
         <ResetPasswordForm />
 
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Change Password
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            fullWidth
+          >
+            <span>Change Password</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

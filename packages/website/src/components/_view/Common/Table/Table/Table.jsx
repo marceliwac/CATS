@@ -188,6 +188,23 @@ export const PARTICIPANT_PARTICIPATION_STATUS_COLUMN_ENUM = {
   },
 };
 
+export const BOOL_ENUM = {
+  TRUE: {
+    colors: {
+      text: '#204f11',
+      background: '#e0f1e0',
+    },
+    value: 'Yes',
+  },
+  FALSE: {
+    colors: {
+      text: '#791919',
+      background: '#efe0e0',
+    },
+    value: 'No',
+  },
+};
+
 export default function Table(props) {
   const {
     title,
@@ -352,7 +369,10 @@ export default function Table(props) {
                             value = false;
                           }
                         }
-                        value = value ? 'Yes' : 'No';
+                        value = value ? 'TRUE' : 'FALSE';
+                        value = (
+                          <EnumElement enumObject={BOOL_ENUM} value={value} />
+                        );
                       }
 
                       if (column.enum) {

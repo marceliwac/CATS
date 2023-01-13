@@ -5,7 +5,7 @@ export default function Instructions() {
   return (
     <div className={styles.instructions}>
       <p>
-        In order to being a process of machine learning we are trying to capture
+        In order to begin a process of machine learning we are trying to capture
         the times when a patient is being weaned from mechanical ventilation. We
         want you to identify the{' '}
         <span className={styles.targetLabel}>
@@ -32,15 +32,19 @@ export default function Instructions() {
           </div>
           <div className={styles.content}>
             <p>
-              Select two dates which will mark start and end of a{' '}
+              Using the table below, select two dates which will mark start and
+              end of a{' '}
               <span className={styles.targetLabel}>
                 period of time during which weaning takes place
               </span>
               .
               <br />
               <em>
-                You can do this by clicking on the table header corresponding to
-                the date you wish to select.
+                You can do this by hovering over the dates in the table header
+                and clicking buttons to mark the ends of an interval. The left
+                button marks the start date and the right button marks the end
+                date. You can specify the same start and end date if you wish to
+                do so.
               </em>{' '}
             </p>
           </div>

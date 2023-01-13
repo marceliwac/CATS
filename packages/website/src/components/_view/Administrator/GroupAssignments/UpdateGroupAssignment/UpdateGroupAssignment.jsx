@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import { useParams } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styles from './UpdateGroupAssignment.module.scss';
 import Form from '../../../Common/Form/Form';
 import UpdateGroupAssignmentForm from './UpdateGroupAssignmentForm/UpdateGroupAssignmentForm';
@@ -13,6 +13,8 @@ import FormAlert from '../../../Common/FormAlert/FormAlert';
 export default function UpdateGroupAssignment() {
   const { groupAssignmentId } = useParams();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
   const { data, isLoading, error, reload } = useApiData({
     path: `/administrator/groupAssignments/${groupAssignmentId}`,
@@ -27,6 +29,7 @@ export default function UpdateGroupAssignment() {
   }
 
   async function onSubmit(d) {
+    setIsSubmitting(true);
     const group = {
       name: d.name,
       addUsersByDefault: d.addUsersByDefault,
@@ -39,6 +42,7 @@ export default function UpdateGroupAssignment() {
         `/administrator/groupAssignments/${groupAssignmentId}`,
         group
       );
+      setHasSubmitted(true);
       setFormAlert({
         severity: 'success',
         title: 'Group updated successfully!',
@@ -56,6 +60,8 @@ export default function UpdateGroupAssignment() {
         message:
           'Something went wrong during group assignment update. Please contact the administrator for further support.',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -72,9 +78,15 @@ export default function UpdateGroupAssignment() {
           stayIds={data.stayIds}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Update
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            disabled={hasSubmitted}
+            fullWidth
+          >
+            <span>Update</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

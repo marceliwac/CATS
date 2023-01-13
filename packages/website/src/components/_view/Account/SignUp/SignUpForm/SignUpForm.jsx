@@ -98,13 +98,13 @@ export default function SignUpForm() {
       />
       <FormCheckbox
         name="confirmConsentFormVerification"
-        label="I have verified the consent form via e-mail link."
+        label="I have verified the electronic signature via e-mail link."
         autocomplete="off"
         rules={{
           required: {
             value: true,
             message:
-              'You have to confirm that you have verified the consent form.',
+              'You have to confirm that you have verified the electronic signature.',
           },
         }}
       />

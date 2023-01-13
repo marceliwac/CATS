@@ -20,7 +20,10 @@ export default function LabelRow(props) {
       confidence = `${confidenceValue}%`;
     }
 
-    if (Array.isArray(label.additionalData.parameters)) {
+    if (
+      Array.isArray(label.additionalData.parameters) &&
+      label.additionalData.parameters.length > 0
+    ) {
       parameters = label.additionalData.parameters.map((parameter) => (
         <span className={styles.parameterList} key={parameter.name}>
           <br />- {parameter.label}{' '}

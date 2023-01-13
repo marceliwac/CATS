@@ -1,7 +1,7 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Form from '../../Common/Form/Form';
 import styles from './CompleteManualSignUp.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
@@ -11,12 +11,15 @@ export default function CompleteManualSignUp() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     try {
       await Auth.confirmSignUp(data.email, data.verificationCode);
       navigate('/');
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not complete sign up!',
@@ -59,9 +62,14 @@ export default function CompleteManualSignUp() {
           }}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Complete Sign Up
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            fullWidth
+          >
+            <span>Complete Sign Up</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

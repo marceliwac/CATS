@@ -1,0 +1,34 @@
+.stays {
+  margin: auto auto;
+  width: 30em;
+}
+
+.button {
+  margin: 1em 0 3em 0;
+}
+
+.description {
+  line-height: 1.5;
+  margin: 1em 0;
+
+  a {
+    text-decoration: underline;
+    font-weight: 400;
+    color: $primary;
+  }
+}
+
+.noData {
+  img {
+    width: 100%;
+    max-width: 14em;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .description {
+    margin-top: 2em;
+    text-align: center;
+  }
+}

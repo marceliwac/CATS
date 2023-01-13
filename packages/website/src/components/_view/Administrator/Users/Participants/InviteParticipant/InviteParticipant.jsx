@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Form from '../../../../Common/Form/Form';
 import APIClient from '../../../../../../util/APIClient';
 import styles from './InviteParticipant.module.scss';
@@ -8,8 +8,11 @@ import FormAlert from '../../../../Common/FormAlert/FormAlert';
 
 export default function InviteParticipant() {
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     const userData = {
       userEmail: data.email,
       firstName: data.firstName,
@@ -18,6 +21,7 @@ export default function InviteParticipant() {
     };
     try {
       await APIClient.post('/administrator/users', userData);
+      setHasSubmitted(true);
       setFormAlert({
         severity: 'success',
         title: 'Participant invited successfully!',
@@ -31,6 +35,8 @@ export default function InviteParticipant() {
         message:
           'Something went wrong during the participant account creation. Please contact the administrator for further support.',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -73,9 +79,15 @@ export default function InviteParticipant() {
           }}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Send invitation
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            disabled={hasSubmitted}
+            fullWidth
+          >
+            <span>Send invitation</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

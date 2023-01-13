@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import { useParams } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styles from './UpdateOrderedGroupAssignment.module.scss';
 import Form from '../../../Common/Form/Form';
 import UpdateOrderedGroupAssignmentForm from './UpdateOrderedGroupAssignmentForm/UpdateOrderedGroupAssignmentForm';
@@ -13,6 +13,7 @@ import FormAlert from '../../../Common/FormAlert/FormAlert';
 export default function UpdateOrderedGroupAssignment() {
   const { orderedGroupAssignmentId } = useParams();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const { data, isLoading, error, reload } = useApiData({
     path: `/administrator/orderedGroupAssignments/${orderedGroupAssignmentId}`,
@@ -27,6 +28,7 @@ export default function UpdateOrderedGroupAssignment() {
   }
 
   async function onSubmit(d) {
+    setIsSubmitting(true);
     const group = {
       name: d.name,
       addUsersByDefault: d.addUsersByDefault,
@@ -55,6 +57,8 @@ export default function UpdateOrderedGroupAssignment() {
         message:
           'Something went wrong during ordered group assignment update. Please contact the administrator for further support.',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -70,9 +74,14 @@ export default function UpdateOrderedGroupAssignment() {
           cognitoIds={data.cognitoIds}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Update
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            fullWidth
+          >
+            <span>Update</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

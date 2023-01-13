@@ -5,6 +5,7 @@ import TableHead from '@mui/material/TableHead';
 import IconButton from '@mui/material/IconButton';
 import StartIcon from '@mui/icons-material/Start';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
+import Tooltip from '@mui/material/Tooltip';
 import styles from './StayTableHeader.module.scss';
 
 import useLabeller from '../../../../../../hooks/useLabeller';
@@ -69,23 +70,27 @@ export default function StayTableHeader(props) {
               <div
                 className={`${styles.header} ${inRange ? styles.inRange : ''}`}
               >
-                <IconButton
-                  className={styles.iconButton}
-                  onClick={() => selectStartTime()}
-                >
-                  <StartIcon className={styles.icon} />
-                </IconButton>
+                <Tooltip title="Mark as start date">
+                  <IconButton
+                    className={styles.iconButton}
+                    onClick={() => selectStartTime()}
+                  >
+                    <StartIcon className={styles.icon} />
+                  </IconButton>
+                </Tooltip>
                 <div className={styles.dateTime}>
                   <span className={styles.date}>{formatDate(date)}</span>
                   <br />
                   <span className={styles.time}>{formatTime(date)}</span>
                 </div>
-                <IconButton
-                  className={styles.iconButton}
-                  onClick={() => selectEndTime()}
-                >
-                  <KeyboardTabIcon className={styles.icon} />
-                </IconButton>
+                <Tooltip title="Mark as end date">
+                  <IconButton
+                    className={styles.iconButton}
+                    onClick={() => selectEndTime()}
+                  >
+                    <KeyboardTabIcon className={styles.icon} />
+                  </IconButton>
+                </Tooltip>
               </div>
             </TableCell>
           );

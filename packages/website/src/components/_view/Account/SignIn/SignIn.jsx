@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Auth } from 'aws-amplify';
 import Form from '../../Common/Form/Form';
 import styles from './SignIn.module.scss';
@@ -11,8 +11,10 @@ import FormAlert from '../../Common/FormAlert/FormAlert';
 function SignIn() {
   const navigate = useNavigate();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     try {
       const user = await Auth.signIn({
         username: data.email,
@@ -50,6 +52,7 @@ function SignIn() {
         );
       }
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not sign in!',
@@ -90,9 +93,14 @@ function SignIn() {
           }}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Sign In
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            fullWidth
+          >
+            <span>Sign In</span>
+          </LoadingButton>
         </div>
         <p className={styles.description}>
           <Link to="/account/requestPasswordReset">Forgot password?</Link>

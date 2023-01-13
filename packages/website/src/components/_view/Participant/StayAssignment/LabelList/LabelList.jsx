@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate, useParams } from 'react-router-dom';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styles from './LabelList.module.scss';
 import useLabeller from '../../../../../hooks/useLabeller';
 import LabelRow from './LabelRow/LabelRow';
@@ -12,10 +13,12 @@ export default function LabelList(props) {
   const { parameters } = props;
   const { labels, isCreatingLabel, toggleIsCreatingLabel } = useLabeller();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { stayAssignmentId } = useParams();
   const navigate = useNavigate();
 
   const onSubmit = React.useCallback(async () => {
+    setIsSubmitting(true);
     try {
       const data = labels.map((label) => ({
         startTime: label.startTime,
@@ -34,8 +37,9 @@ export default function LabelList(props) {
       });
       setTimeout(() => {
         navigate('/participant/stayAssignments?navigateToNext=true');
-      }, 2000);
+      }, 3000);
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not submit labels!',
@@ -67,13 +71,20 @@ export default function LabelList(props) {
         </div>
 
         <div className={styles.buttonRow}>
-          <Button variant="contained" color="success" onClick={onSubmit}>
-            {(labels.length > 0 &&
-              `Mark as labelled (${labels.length} label${
-                labels.length !== 1 ? 's' : ''
-              })`) ||
-              'Mark as labelled (no labels needed)'}
-          </Button>
+          <LoadingButton
+            variant="contained"
+            color="success"
+            onClick={onSubmit}
+            loading={isSubmitting}
+          >
+            <span>
+              {(labels.length > 0 &&
+                `Mark as labelled (${labels.length} label${
+                  labels.length !== 1 ? 's' : ''
+                })`) ||
+                'Mark as labelled (no labels needed)'}
+            </span>
+          </LoadingButton>
         </div>
       </div>
     </>

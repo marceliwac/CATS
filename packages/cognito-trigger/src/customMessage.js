@@ -53,31 +53,32 @@ class CustomMessage {
         ? this.clientMetadata.group
         : null;
 
-    const emailMessage = `Dear ${this.headerName},
-        <br />
-        <br />
-        You have been invited to sign-up for an account for ${
-          this.applicationName
-        }${
-      group ? ` as one of the ${group}` : ''
-    }. To activate your account, you will need to set the new password and ensure that your name is entered correctly.
-        <br />
-        <br />
-        You can complete your sign-up by clicking on the link below:
-        <br />
-        <br />
-        <a href="${link}">Complete sign-up</a>
-        <br />
-        <br />
-        Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following credentials:
-        <br />
-        <br />
-        <b>E-mail (username):</b> ${this.usernameParameter}
-        <br />
-        <b>Password:</b> ${this.codeParameter}
-        <br />
-        <br />
-        ${this.signature}`;
+    const emailMessage = `<html lang="en">
+      Dear ${this.headerName},
+      <br />
+      <br />
+      You have been invited to sign-up for an account for ${
+        this.applicationName
+      }${group ? ` as one of the ${group}` : ''}. 
+      To activate your account, you will need to set the new password and ensure that your name is entered correctly.
+      <br />
+      <br />
+      You can complete your sign-up by clicking on the link below:
+      <br />
+      <br />
+      <a href="${link}">Complete sign-up</a>
+      <br />
+      <br />
+      Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following credentials:
+      <br />
+      <br />
+      <b>E-mail (username):</b> ${this.usernameParameter}
+      <br />
+      <b>Password:</b> ${this.codeParameter}
+      <br />
+      <br />
+      ${this.signature}
+    </html>`;
 
     return {
       emailSubject: `Your new account for ${this.applicationName}.`,
@@ -90,25 +91,28 @@ class CustomMessage {
     const bareLink = this.completeManualSignupBareLink;
     return {
       emailSubject: `Validate your account for ${this.applicationName}.`,
-      emailMessage: `Dear ${this.headerName},
-        <br />
-        <br />
-        Thank you for signing up.
-        <br />
-        You can complete your sign-up by clicking on the link below:
-        <br />
-        <a href="${link}">${link}</a>
-        <br />
-        <br />
-        Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following credentials:
-        <br />
-        <br />
-        <b>E-mail (username):</b> ${this.userAttributes.email}
-        <br />
-        <b>Code:</b> ${this.codeParameter}
-        <br />
-        <br />
-        ${this.signature}`,
+      emailMessage: `<html lang="en">
+          Dear ${this.headerName},
+          <br />
+          <br />
+          Thank you for signing up.
+          <br />
+          You can complete your sign-up by clicking on the link below:
+          <br />
+          <br />
+          <a href="${link}">Complete sign-up</a>
+          <br />
+          <br />
+          Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following credentials:
+          <br />
+          <br />
+          <b>E-mail (username):</b> ${this.userAttributes.email}
+          <br />
+          <b>Code:</b> ${this.codeParameter}
+          <br />
+          <br />
+          ${this.signature}
+        </html>`,
     };
   }
 
@@ -117,23 +121,27 @@ class CustomMessage {
     const bareLink = this.resetPasswordBareLink;
     return {
       emailSubject: `Reset your password for ${this.applicationName}.`,
-      emailMessage: `Dear ${this.headerName},
-      <br />
-      <br />
-      It appears that you have requested a password reset for your ${this.applicationName} account.
-      <br />
-      Please click on the link to reset your password:
-        <a href="${link}">${link}</a>.
-      <br />
-      <br />
-      Alternatively, you can reset your password by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
-      <br />
-      <b>E-mail (username):</b> ${this.userAttributes.email}
-      <br />
-      <b>Verification code:</b> ${this.codeParameter}
-      <br />
-      <br />
-      ${this.signature}`,
+      emailMessage: `<html lang="en">
+        Dear ${this.headerName},
+        <br />
+        <br />
+        It appears that you have requested a password reset for your ${this.applicationName} account.
+        <br />
+        Please click on the link to reset your password:
+        <br />
+        <br />
+          <a href="${link}">Reset password</a>
+        <br />
+        <br />
+        Alternatively, you can reset your password by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
+        <br />
+        <b>E-mail (username):</b> ${this.userAttributes.email}
+        <br />
+        <b>Verification code:</b> ${this.codeParameter}
+        <br />
+        <br />
+        ${this.signature}
+      </html>`,
     };
   }
 
@@ -142,23 +150,27 @@ class CustomMessage {
     const bareLink = this.verifyContactDetailsBareLink;
     return {
       emailSubject: `Verify your new contact details for ${this.applicationName}.`,
-      emailMessage: `Dear ${this.headerName},
-      <br />
-      <br />
-      It appears that you have requested a change in your contact details for your ${this.applicationName} account.
-      <br />
-      Please click on the link below to verify your updated contact details:
-        <a href="${link}">${link}</a>.
-      <br />
-      <br />
-      Alternatively, you can verify your contact details by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
-      <br />
-      <b>E-mail (username):</b> ${this.usernameParameter}
-      <br />
-      <b>Verification code:</b> ${this.codeParameter}
-      <br />
-      <br />
-      ${this.signature}`,
+      emailMessage: `<html lang="en">
+        Dear ${this.headerName},
+        <br />
+        <br />
+        It appears that you have requested a change in your contact details for your ${this.applicationName} account.
+        <br />
+        Please click on the link below to verify your updated contact details:
+        <br />
+        <br />
+        <a href="${link}">Verify details</a>
+        <br />
+        <br />
+        Alternatively, you can verify your contact details by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
+        <br />
+        <b>E-mail (username):</b> ${this.usernameParameter}
+        <br />
+        <b>Verification code:</b> ${this.codeParameter}
+        <br />
+        <br />
+        ${this.signature}
+      </html>`,
     };
   }
 
@@ -168,24 +180,27 @@ class CustomMessage {
     const bareLink = this.completeManualSignupBareLink;
     return {
       emailSubject: `Complete your sign-up for ${this.applicationName}.`,
-      emailMessage: `Dear ${this.headerName},
-      <br />
-      <br />
-      This is a verification code reminder to complete the sign-up for your account at ${this.applicationName}.
-      <br />
-      <br />
-      Please click on the link to activate your account:
-      <a href="${link}">${link}</a>.
-      <br />
-      <br />
-      Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
-      <br />
-      <b>E-mail (username):</b> ${this.usernameParameter}
-      <br />
-      <b>Verification code:</b> ${this.codeParameter}
-      <br />
-      <br />
-      ${this.signature}`,
+      emailMessage: `<html lang="en">
+        Dear ${this.headerName},
+        <br />
+        <br />
+        This is a verification code reminder to complete the sign-up for your account at ${this.applicationName}.
+        <br />
+        Please click on the link to activate your account:
+        <br />
+        <br />
+        <a href="${link}">Activate account</a>
+        <br />
+        <br />
+        Alternatively, you can complete your sign-up by visiting <a href="${bareLink}">${bareLink}</a> and using the following verification code:
+        <br />
+        <b>E-mail (username):</b> ${this.usernameParameter}
+        <br />
+        <b>Verification code:</b> ${this.codeParameter}
+        <br />
+        <br />
+        ${this.signature}
+      </html>`,
     };
   }
 }

@@ -2,6 +2,20 @@ import React from 'react';
 import styles from './PatientDetails.module.scss';
 import useLabeller from '../../../../../hooks/useLabeller';
 
+function formatLengthOfTime(length) {
+  const days = Math.floor(length);
+  const hours = Math.floor((length - days) * 24);
+  if (days === 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''}`;
+  }
+  if (hours === 0) {
+    return `${days} day${days > 1 ? 's' : ''}`;
+  }
+  return `${days} day${days > 1 ? 's' : ''} and ${hours} hour${
+    hours > 1 ? 's' : ''
+  }`;
+}
+
 export default function PatientDetails(props) {
   const { details } = props;
   const { formatDate } = useLabeller();
@@ -13,13 +27,15 @@ export default function PatientDetails(props) {
       : details.gender === 'F'
       ? 'female'
       : 'Unknown';
-  const displayAge = details.age ? `${details.age} years old` : 'Unknown';
+  const displayAge = details.age
+    ? `${Math.floor(details.age)} years old`
+    : 'Unknown';
   const displayRace = details.race ? details.race.toLowerCase() : 'Unknown';
   const displayLengthOfStayHospital = details.lengthOfStayHospital
-    ? `${details.lengthOfStayHospital} days`
+    ? formatLengthOfTime(details.lengthOfStayHospital)
     : 'Unknown';
   const displayLengthOfStayIcu = details.lengthOfStayIcu
-    ? `${details.lengthOfStayIcu} days`
+    ? formatLengthOfTime(details.lengthOfStayIcu)
     : 'Unknown';
   const displayAdmissionTime = details.admissionTime
     ? formatDate(new Date(details.admissionTime))
@@ -48,7 +64,7 @@ export default function PatientDetails(props) {
         </div>
         <div className={styles.detail}>
           <p className={styles.label}>Length of Stay (hospital)</p>
-          <p className={styles.value}>{displayLengthOfStayHospital} days</p>
+          <p className={styles.value}>{displayLengthOfStayHospital}</p>
         </div>
         <div className={styles.detail}>
           <p className={styles.label}>Admission Time</p>
@@ -64,7 +80,7 @@ export default function PatientDetails(props) {
         </div>
         <div className={styles.detail}>
           <p className={styles.label}>Length of Stay (ICU)</p>
-          <p className={styles.value}>{displayLengthOfStayIcu} days</p>
+          <p className={styles.value}>{displayLengthOfStayIcu}</p>
         </div>
       </div>
     </div>

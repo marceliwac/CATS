@@ -91,10 +91,10 @@ export default function Enroll() {
           </div>
           <div className={styles.content}>
             <p>
-              Finally, to complete enrollment you should create an account in
-              the tool. You can do so by pressing the button below. Please
-              ensure that you use the same email address you have used to sign
-              the consent form.
+              To continue enrollment you should create an account in the online
+              tool. You can do so by pressing the button below. Please ensure
+              that you use the same email address you have used to sign the
+              consent form.
             </p>
             <Button
               className={styles.button}
@@ -104,6 +104,26 @@ export default function Enroll() {
             >
               Create an account
             </Button>
+          </div>
+        </div>
+        <div className={styles.step}>
+          <div className={styles.header}>
+            <div className={styles.stepNumber}>
+              <h2>4</h2>
+            </div>
+            <h2>Verify your account</h2>
+          </div>
+          <div className={styles.content}>
+            <p>
+              Finally, to complete the process you will need to verify your
+              account by pressing a link in the email which will be sent to you
+              upon signup. This is separate from verifying the electronic
+              signature. You will need to verify your account to be able to sign
+              in.
+            </p>
+            <p className={styles.important}>
+              Be sure to check your spam folder!
+            </p>
           </div>
         </div>
       </div>

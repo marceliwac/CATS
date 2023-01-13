@@ -1,7 +1,7 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Form from '../../Common/Form/Form';
 import styles from './CompleteSignUp.module.scss';
 import CompleteSignUpForm from './CompleteSignupForm/CompleteSignupForm';
@@ -19,8 +19,10 @@ function CompleteSignUp() {
     };
   }
   const [formAlert, setFormAlert] = React.useState(defaultFormAlert);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     const userAttributes = {
       given_name: data.firstName,
       family_name: data.lastName,
@@ -32,6 +34,7 @@ function CompleteSignUp() {
         // The Auth.Hub listener will handle the redirect automatically.
       }
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not complete sign up!',
@@ -50,9 +53,14 @@ function CompleteSignUp() {
       <Form onSubmit={(data) => onSubmit(data)}>
         <CompleteSignUpForm />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Complete Sign Up
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            fullWidth
+          >
+            <span>Complete Sign Up</span>
+          </LoadingButton>
         </div>
 
         {formAlert && <FormAlert alert={formAlert} />}

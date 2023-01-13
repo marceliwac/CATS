@@ -1,7 +1,7 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import styles from './RequestPasswordReset.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
 import Form from '../../Common/Form/Form';
@@ -11,10 +11,14 @@ import FormAlert from '../../Common/FormAlert/FormAlert';
 function RequestPasswordReset() {
   const [searchParams] = useSearchParams();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     try {
       await Auth.forgotPassword(data.email);
+      setHasSubmitted(true);
       setFormAlert({
         severity: 'success',
         title: 'Password reset initiated!',
@@ -22,6 +26,7 @@ function RequestPasswordReset() {
           'If an account with this e-mail exists, you should receive an e-mail with a verification code shortly. Please check your inbox.',
       });
     } catch (e) {
+      setIsSubmitting(false);
       setFormAlert({
         severity: 'error',
         title: 'Could not complete sign up!',
@@ -53,9 +58,15 @@ function RequestPasswordReset() {
           }}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Reset Password
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            disabled={hasSubmitted}
+            fullWidth
+          >
+            <span>Reset Password</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>

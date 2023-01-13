@@ -1,6 +1,8 @@
 import React from 'react';
 import PeopleIcon from '@mui/icons-material/People';
-import SchoolIcon from '@mui/icons-material/School';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import Filter1Icon from '@mui/icons-material/Filter1';
 import styles from './Navbar.module.scss';
 import AuthenticationContext from '../../../../contexts/AuthenticationContext';
 import NavbarItem from './NavbarItem/NavbarItem';
@@ -31,7 +33,7 @@ export default function Navbar() {
           </NavbarItem>
           <NavbarItem
             path="/administrator/stayAssignments"
-            icon={<PeopleIcon />}
+            icon={<AssignmentIcon />}
             label="Stay assignments"
           >
             <NavbarSubItem
@@ -41,7 +43,7 @@ export default function Navbar() {
           </NavbarItem>
           <NavbarItem
             path="/administrator/groupAssignments"
-            icon={<PeopleIcon />}
+            icon={<FilterNoneIcon />}
             label="Group assignments"
           >
             <NavbarSubItem
@@ -51,7 +53,7 @@ export default function Navbar() {
           </NavbarItem>
           <NavbarItem
             path="/administrator/orderedGroupAssignments"
-            icon={<PeopleIcon />}
+            icon={<Filter1Icon />}
             label="Ordered assignments"
           >
             <NavbarSubItem
@@ -65,7 +67,7 @@ export default function Navbar() {
         <>
           <NavbarItem
             path="/participant/stayAssignments"
-            icon={<SchoolIcon />}
+            icon={<AssignmentIcon />}
             label="Stay assignments"
           >
             <NavbarSubItem

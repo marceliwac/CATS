@@ -1,7 +1,7 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
 import { useSearchParams } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Form from '../../Common/Form/Form';
 import styles from './VerifyContactDetails.module.scss';
 import FormTextField from '../../Common/FormTextField/FormTextField';
@@ -10,10 +10,14 @@ import FormAlert from '../../Common/FormAlert/FormAlert';
 export default function VerifyContactDetails() {
   const [searchParams] = useSearchParams();
   const [formAlert, setFormAlert] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
   async function onSubmit(data) {
+    setIsSubmitting(true);
     try {
       await Auth.confirmSignUp(data.email, data.verificationCode);
+      setHasSubmitted(true);
       setFormAlert({
         severity: 'success',
         title: 'New contact details verified successfully!',
@@ -27,6 +31,8 @@ export default function VerifyContactDetails() {
         message:
           'Something went wrong during the verification of your new contact details. Please contact the administrator for further support.',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -63,9 +69,15 @@ export default function VerifyContactDetails() {
           }}
         />
         <div className={styles.formControls}>
-          <Button variant="contained" type="submit" fullWidth>
-            Verify new details
-          </Button>
+          <LoadingButton
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            disabled={hasSubmitted}
+            fullWidth
+          >
+            <span>Verify new details</span>
+          </LoadingButton>
         </div>
         {formAlert && <FormAlert alert={formAlert} />}
       </Form>
