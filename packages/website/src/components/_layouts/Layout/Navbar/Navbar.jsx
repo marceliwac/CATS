@@ -3,6 +3,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import Filter1Icon from '@mui/icons-material/Filter1';
+import HelpIcon from '@mui/icons-material/Help';
 import styles from './Navbar.module.scss';
 import AuthenticationContext from '../../../../contexts/AuthenticationContext';
 import NavbarItem from './NavbarItem/NavbarItem';
@@ -73,6 +74,20 @@ export default function Navbar() {
             <NavbarSubItem
               path="/participant/stayAssignments"
               label="Assigned to me"
+            />
+          </NavbarItem>
+          <NavbarItem path="/help" icon={<HelpIcon />} label="Help">
+            <NavbarSubItem
+              path="/help/instructions#using_the_tool"
+              label="Using the tool"
+            />
+            <NavbarSubItem
+              path="/help/instructions#assigned_stays"
+              label="Assigned stays"
+            />
+            <NavbarSubItem
+              path="/help/instructions#creating_labels"
+              label="Creating labels"
             />
           </NavbarItem>
         </>

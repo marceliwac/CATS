@@ -32,9 +32,11 @@ const config = {
   apiPrefix: 'api',
 
   // ID of the User Pool (with the region qualifier) (needs to be manually updated)
+  // userPoolId: 'eu-west-1_bUG1eU2gv', // TODO Automate this by moving it to AWS SSM
   userPoolId: 'eu-west-1_u3rCCkiLU', // TODO Automate this by moving it to AWS SSM
 
   // ID of the User Pool Client for the website (needs to be manually updated)
+  // userPoolClientWebsiteId: '1ik2qjs93h0p4g3ni3advb22v9', // TODO Automate this by moving it to AWS SSM
   userPoolClientWebsiteId: '74i6cr0qnp0mf6krt9sn5p8lqo', // TODO Automate this by moving it to AWS SSM
 
   // ARN of the identity for cognito emails (needs to be manually created)
