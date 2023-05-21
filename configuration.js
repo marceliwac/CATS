@@ -54,6 +54,7 @@ const serviceNames = {
   website: `${config.stackNamePrefix}-website`,
   migrations: `${config.stackNamePrefix}-migrations`,
   notifications: `${config.stackNamePrefix}-notifications`,
+  rulesetProcessor: `${config.stackNamePrefix}-ruleset-processor`,
 };
 
 function validateStage(stage) {
@@ -155,6 +156,10 @@ const shared = {
       memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
       timeout: 120,
     },
+    rulesetProcessor: {
+      memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
+      timeout: 120,
+    },
   },
 
   lambdaEnvironment: (stage) => {
@@ -180,6 +185,18 @@ const shared = {
       REGION: config.region,
       APPLICATION_NAME: config.applicationName,
       WEBSITE_URL: `https://${domains.website}`,
+      DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
+      MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
+    };
+  },
+
+  rulesetProcessorLambdaEnvironment: (stage) => {
+    validateStage(stage);
+    const domains = getDomains(stage);
+    return {
+      CONSOLE_LOG_LEVEL: 'debug',
+      STAGE: stage,
+      REGION: config.region,
       DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
       MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
     };
@@ -239,6 +256,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('development'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('development'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('development'),
     },
     staging: {
       region: config.region,
@@ -259,6 +278,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('staging'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('staging'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('staging'),
     },
     production: {
       region: config.region,
@@ -288,6 +309,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('production'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('production'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('production'),
     },
   },
 };

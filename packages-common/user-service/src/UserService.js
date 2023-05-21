@@ -68,6 +68,8 @@ function formatUser(userObject) {
     id: userObject.Username,
     status: userObject.UserStatus,
     isEnabled: userObject.Enabled,
+    createdAt: userObject.UserCreateDate,
+    updatedAt: userObject.UserLastModifiedDate,
   };
 
   if (userObject.Attributes) {

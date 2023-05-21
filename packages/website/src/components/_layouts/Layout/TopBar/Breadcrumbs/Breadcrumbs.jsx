@@ -14,6 +14,7 @@ const BREADCRUMB_LUT = {
   administrators: 'Administrators',
   participants: 'Participants',
   invite: 'Invite',
+  rulesets: 'Rulesets',
   stayAssignments: 'Stay Assignments',
   groupAssignments: 'Group Assignments',
   orderedGroupAssignments: 'Ordered Group Assignments',

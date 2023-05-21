@@ -223,6 +223,55 @@ resources:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
           - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
 
+    LambdaRulesetProcessorRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Path: /
+        Policies:
+          - PolicyName: AllowDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: DatabaseSecret
+          - PolicyName: AllowMIMICDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: MIMICDatabaseSecret
+          - PolicyName: AllowXRayTracePush
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - xray:PutTraceSegments
+                    - xray:PutTelemetryRecords
+                    - xray:GetSamplingRules
+                    - xray:GetSamplingTargets
+                    - xray:GetSamplingStatisticSummaries
+                  Resource: '*'
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
     CognitoUserPoolUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
@@ -326,6 +375,12 @@ resources:
       Value:
         Fn::GetAtt:
           - LambdaApiRole
+          - Arn
+
+    LambdaRulesetProcessorRoleArn:
+      Value:
+        Fn::GetAtt:
+          - LambdaRulesetProcessorRole
           - Arn
 
     ApiGatewayCloudwatchLogsRoleArn:

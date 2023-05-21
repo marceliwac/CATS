@@ -3,6 +3,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import Filter1Icon from '@mui/icons-material/Filter1';
+import RuleIcon from '@mui/icons-material/Rule';
 import HelpIcon from '@mui/icons-material/Help';
 import styles from './Navbar.module.scss';
 import AuthenticationContext from '../../../../contexts/AuthenticationContext';
@@ -66,6 +67,13 @@ export default function Navbar() {
       )}
       {isParticipant && (
         <>
+          <NavbarItem
+            path="/participant/rulesets"
+            icon={<RuleIcon />}
+            label="Rulesets"
+          >
+            <NavbarSubItem path="/participant/rulesets" label="My rulesets" />
+          </NavbarItem>
           <NavbarItem
             path="/participant/stayAssignments"
             icon={<AssignmentIcon />}
