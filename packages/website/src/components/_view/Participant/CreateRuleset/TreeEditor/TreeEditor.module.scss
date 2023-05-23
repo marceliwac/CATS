@@ -1,0 +1,11 @@
+.nodeOverride {
+  path {
+    stroke: none !important;
+  }
+}
+
+.svgOverride {
+  & > g > path {
+    stroke: #aaaaaa !important;
+  }
+}

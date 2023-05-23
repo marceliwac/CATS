@@ -27,7 +27,7 @@ const tempData = {
             nodeType: 'RULE',
             parameter: 'ventilator_mode',
             operation: '=',
-            value: 'CPAP/PSV',
+            value: ['CPAP', 'CPAP/PSV'],
           },
         },
         {
@@ -36,7 +36,7 @@ const tempData = {
             nodeType: 'RULE',
             parameter: 'ventilator_mode',
             operation: '=',
-            value: 'CPAP/PSV',
+            value: ['CPAP/PSV'],
           },
         },
       ],

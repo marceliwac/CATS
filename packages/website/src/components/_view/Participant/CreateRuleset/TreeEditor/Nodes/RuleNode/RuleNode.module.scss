@@ -1,4 +1,37 @@
+.topRow {
+  height: 0;
+  position: relative;
+  bottom: 2.5em;
+}
+
 .ruleNode {
-  border: 1px solid green;
+  width: 400px;
   box-sizing: border-box;
+  border: $border;
+  border-radius: $border-radius;
+  background-color: white;
+  overflow: hidden;
+
+  .innerWrapper {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: .5em 1em 1em 1em;
+
+    &.left-or.right-leaf {
+      border-left: $or-border;
+      border-right: $leaf-border;
+      background-image: linear-gradient(to right, $or-background, $leaf-background);
+    }
+
+    &.left-and.right-leaf {
+      border-left: $and-border;
+      border-right: $leaf-border;
+      background-image: linear-gradient(to right, $and-background , $leaf-background);
+    }
+
+  }
 }

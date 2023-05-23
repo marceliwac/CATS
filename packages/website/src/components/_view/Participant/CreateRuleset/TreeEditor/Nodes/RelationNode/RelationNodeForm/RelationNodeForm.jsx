@@ -1,41 +1,39 @@
 import React from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
-import { OutlinedInput } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import styles from '../../../../../StayAssignment/LabelList/CurrentLabel/ParameterSelector/ParameterSelector.module.scss';
+import styles from './RelationNodeForm.module.scss';
 import useTreeEditor from '../../../../../../../../hooks/useTreeEditor';
+import usePostInitDebouncing from '../../../../../../../../hooks/usePostInitDebouncing';
+import TreeEditorConfig from '../../../TreeEditorConfig';
 
-const operationOptions = [
-  {
-    value: 'OR',
-    label: 'At least one rule matches',
-  },
-  {
-    value: 'AND',
-    label: 'All rules must match',
-  },
-];
+const {
+  relation: { operationOptions },
+} = TreeEditorConfig;
 
 export default function RelationNodeForm(props) {
   const { id, operation } = props;
   const [operationInput, setOperationInput] = React.useState(operation);
   const { updateNode } = useTreeEditor();
 
-  React.useEffect(() => {
-    updateNode(id, { operation: operationInput });
-  }, [id, operationInput, updateNode]);
+  usePostInitDebouncing(() => {
+    updateNode(id, {
+      operation: operationInput,
+    });
+  }, [id, updateNode, operationInput]);
+
   return (
     <div className={styles.relationNodeForm}>
-      <FormControl sx={{ m: 1, width: 300 }} className={styles.selector}>
+      <FormControl className={styles.operationDropdown}>
         <InputLabel id={`${id}-operation-label`}>
-          How to handle this relation...
+          How to handle this relation
         </InputLabel>
         <Select
+          className={styles.select}
           labelId={`${id}-operation-label`}
           id={`${id}-operation`}
-          label="How to handle this relation..."
+          label="How to handle this relation"
           value={operationInput}
           onChange={(e) => setOperationInput(e.target.value)}
         >

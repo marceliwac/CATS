@@ -1,216 +1,195 @@
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
-import { OutlinedInput } from '@mui/material';
+import { InputAdornment, ListItemText, OutlinedInput } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 import FormControl from '@mui/material/FormControl';
-import styles from '../../../../../StayAssignment/LabelList/CurrentLabel/ParameterSelector/ParameterSelector.module.scss';
+import Checkbox from '@mui/material/Checkbox';
+import styles from './RuleNodeForm.module.scss';
+import useTreeEditor from '../../../../../../../../hooks/useTreeEditor';
+import usePostInitDebouncing from '../../../../../../../../hooks/usePostInitDebouncing';
+import TreeEditorConfig from '../../../TreeEditorConfig';
+import useDidMount from '../../../../../../../../hooks/useDidMount';
 
-const operationOptions = [
-  {
-    value: '<',
-    label: 'Smaller than',
+const {
+  rule: {
+    operationOptionsValue,
+    operationOptionsSelection,
+    parameterOptions,
+    parameterSelection,
   },
-  {
-    value: '>',
-    label: 'Greater than',
-  },
-  {
-    value: '=',
-    label: 'Equal to',
-  },
-  {
-    value: '!=',
-    label: 'Not equal to',
-  },
-];
+} = TreeEditorConfig;
 
-const parameterOptions = [
-  { value: 'heart_rate', label: 'Heart Rate [bpm]' },
-  {
-    value: 'arterial_bp_systolic',
-    label: 'Arterial Blood Pressure Systolic [mmHg]',
-  },
-  {
-    value: 'arterial_bp_diastolic',
-    label: 'Arterial Blood Pressure Diastolic [mmHg]',
-  },
-  {
-    value: 'arterial_bp_mean',
-    label: 'Arterial Blood Pressure Mean [mmHg]',
-  },
-  {
-    value: 'bp_systolic_non_invasive',
-    label: 'Non-invasive Blood Pressure Systolic [mmHg]',
-  },
-  {
-    value: 'bp_diastolic_non_invasive',
-    label: 'Non-invasive Blood Pressure Diastolic [mmHg]',
-  },
-  {
-    value: 'bp_mean_non_invasive',
-    label: 'Non-invasive Blood Pressure Mean [mmHg]',
-  },
-  {
-    value: 'cardiac_output_thermodilution',
-    label: 'Cardiac Output (thermodilution) [L/min]',
-  },
-  { value: 'respiratory_rate', label: 'Respiratory Rate [insp/min]' },
-  {
-    value: 'arterial_o2_pressure',
-    label: 'Arterial O2 Pressure [mmHg]',
-  },
-  {
-    value: 'arterial_o2_saturation',
-    label: 'Arterial O2 Saturation [%]',
-  },
-  {
-    value: 'o2_saturation_pulseoxymetry',
-    label: 'O2 Saturation (pulseoximetry) [%]',
-  },
-  { value: 'peep_set_cleaned', label: 'PEEP Set [cm H2O]' },
-  { value: 'temperature', label: 'Temperature [C]' },
-  { value: 'pcwp', label: 'PCWP [mmHg]' },
-  { value: 'inspired_o2_fraction', label: 'FiO2 [%]' },
-  { value: 'ventilator_mode', label: 'Ventilator Mode' },
-  { value: 'cuff_pressure', label: 'Cuff Pressure [cm H2O]' },
-  { value: 'tidal_volume_set', label: 'Tidal Volume (set) [mL]' },
-  {
-    value: 'tidal_volume_observed',
-    label: 'Tidal Volume (observed) [mL]',
-  },
-  {
-    value: 'tidal_volume_spontaneous',
-    label: 'Tidal Volume (spontaneous) [mL]',
-  },
-  { value: 'minute_volume', label: 'Minute Volume [L/min]' },
-  {
-    value: 'percentage_minute_volume',
-    label: 'Minute Volume Target (for IBW) [%]',
-  },
-  {
-    value: 'respiratory_rate_set',
-    label: 'Respiratory Rate (set) [insp/min]',
-  },
-  {
-    value: 'respiratory_rate_spontaneous',
-    label: 'Respiratory Rate (spontaneous) [insp/min]',
-  },
-  {
-    value: 'respiratory_rate_total',
-    label: 'Respiratory Rate (total) [insp/min]',
-  },
-  {
-    value: 'peak_inspiratory_pressure',
-    label: 'Peak Inspiratory Pressure [cm H2O]',
-  },
-  { value: 'plateau_pressure', label: 'Plateau Pressure [cm H2O]' },
-  {
-    value: 'mean_airway_pressure',
-    label: 'Mean Airway Pressure [cm H2O]',
-  },
-  { value: 'total_peep_level', label: 'Total PEEP Level [cm H2O]' },
-  { value: 'sbt_started', label: 'SBT Started' },
-  { value: 'sbt_stopped', label: 'SBT Stopped' },
-  { value: 'sbt_successfully_completed', label: 'SBT Succeeded' },
-  { value: 'sbt_deferred', label: 'SBT Deferred' },
-  { value: 'expiratory_ratio', label: 'Expiratory Ratio' },
-  { value: 'inspiratory_ratio', label: 'Inspiratory Ratio' },
-  {
-    value: 'p_insp_draeger',
-    label: 'Inspiratory Pressure (Draeger) [cm H2O]',
-  },
-  { value: 'bipap_mode', label: 'BiPAP Mode' },
-  { value: 'bipap_epap', label: 'BiPAP EPAP [cm H2O]' },
-  { value: 'bipap_ipap', label: 'BiPAP IPAP [cm H2O]' },
-  { value: 'bipap_bpm', label: 'BIPAP BPM (S/T - back up) [bmp]' },
-  { value: 'etco2', label: 'EtCO2 [mmHg]' },
-  {
-    value: 'ventilator_mode_hamilton',
-    label: 'Ventilator Mode (Hamilton)',
-  },
-  {
-    value: 'p_insp_hamilton',
-    label: 'Inspiratory Pressure (Hamilton) [cm H2O)',
-  },
-  {
-    value: 'resistance_expiry',
-    label: 'Resistance (exipiratory) [cm H2O/L/sec]',
-  },
-  {
-    value: 'resistance_inspiry',
-    label: 'Resistance (inspiratory) [cm H2O/L/sec]',
-  },
-  { value: 'o2_delivery_devices', label: 'Oxygen Delivery Devices' },
-  { value: 'o2_flow', label: 'Oxygen Flow [L/min]' },
-  {
-    value: 'o2_flow_additional',
-    label: 'Oxygen Flow (additional) [L/min]',
-  },
-];
+function getParameterUnitByOptionValue(value) {
+  const matchingParameterOptions = parameterOptions.filter(
+    (option) => option.value === value
+  );
+  return matchingParameterOptions.length > 0
+    ? matchingParameterOptions[0].unit
+    : '';
+}
+
 export default function RuleNodeForm(props) {
   const { id, operation, parameter, value } = props;
   const [operationInput, setOperationInput] = React.useState(operation);
   const [parameterInput, setParameterInput] = React.useState(parameter);
   const [valueInput, setValueInput] = React.useState(value);
+  const [valueOptions, setValueOptions] = React.useState(null);
+  const [valueUnit, setValueUnit] = React.useState('');
+  const { updateNode } = useTreeEditor();
+  const didMount = useDidMount();
+
+  usePostInitDebouncing(() => {
+    updateNode(id, {
+      parameter: parameterInput,
+      operation: operationInput,
+      value: valueInput,
+    });
+  }, [id, operationInput, parameterInput, valueInput]);
+
+  React.useEffect(() => {
+    if (didMount) {
+      if (Object.keys(parameterSelection).includes(parameterInput)) {
+        const newValueOptions = parameterSelection[parameterInput];
+        setValueOptions(newValueOptions);
+        const newValueOptionValues = newValueOptions.map(
+          (option) => option.value
+        );
+        setValueInput((currentValueInput) => {
+          if (Array.isArray(currentValueInput)) {
+            return currentValueInput
+              .map((option) =>
+                newValueOptionValues.includes(option) ? option : null
+              )
+              .filter((option) => option !== null);
+          }
+          return [];
+        });
+        setValueUnit('');
+      } else {
+        setValueOptions(null);
+        setValueInput('');
+        setValueUnit(getParameterUnitByOptionValue(parameterInput));
+      }
+    }
+  }, [didMount, parameterInput]);
 
   return (
     <div className={styles.ruleNodeForm}>
-      <FormControl sx={{ m: 1, width: 300 }} className={styles.selector}>
-        <InputLabel id={`${id}-parameter-label`}>Parameter</InputLabel>
-        <Select
-          labelId={`${id}-parameter-label`}
-          id="parameters-checkbox"
-          label="Parameter"
-          value={parameterInput}
-          onChange={(e) => setParameterInput(e.target.value)}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 48 * 10.5 + 8,
-                // width: 250,
+      <div className={styles.row}>
+        <FormControl sx={{ m: 1 }} className={styles.parameterDropdown}>
+          <InputLabel id={`${id}-parameter-label`}>Parameter</InputLabel>
+          <Select
+            className={styles.select}
+            labelId={`${id}-parameter-label`}
+            id={`${id}-parameter`}
+            label="Parameter"
+            value={parameterInput}
+            onChange={(e) => setParameterInput(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 48 * 10.5 + 8,
+                },
               },
-            },
-          }}
-        >
-          {parameterOptions.map((option) => (
-            <MenuItem
-              key={`${id}-parameter-${option.value}`}
-              value={option.value}
+            }}
+          >
+            {parameterOptions.map((option) => (
+              <MenuItem
+                key={`${id}-parameter-${option.value}`}
+                value={option.value}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+      <div className={styles.row}>
+        <FormControl sx={{ m: 1 }} className={styles.operationDropdown}>
+          <InputLabel id={`${id}-operation-label`}>Must be</InputLabel>
+          <Select
+            className={styles.select}
+            labelId={`${id}-operation-label`}
+            id={`${id}-operation`}
+            label="Must be"
+            value={operationInput}
+            onChange={(e) => setOperationInput(e.target.value)}
+          >
+            {(valueOptions !== null
+              ? operationOptionsSelection
+              : operationOptionsValue
+            ).map((option) => (
+              <MenuItem
+                key={`${id}-operation-${option.value}`}
+                value={option.value}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {(valueOptions !== null && (
+          <FormControl sx={{ m: 1 }} className={styles.valueInput}>
+            <InputLabel id={`${id}-value-label`}>Value</InputLabel>
+            <Select
+              className={styles.select}
+              labelId={`${id}-value-label`}
+              id={`${id}-value`}
+              label="Value"
+              multiple
+              value={valueInput}
+              onChange={(e) => setValueInput(e.target.value)}
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return '(none selected)';
+                }
+                return `(${selected.length}) ${selected.join(', ')}`;
+              }}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 48 * 10.5 + 8,
+                  },
+                },
+              }}
             >
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl sx={{ m: 1, width: 300 }} className={styles.selector}>
-        <InputLabel id={`${id}-operation-label`}>
-          How to compare this parameter...
-        </InputLabel>
-        <Select
-          labelId={`${id}-operation-label`}
-          id={`${id}-operation`}
-          label="How to compare this parameter..."
-          value={operationInput}
-          onChange={(e) => setOperationInput(e.target.value)}
-        >
-          {operationOptions.map((option) => (
-            <MenuItem
-              key={`${id}-operation-${option.value}`}
-              value={option.value}
-            >
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl sx={{ m: 1, width: 300 }} className={styles.selector}>
-        <OutlinedInput
-          label="Value"
-          value={valueInput}
-          onChange={(e) => setValueInput(e.target.value)}
-        />
-      </FormControl>
+              {valueOptions.map((option) => (
+                <MenuItem
+                  key={`${id}-value-${option.value}`}
+                  value={option.value}
+                >
+                  <Checkbox checked={valueInput.indexOf(option.value) > -1} />
+                  <ListItemText primary={option.label} />
+                </MenuItem>
+              ))}
+              {valueOptions.map((option) => (
+                <MenuItem
+                  key={`${id}-value-${option.value}`}
+                  value={option.value}
+                >
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )) || (
+          <FormControl sx={{ m: 1 }} className={styles.valueInput}>
+            <InputLabel id={`${id}-value-label-input`}>Value</InputLabel>
+            <OutlinedInput
+              className={styles.input}
+              id={`${id}-value-input`}
+              label="Value"
+              value={valueInput}
+              onChange={(e) => setValueInput(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">{valueUnit}</InputAdornment>
+              }
+            />
+          </FormControl>
+        )}
+      </div>
     </div>
   );
 }

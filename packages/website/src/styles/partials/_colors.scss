@@ -14,3 +14,24 @@ $highlight: #eee;
 
 $border: 1px solid #ccc;
 $border-radius: .25em;
+
+$root-background: #f1f1f1;
+$root-border: $border-radius solid #ccc;
+
+$or-background: rgba(255, 134, 0, 0.06);
+$or-border: $border-radius solid #f59c36;
+
+$and-background: rgba(95, 164, 239, 0.05);
+$and-border: $border-radius solid #6c99ee;
+
+$leaf-background: rgba(65, 178, 38, 0.06);
+$leaf-border: $border-radius solid #699142;
+
+$or-or-background: linear-gradient(to right, $or-background, $or-background);
+$or-and-background: linear-gradient(to right, $or-background, $and-background);
+$and-or-background: linear-gradient(to right, $and-background, $or-background);
+$and-and-background: linear-gradient(to right, $and-background, $and-background);
+$or-leaf-background: linear-gradient(to right, $or-background, $leaf-background);
+$and-leaf-background: linear-gradient(to right, $and-background, $leaf-background);
+$root-or-background: linear-gradient(to right, $root-background, $or-background);
+$root-and-background: linear-gradient(to right, $root-background, $and-background);

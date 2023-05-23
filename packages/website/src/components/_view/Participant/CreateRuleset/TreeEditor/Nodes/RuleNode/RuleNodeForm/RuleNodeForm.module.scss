@@ -1,0 +1,37 @@
+.ruleNodeForm {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .parameterDropdown {
+    width: 100%;
+    margin: .75em 0 0 0;
+  }
+
+
+  .operationDropdown {
+    min-width: 140px;
+    margin: 1em 0 0 0;
+  }
+
+  .valueInput {
+    flex-grow: 1;
+    margin: 1em 0 0 1em;
+  }
+
+  .select,
+  .input {
+    background-color: white;
+  }
+}

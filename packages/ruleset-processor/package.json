@@ -1,0 +1,20 @@
+{
+  "name": "@wls/ruleset-processor",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "serverless package --stage=${STAGE} --package=build",
+    "deploy": "serverless deploy --stage=${STAGE} --package=build",
+    "local": "serverless offline --httpPort 4000 --aws-profile=marceliwac-uni",
+    "remove": "serverless remove --stage=${STAGE}"
+  },
+  "author": "Marceli Wac",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "serverless-offline": "^8.1.0"
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^6.0.0"
+  }
+}

@@ -2,33 +2,42 @@ import React from 'react';
 import styles from './RuleNode.module.scss';
 import useTreeEditor from '../../../../../../../hooks/useTreeEditor';
 import RuleNodeForm from './RuleNodeForm/RuleNodeForm';
+import Menu from '../../../../../Common/Menu/Menu';
 
 export default function RuleNode(props) {
   const { nodeDatum } = props;
   const {
-    attributes: { id, nodeType, operation, parameter, value },
+    attributes: { id, operation, parameter, value, leftClass, rightClass },
   } = nodeDatum;
 
-  const { toggleNodeType, addNode, removeNode } = useTreeEditor();
+  const { removeNode } = useTreeEditor();
+
+  const menuOptions = [
+    {
+      label: `Remove this rule`,
+      handler: () => removeNode(id),
+    },
+  ];
 
   return (
-    <div className={styles.ruleNode}>
-      <button type="button" onClick={() => toggleNodeType(id)}>
-        Change type
-      </button>
-      <button type="button" onClick={() => addNode(id)}>
-        Add node
-      </button>
-      <button type="button" onClick={() => removeNode(id)}>
-        Remove node
-      </button>
-      <p>
-        <b>id:</b> {id}
-      </p>
-      <p>
-        <b>nodeType:</b> {nodeType}
-      </p>
-      <RuleNodeForm operation={operation} parameter={parameter} value={value} />
-    </div>
+    <>
+      <div className={styles.topRow}>
+        <Menu id={`${id}-menu`} items={menuOptions} />
+      </div>
+      <div className={styles.ruleNode}>
+        <div
+          className={`${styles.innerWrapper} ${
+            leftClass ? styles[leftClass] : ''
+          } ${rightClass ? styles[rightClass] : ''}`}
+        >
+          <RuleNodeForm
+            id={id}
+            operation={operation}
+            parameter={parameter}
+            value={value}
+          />
+        </div>
+      </div>
+    </>
   );
 }

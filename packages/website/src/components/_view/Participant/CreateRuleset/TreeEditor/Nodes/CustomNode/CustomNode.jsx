@@ -7,7 +7,7 @@ import TreeEditorConfig from '../../TreeEditorConfig';
 export default function CustomNode(props) {
   const { nodeDatum } = props;
   const {
-    attributes: { nodeType },
+    attributes: { id, nodeType },
   } = nodeDatum;
   let Node = () => <p>Invalid node type!</p>;
   if (nodeType === 'RELATION') {
@@ -26,7 +26,7 @@ export default function CustomNode(props) {
         height={TreeEditorConfig.nodeSize.y}
       >
         <div className={styles.node}>
-          <Node nodeDatum={nodeDatum} />
+          <Node key={id} nodeDatum={nodeDatum} />
         </div>
       </foreignObject>
     </>
