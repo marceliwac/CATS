@@ -5,7 +5,8 @@ import TreeEditorConfig from './TreeEditorConfig';
 import CustomNode from './Nodes/CustomNode/CustomNode';
 import useTreeEditor from '../../../../../hooks/useTreeEditor';
 
-export default function TreeEditor() {
+export default function TreeEditor(props) {
+  const { setGlobalError } = props;
   const { data, getRuleset } = useTreeEditor();
   const treeRef = React.useRef();
   return (
@@ -36,7 +37,7 @@ export default function TreeEditor() {
         depthFactor={TreeEditorConfig.depthFactor}
         separation={TreeEditorConfig.separation}
         renderCustomNodeElement={({ nodeDatum }) => (
-          <CustomNode nodeDatum={nodeDatum} />
+          <CustomNode setGlobalError={setGlobalError} nodeDatum={nodeDatum} />
         )}
       />
     </>

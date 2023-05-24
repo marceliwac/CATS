@@ -5,10 +5,16 @@ import RuleNodeForm from './RuleNodeForm/RuleNodeForm';
 import Menu from '../../../../../Common/Menu/Menu';
 
 export default function RuleNode(props) {
-  const { nodeDatum } = props;
+  const { nodeDatum, setGlobalError } = props;
   const {
     attributes: { id, operation, parameter, value, leftClass, rightClass },
   } = nodeDatum;
+  const [error, setError] = React.useState(false);
+
+  function setErrorHandler(a) {
+    setGlobalError(a);
+    setError(a);
+  }
 
   const { removeNode } = useTreeEditor();
 
@@ -24,7 +30,7 @@ export default function RuleNode(props) {
       <div className={styles.topRow}>
         <Menu id={`${id}-menu`} items={menuOptions} />
       </div>
-      <div className={styles.ruleNode}>
+      <div className={`${styles.ruleNode} ${error ? styles.error : ''}`}>
         <div
           className={`${styles.innerWrapper} ${
             leftClass ? styles[leftClass] : ''
@@ -35,6 +41,8 @@ export default function RuleNode(props) {
             operation={operation}
             parameter={parameter}
             value={value}
+            error={error}
+            setError={(a) => setErrorHandler(a)}
           />
         </div>
       </div>

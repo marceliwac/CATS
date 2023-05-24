@@ -12,6 +12,17 @@
   background-color: white;
   overflow: hidden;
 
+  &.error {
+    border: 1px solid #d32f2f;
+
+    .innerWrapper {
+      background-color: #ffeeee;
+      background-image: none  !important;;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+    }
+  }
+
   .innerWrapper {
     box-sizing: border-box;
     width: 100%;
@@ -32,6 +43,5 @@
       border-right: $leaf-border;
       background-image: linear-gradient(to right, $and-background , $leaf-background);
     }
-
   }
 }

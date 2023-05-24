@@ -1,6 +1,11 @@
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
-import { InputAdornment, ListItemText, OutlinedInput } from '@mui/material';
+import {
+  InputAdornment,
+  ListItemText,
+  OutlinedInput,
+  FormHelperText,
+} from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 import FormControl from '@mui/material/FormControl';
@@ -30,14 +35,16 @@ function getParameterUnitByOptionValue(value) {
 }
 
 export default function RuleNodeForm(props) {
-  const { id, operation, parameter, value } = props;
+  const { id, operation, parameter, value, error, setError } = props;
   const [operationInput, setOperationInput] = React.useState(operation);
   const [parameterInput, setParameterInput] = React.useState(parameter);
   const [valueInput, setValueInput] = React.useState(value);
   const [valueOptions, setValueOptions] = React.useState(null);
   const [valueUnit, setValueUnit] = React.useState('');
-  const { updateNode } = useTreeEditor();
+  const { isNumeric, updateNode } = useTreeEditor();
   const didMount = useDidMount();
+  const [valueError, setValueError] = React.useState(false);
+  const [parameterError, setParameterError] = React.useState(false);
 
   usePostInitDebouncing(() => {
     updateNode(id, {
@@ -46,6 +53,15 @@ export default function RuleNodeForm(props) {
       value: valueInput,
     });
   }, [id, operationInput, parameterInput, valueInput]);
+
+  React.useEffect(() => {
+    const vError =
+      valueInput === '' && operationInput !== TreeEditorConfig.operationNotSet;
+    const pError = parameterInput === '';
+    setValueError(vError);
+    setParameterError(pError);
+    setError(vError || pError);
+  }, [operationInput, parameterInput, setError, valueInput]);
 
   React.useEffect(() => {
     if (didMount) {
@@ -66,24 +82,37 @@ export default function RuleNodeForm(props) {
           return [];
         });
         setValueUnit('');
+        if (
+          !operationOptionsSelection.map((op) => op.value).includes(operation)
+        ) {
+          setOperationInput(operationOptionsSelection[0].value);
+        }
       } else {
         setValueOptions(null);
-        setValueInput('');
+        setValueInput((current) =>
+          isNumeric(current) ? `${parseFloat(current)}` : ''
+        );
         setValueUnit(getParameterUnitByOptionValue(parameterInput));
       }
     }
-  }, [didMount, parameterInput]);
+  }, [isNumeric, operation, didMount, parameterInput]);
 
   return (
     <div className={styles.ruleNodeForm}>
       <div className={styles.row}>
-        <FormControl sx={{ m: 1 }} className={styles.parameterDropdown}>
-          <InputLabel id={`${id}-parameter-label`}>Parameter</InputLabel>
+        <FormControl
+          sx={{ m: 1 }}
+          className={styles.parameterDropdown}
+          error={parameterError}
+        >
+          <InputLabel id={`${id}-parameter-label`}>
+            {parameterError ? 'Parameter needed' : 'Parameter'}
+          </InputLabel>
           <Select
             className={styles.select}
             labelId={`${id}-parameter-label`}
             id={`${id}-parameter`}
-            label="Parameter"
+            label={parameterError ? 'Parameter needed' : 'Parameter'}
             value={parameterInput}
             onChange={(e) => setParameterInput(e.target.value)}
             MenuProps={{
@@ -164,31 +193,30 @@ export default function RuleNodeForm(props) {
                   <ListItemText primary={option.label} />
                 </MenuItem>
               ))}
-              {valueOptions.map((option) => (
-                <MenuItem
-                  key={`${id}-value-${option.value}`}
-                  value={option.value}
-                >
-                  {option.label}
-                </MenuItem>
-              ))}
             </Select>
           </FormControl>
-        )) || (
-          <FormControl sx={{ m: 1 }} className={styles.valueInput}>
-            <InputLabel id={`${id}-value-label-input`}>Value</InputLabel>
-            <OutlinedInput
-              className={styles.input}
-              id={`${id}-value-input`}
-              label="Value"
-              value={valueInput}
-              onChange={(e) => setValueInput(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">{valueUnit}</InputAdornment>
-              }
-            />
-          </FormControl>
-        )}
+        )) ||
+          (operationInput !== TreeEditorConfig.operationNotSet && (
+            <FormControl
+              sx={{ m: 1 }}
+              className={styles.valueInput}
+              error={valueError}
+            >
+              <InputLabel id={`${id}-value-label-input`}>
+                {valueError ? 'Value needed' : 'Value'}
+              </InputLabel>
+              <OutlinedInput
+                className={styles.input}
+                id={`${id}-value-input`}
+                label={valueError ? 'Value needed' : 'Value'}
+                value={valueInput}
+                onChange={(e) => setValueInput(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">{valueUnit}</InputAdornment>
+                }
+              />
+            </FormControl>
+          ))}
       </div>
     </div>
   );

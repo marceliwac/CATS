@@ -1,10 +1,23 @@
 import React from 'react';
 import uuid from 'react-uuid';
 import TreeEditorContext from '../contexts/TreeEditorContext';
+import TreeEditorConfig from '../components/_view/Participant/CreateRuleset/TreeEditor/TreeEditorConfig';
 import useDidMount from './useDidMount';
 
 export default function useTreeEditor() {
   return React.useContext(TreeEditorContext);
+}
+
+// This won't copy functions and will fail on circular refs.
+function deepCopy(a) {
+  return JSON.parse(JSON.stringify(a));
+}
+
+function isNumeric(a) {
+  return (
+    typeof a === 'number' ||
+    (typeof a === 'string' && !Number.isNaN(a) && !Number.isNaN(parseFloat(a)))
+  );
 }
 
 function getNewRelationNode() {
@@ -105,30 +118,80 @@ function getRulesetRule(node, nodes) {
   }
 
   if (node.attributes.nodeType === 'RULE') {
-    if (Array.isArray(node.attributes.value)) {
-      const intermediateRelation = getIntermediateRelationForRule(node);
-      getRulesetRule(intermediateRelation, nodes);
-    } else {
-      nodes.rules.push({ ...node.attributes });
-    }
+    nodes.rules.push({ ...node.attributes });
   }
 
   if (node.attributes.nodeType === 'RELATION') {
     nodes.relations.push({
       ...node.attributes,
-      dependencies: Array.isArray(node.children)
-        ? node.children.map((childNode) => childNode.attributes.id)
-        : [],
+      dependencies: node.children.map((childNode) => childNode.attributes.id),
     });
+  }
+}
+
+function formatRelations(relations) {
+  return relations
+    .filter((relation) => relation.dependencies.length > 0)
+    .map((relation) => ({
+      id: relation.id,
+      operation: relation.operation,
+      dependencies: relation.dependencies,
+    }));
+}
+
+function formatRules(rules) {
+  return rules.map((rule) => {
+    let ruleOperation = rule.operation;
+    let ruleValue = isNumeric(rule.value) ? parseFloat(rule.value) : rule.value;
+    if (ruleOperation === TreeEditorConfig.operationNotSet) {
+      ruleOperation = '=';
+      ruleValue = '';
+    }
+    if (ruleValue === TreeEditorConfig.noneOptionValue) {
+      ruleValue = '';
+    }
+    if (ruleValue === '') {
+      ruleValue = null;
+    }
+
+    return {
+      id: rule.id,
+      operation: ruleOperation,
+      parameter: rule.parameter,
+      value: ruleValue,
+    };
+  });
+}
+
+function simplifyComplexRules(node) {
+  // Handle relation with children
+  if (Array.isArray(node.children) && node.children.length > 0) {
+    node.children.forEach((child) => {
+      simplifyComplexRules(child);
+    });
+  }
+
+  // Handle complex rule
+  if (
+    node.attributes.nodeType === 'RULE' &&
+    Array.isArray(node.attributes.value)
+  ) {
+    const intermediateRelation = getIntermediateRelationForRule(node);
+    node.attributes = intermediateRelation.attributes;
+    node.children = intermediateRelation.children;
   }
 }
 
 function formatRuleset(node) {
   const nodes = { rules: [], relations: [] };
-  getRulesetRule(node, nodes);
+  const simplified = deepCopy(node);
+  simplifyComplexRules(simplified);
+  getRulesetRule(simplified, nodes);
+  const { rules, relations } = nodes;
   return {
     root: node.attributes.id,
-    ...nodes,
+    rules: formatRules(rules),
+    relations: formatRelations(relations),
   };
 }
 
@@ -140,7 +203,7 @@ export function TreeEditorProvider(props) {
   React.useEffect(() => {
     if (!didMount) {
       setData((currentData) => {
-        const newData = { ...currentData };
+        const newData = deepCopy(currentData);
         updateStyleAttributes(newData);
         return newData;
       });
@@ -153,7 +216,7 @@ export function TreeEditorProvider(props) {
 
   function toggleType(nodeId) {
     setData((currentData) => {
-      const newData = { ...currentData };
+      const newData = deepCopy(currentData);
       const result = findNodeById(newData, nodeId);
       if (!result) {
         console.warn('Node with selected id does not exist!');
@@ -167,7 +230,7 @@ export function TreeEditorProvider(props) {
 
   function removeNode(nodeId) {
     setData((currentData) => {
-      const newData = { ...currentData };
+      const newData = deepCopy(currentData);
 
       const result = findNodeById(newData, nodeId);
       if (!result) {
@@ -183,7 +246,7 @@ export function TreeEditorProvider(props) {
 
   function addNode(parentNodeId, nodeType) {
     setData((currentData) => {
-      const newData = { ...currentData };
+      const newData = deepCopy(currentData);
       const result = findNodeById(newData, parentNodeId);
       if (!result) {
         console.warn('Node with selected id does not exist!');
@@ -206,7 +269,7 @@ export function TreeEditorProvider(props) {
 
   const updateNode = React.useCallback((nodeId, newAttributes) => {
     setData((currentData) => {
-      const newData = { ...currentData };
+      const newData = deepCopy(currentData);
       const result = findNodeById(newData, nodeId);
       if (!result) {
         console.warn('Node with selected id does not exist!');
@@ -224,7 +287,15 @@ export function TreeEditorProvider(props) {
 
   return (
     <TreeEditorContext.Provider
-      value={{ data, getRuleset, toggleType, removeNode, addNode, updateNode }}
+      value={{
+        data,
+        getRuleset,
+        toggleType,
+        removeNode,
+        addNode,
+        updateNode,
+        isNumeric,
+      }}
     >
       {children}
     </TreeEditorContext.Provider>

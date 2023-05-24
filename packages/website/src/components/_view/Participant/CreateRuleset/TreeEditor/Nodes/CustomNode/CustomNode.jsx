@@ -5,7 +5,7 @@ import RuleNode from '../RuleNode/RuleNode';
 import TreeEditorConfig from '../../TreeEditorConfig';
 
 export default function CustomNode(props) {
-  const { nodeDatum } = props;
+  const { nodeDatum, setGlobalError } = props;
   const {
     attributes: { id, nodeType },
   } = nodeDatum;
@@ -26,7 +26,11 @@ export default function CustomNode(props) {
         height={TreeEditorConfig.nodeSize.y}
       >
         <div className={styles.node}>
-          <Node key={id} nodeDatum={nodeDatum} />
+          <Node
+            key={id}
+            nodeDatum={nodeDatum}
+            setGlobalError={setGlobalError}
+          />
         </div>
       </foreignObject>
     </>

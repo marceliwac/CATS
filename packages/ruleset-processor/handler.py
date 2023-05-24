@@ -85,16 +85,16 @@ def op_neq(parameter, value):
 
 @xray_recorder.capture('## get_rule_operation')
 def get_rule_operation(rule):
-    operator = rule['operator']
-    if operator == '<':
+    operation = rule['operation']
+    if operation == '<':
         return op_lt
-    if operator == '>':
+    if operation == '>':
         return op_gt
-    if operator == '=':
+    if operation == '=':
         return op_eq
-    if operator == '!=':
+    if operation == '!=':
         return op_neq
-    raise Exception(f'Invalid operator in rule definition. Could not find operation for: "{operator}".')
+    raise Exception(f'Invalid operation in rule definition. Could not find operation for: "{operation}".')
 
 
 @xray_recorder.capture('## op_and')
@@ -109,12 +109,12 @@ def op_or(values):
 
 @xray_recorder.capture('## get_relation_operation')
 def get_relation_operation(relation):
-    operator = relation['operator']
-    if operator == 'AND':
+    operation = relation['operation']
+    if operation == 'AND':
         return op_and
-    if operator == 'OR':
+    if operation == 'OR':
         return op_or
-    raise Exception(f'Invalid operator in relation definition. Could not find operation for: "{operator}".')
+    raise Exception(f'Invalid operation in relation definition. Could not find operation for: "{operation}".')
 
 
 @xray_recorder.capture('## check_rule_value')
@@ -135,7 +135,7 @@ def check_relation_value(relation, values):
 @xray_recorder.capture('## compute_rules')
 def compute_rules(frame, ruleset):
     for rule in ruleset['rules']:
-        frame[rule['name']] = frame[rule['parameter']].apply(lambda x: check_rule_value(rule, x))
+        frame[rule['id']] = frame[rule['parameter']].apply(lambda x: check_rule_value(rule, x))
 
 
 @xray_recorder.capture('## compute_relations')
@@ -143,7 +143,7 @@ def compute_relations(frame, ruleset):
     for relation in ruleset['relations']:
         for index, row in frame.iterrows():
             dependencies = row[relation['dependencies']].values
-            frame.loc[index,relation['name']] = check_relation_value(relation, dependencies)
+            frame.loc[index,relation['id']] = check_relation_value(relation, dependencies)
 
 
 @xray_recorder.capture('## get_parameters_to_select')
