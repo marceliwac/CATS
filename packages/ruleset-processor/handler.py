@@ -66,20 +66,28 @@ PARAMETER_DTYPES = {
 
 @xray_recorder.capture('## op_eq')
 def op_lt(parameter, value):
+    if value is None:
+      return false
     return parameter < value
 
 
 @xray_recorder.capture('## op_lt')
 def op_gt(parameter, value):
+    if value is None:
+      return false
     return parameter > value
 
 @xray_recorder.capture('## op_eq')
 def op_eq(parameter, value):
+    if parameter is None:
+      return pd.isna(value)
     return parameter == value
 
 
-@xray_recorder.capture('## op_lt')
+@xray_recorder.capture('## op_neq')
 def op_neq(parameter, value):
+    if parameter is None:
+      return not pd.isna(value)
     return parameter != value
 
 

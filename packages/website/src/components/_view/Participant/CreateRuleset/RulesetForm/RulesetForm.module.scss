@@ -1,33 +1,29 @@
 .rulesetForm {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
+  width: 25em;
+  background-color: white;
+  border: $border;
+  border-radius: $border-radius;
+  padding: 1em 1em 1em 1em;
+  box-sizing: border-box;
+  margin: 1em;
+  box-shadow: 0 0 .5em #ddd;
+  z-index: 1000;
 
-  .row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 6em;
-    align-items: center;
-    justify-content: center;
-
-    .name {
-      flex-grow: 2;
-      margin-left: 0;
-    }
-
-    .button {
-      flex-grow: 1;
-      margin: 0 0 0 2em;
-      max-width: 15em;
-    }
+  .name {
+    margin: .25em 0 0 0;
   }
 
+  .button {
+    margin: 1em 0 0 0;
+  }
 
   .errorMessage {
-    color: red;
+    margin: 1em 0 0 0;
+    color: #d32f2f;
     font-weight: 300;
     font-size: .9em;
   }

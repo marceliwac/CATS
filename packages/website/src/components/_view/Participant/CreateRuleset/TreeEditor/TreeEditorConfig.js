@@ -1,8 +1,10 @@
 const NONE_OPTION_VALUE = '(none)';
+const OPERATION_SET = '!!';
 const OPERATION_NOT_SET = '!';
 export default {
   noneOptionValue: NONE_OPTION_VALUE,
   operationNotSet: OPERATION_NOT_SET,
+  operationSet: OPERATION_SET,
   nodeSize: {
     x: 400,
     y: 250,
@@ -43,6 +45,10 @@ export default {
       {
         value: '!=',
         label: 'Not equal to',
+      },
+      {
+        value: OPERATION_SET,
+        label: 'Set',
       },
       {
         value: OPERATION_NOT_SET,

@@ -51,7 +51,10 @@ resources:
   Resources:
     GetInvokedByApiRolePermission:
       Type: AWS::Lambda::Permission
+      DependsOn:
+        - "ProcessRulesetLambdaFunction"
       Properties:
         Action: lambda:InvokeFunction
         FunctionName: ${self:service}-${self:provider.stage}-processRuleset
         Principal: ${cf:${self:custom.config.stackName.infrastructure}.LambdaApiRoleArn}
+

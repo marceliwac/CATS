@@ -22,6 +22,8 @@ const {
     operationOptionsSelection,
     parameterOptions,
     parameterSelection,
+    operationNotSet,
+    operationSet,
   },
 } = TreeEditorConfig;
 
@@ -35,13 +37,13 @@ function getParameterUnitByOptionValue(value) {
 }
 
 export default function RuleNodeForm(props) {
-  const { id, operation, parameter, value, error, setError } = props;
+  const { id, operation, parameter, value, setError } = props;
   const [operationInput, setOperationInput] = React.useState(operation);
   const [parameterInput, setParameterInput] = React.useState(parameter);
   const [valueInput, setValueInput] = React.useState(value);
   const [valueOptions, setValueOptions] = React.useState(null);
   const [valueUnit, setValueUnit] = React.useState('');
-  const { isNumeric, updateNode } = useTreeEditor();
+  const { isNumeric, updateNode, setHasError } = useTreeEditor();
   const didMount = useDidMount();
   const [valueError, setValueError] = React.useState(false);
   const [parameterError, setParameterError] = React.useState(false);
@@ -56,12 +58,14 @@ export default function RuleNodeForm(props) {
 
   React.useEffect(() => {
     const vError =
-      valueInput === '' && operationInput !== TreeEditorConfig.operationNotSet;
+      valueInput === '' &&
+      ![operationNotSet, operationSet].includes(operationInput);
     const pError = parameterInput === '';
     setValueError(vError);
     setParameterError(pError);
     setError(vError || pError);
-  }, [operationInput, parameterInput, setError, valueInput]);
+    setHasError(vError || pError);
+  }, [operationInput, parameterInput, setError, valueInput, setHasError]);
 
   React.useEffect(() => {
     if (didMount) {
@@ -196,7 +200,7 @@ export default function RuleNodeForm(props) {
             </Select>
           </FormControl>
         )) ||
-          (operationInput !== TreeEditorConfig.operationNotSet && (
+          (![operationSet, operationNotSet].includes(operationInput) && (
             <FormControl
               sx={{ m: 1 }}
               className={styles.valueInput}

@@ -147,6 +147,10 @@ function formatRules(rules) {
       ruleOperation = '=';
       ruleValue = '';
     }
+    if (ruleOperation === TreeEditorConfig.operationSet) {
+      ruleOperation = '!=';
+      ruleValue = '';
+    }
     if (ruleValue === TreeEditorConfig.noneOptionValue) {
       ruleValue = '';
     }
@@ -197,6 +201,7 @@ function formatRuleset(node) {
 
 export function TreeEditorProvider(props) {
   const { initialData, children } = props;
+  const [hasError, setHasError] = React.useState(false);
   const [data, setData] = React.useState(initialData);
   const didMount = useDidMount();
 
@@ -295,6 +300,8 @@ export function TreeEditorProvider(props) {
         addNode,
         updateNode,
         isNumeric,
+        hasError,
+        setHasError,
       }}
     >
       {children}

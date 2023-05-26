@@ -6,40 +6,29 @@ import CustomNode from './Nodes/CustomNode/CustomNode';
 import useTreeEditor from '../../../../../hooks/useTreeEditor';
 
 export default function TreeEditor(props) {
-  const { setGlobalError } = props;
-  const { data, getRuleset } = useTreeEditor();
+  const { data } = useTreeEditor();
   const treeRef = React.useRef();
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => {
-          console.log(getRuleset());
-        }}
-      >
-        Get ruleset
-      </button>
-      <Tree
-        ref={treeRef}
-        data={{ ...data }}
-        translate={{ x: 0, y: 0 }}
-        draggable
-        pathFunc="step"
-        nodeSize={{
-          x: TreeEditorConfig.nodeSize.x,
-          y: TreeEditorConfig.nodeSize.y,
-        }}
-        rootNodeClassName={styles.nodeOverride}
-        branchNodeClassName={styles.nodeOverride}
-        leafNodeClassName={styles.nodeOverride}
-        svgClassName={styles.svgOverride}
-        hasInteractiveNodes
-        depthFactor={TreeEditorConfig.depthFactor}
-        separation={TreeEditorConfig.separation}
-        renderCustomNodeElement={({ nodeDatum }) => (
-          <CustomNode setGlobalError={setGlobalError} nodeDatum={nodeDatum} />
-        )}
-      />
-    </>
+    <Tree
+      ref={treeRef}
+      data={{ ...data }}
+      translate={{ x: 300, y: 500 }}
+      draggable
+      pathFunc="step"
+      nodeSize={{
+        x: TreeEditorConfig.nodeSize.x,
+        y: TreeEditorConfig.nodeSize.y,
+      }}
+      rootNodeClassName={styles.nodeOverride}
+      branchNodeClassName={styles.nodeOverride}
+      leafNodeClassName={styles.nodeOverride}
+      svgClassName={styles.svgOverride}
+      hasInteractiveNodes
+      depthFactor={TreeEditorConfig.depthFactor}
+      separation={TreeEditorConfig.separation}
+      renderCustomNodeElement={({ nodeDatum }) => (
+        <CustomNode nodeDatum={nodeDatum} />
+      )}
+    />
   );
 }
