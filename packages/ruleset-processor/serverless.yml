@@ -15,6 +15,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-python-requirements
   - serverless-offline
+  - serverless-step-functions
 
 package:
   include:
@@ -45,16 +46,94 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handler.handler
-#
+    handler: processRuleset.handler
+    tracing: Active
+  processStatistics:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: processStatistics.handler
+    tracing: Active
+
+stepFunctions:
+  stateMachines:
+    rulesetProcessorFunction:
+      role: ${cf:${self:custom.config.stackName.infrastructure}.StepFunctionRulesetProcessorRoleArn}
+      name: RulesetProcessor
+      definition:
+        StartAt: ListStage3DataObjects
+        States:
+          ListStage3DataObjects:
+            Type: Task
+            Parameters:
+              Bucket: ${cf:${self:custom.config.stackName.infrastructure}.Stage3DataS3BucketName}
+              Prefix: "stays/"
+            Resource: arn:aws:states:::aws-sdk:s3:listObjectsV2
+            Next: TriggerLambdaForEachFile
+            OutputPath: "$.Contents"
+            ResultSelector:
+              Contents.$: "$.Contents[?(@.Size > 0)]"
+          TriggerLambdaForEachFile:
+            Type: Map
+            ItemProcessor:
+              ProcessorConfig:
+                Mode: DISTRIBUTED
+                ExecutionType: STANDARD
+              StartAt: ProcessFile
+              States:
+                ProcessFile:
+                  Type: Task
+                  Resource: arn:aws:states:::lambda:invoke
+                  OutputPath: "$.Payload"
+                  Parameters:
+                    FunctionName:
+                      Ref: ProcessRulesetLambdaFunction
+                    Payload.$: "$"
+                  End: true
+            ItemSelector:
+              filename.$: "$$.Map.Item.Value.Key"
+              ruleset.$: "$$.Execution.Input.ruleset"
+              bucket: ${cf:${self:custom.config.stackName.infrastructure}.Stage3DataS3BucketName}
+            Next: ProcessStatistics
+          ProcessStatistics:
+            Type: Task
+            Resource: arn:aws:states:::lambda:invoke
+            OutputPath: "$.Payload"
+            Parameters:
+              FunctionName:
+                Ref: ProcessStatisticsLambdaFunction
+              Payload:
+                ruleset.$: "$$.Execution.Input.ruleset"
+                statisticsFilenames.$: "$.[*].statisticsFilename"
+                labelsFilenames.$: "$.[*].labelsFilename"
+                bucket: ${cf:${self:custom.config.stackName.infrastructure}.Stage3DataS3BucketName}
+            End: true
+        TimeoutSeconds: 600
+      dependsOn:
+        - ProcessRulesetLambdaFunction
+
 resources:
   Resources:
-    GetInvokedByApiRolePermission:
+    ProcessRulesetGetInvokedByRulesetProcessorRolePermission:
       Type: AWS::Lambda::Permission
       DependsOn:
-        - "ProcessRulesetLambdaFunction"
+        - ProcessRulesetLambdaFunction
       Properties:
         Action: lambda:InvokeFunction
-        FunctionName: ${self:service}-${self:provider.stage}-processRuleset
-        Principal: ${cf:${self:custom.config.stackName.infrastructure}.LambdaApiRoleArn}
+        FunctionName:
+          Ref: ProcessRulesetLambdaFunction
+        Principal: ${cf:${self:custom.config.stackName.infrastructure}.StepFunctionRulesetProcessorRoleArn}
+    ProcessStatisticsGetInvokedByRulesetProcessorRolePermission:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - ProcessStatisticsLambdaFunction
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName:
+          Ref: ProcessStatisticsLambdaFunction
+        Principal: ${cf:${self:custom.config.stackName.infrastructure}.StepFunctionRulesetProcessorRoleArn}
 
