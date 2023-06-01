@@ -35,4 +35,6 @@ module.exports = {
   StayAssignment: require('./src/StayAssignment'),
   GroupAssignment: require('./src/GroupAssignment'),
   OrderedGroupAssignment: require('./src/OrderedGroupAssignment'),
+  Ruleset: require('./src/Ruleset'),
+  RulesetLabel: require('./src/RulesetLabel'),
 };

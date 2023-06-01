@@ -216,6 +216,10 @@ export function TreeEditorProvider(props) {
   }, [didMount]);
 
   function getRuleset() {
+    return data;
+  }
+
+  function getParsedRuleset() {
     return formatRuleset(data);
   }
 
@@ -295,6 +299,7 @@ export function TreeEditorProvider(props) {
       value={{
         data,
         getRuleset,
+        getParsedRuleset,
         toggleType,
         removeNode,
         addNode,

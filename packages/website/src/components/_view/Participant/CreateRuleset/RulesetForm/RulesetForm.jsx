@@ -7,12 +7,12 @@ import styles from './RulesetForm.module.scss';
 import useTreeEditor from '../../../../../hooks/useTreeEditor';
 import APIClient from '../../../../../util/APIClient';
 
-export default function RulesetForm(props) {
+export default function RulesetForm() {
   const [name, setName] = React.useState('My ruleset');
   const [nameError, setNameError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const { getRuleset, hasError } = useTreeEditor();
+  const { getRuleset, getParsedRuleset, hasError } = useTreeEditor();
 
   async function submit() {
     if (hasError) {
@@ -30,7 +30,12 @@ export default function RulesetForm(props) {
     try {
       setIsSubmitting(true);
       const ruleset = getRuleset();
-      await APIClient.post('/participant/rulesets', ruleset);
+      const parsedRuleset = getParsedRuleset();
+      await APIClient.post('/participant/rulesets', {
+        name,
+        ruleset,
+        parsedRuleset,
+      });
       setErrorMessage(null);
     } catch (e) {
       setErrorMessage('Could not create a ruleset! Please contact support.');

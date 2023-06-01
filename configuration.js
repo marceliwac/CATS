@@ -39,9 +39,13 @@ const config = {
   // userPoolClientWebsiteId: '1ik2qjs93h0p4g3ni3advb22v9', // TODO Automate this by moving it to AWS SSM
   userPoolClientWebsiteId: '74i6cr0qnp0mf6krt9sn5p8lqo', // TODO Automate this by moving it to AWS SSM
 
+  // ARN of the step function that processes the ruleset
+  rulesetProcessorStateMachineArn: 'arn:aws:states:eu-west-1:211056341960:stateMachine:RulesetProcessor', // TODO Automate this by moving it to AWS SSM
+
   // ARN of the identity for cognito emails (needs to be manually created)
   cognitoSourceArn:
     'arn:aws:ses:us-east-1:211056341960:identity/wl.marceliwac.com',
+
 };
 
 const serviceNames = {
@@ -173,6 +177,7 @@ const shared = {
       WEBSITE_URL: `https://${domains.website}`,
       DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
       MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
+      RULESET_PROCESSOR_STATE_MACHINE_ARN: config.rulesetProcessorStateMachineArn,
     };
   },
 

@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "local": "IS_LOCAL=true LOCAL_CONNECTION_STRING='pg://postgres:postgres@localhost:5432/wls' serverless offline --useChildProcesses--httpPort=4002 --lambdaPort=4003",
+    "local": "IS_LOCAL=true LOCAL_CONNECTION_STRING='pg://postgres:postgres@localhost:5432/wls' serverless offline --useChildProcesses --httpPort=4002 --lambdaPort=4003 --stage=${STAGE}",
     "deploy": "serverless deploy --stage=${STAGE}",
     "remove": "serverless remove --stage=${STAGE}"
   },
