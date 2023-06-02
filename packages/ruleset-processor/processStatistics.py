@@ -89,7 +89,7 @@ def get_aggregate_for(array, key):
     r3 = frame[(frame[key] >= median) & (frame[key] <= q3)]
     r4 = frame[(frame[key] >= q3) & (frame[key] <= maxOut)]
 
-    vals, bins = np.histogram(frame[key], bins = 200)
+    vals, bins = np.histogram(frame[key], bins = 20)
     histogram = [[a,b] for a,b in list(zip(bins, vals))]
 
     return {

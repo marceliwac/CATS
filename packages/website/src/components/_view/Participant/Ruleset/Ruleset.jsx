@@ -9,6 +9,7 @@ import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import LabelStatistics from './LabelStatistics/LabelStatistics';
+import AggregateMetric from './AggregateMetric/AggregateMetric';
 
 function getReadableStatus(status) {
   status = 'IN_PROGRESS';
@@ -69,6 +70,10 @@ export default function Ruleset() {
       <div className={styles.topStatistics}>
         <LabelStatistics statistics={data.statistics} />
       </div>
+      <AggregateMetric
+        dataKey="avgLabelDuration"
+        data={data.statistics.avgLabelDuration}
+      />
     </div>
   );
 }
