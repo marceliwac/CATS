@@ -199,6 +199,7 @@ def compute_statistics_and_labels(frame, ruleset):
             'rowCount': len(stay_rows),
             'labelledRowCount': len(stay_rows[stay_rows[ruleset['root']] == True]),
             'labelCount': len(stay_labels),
+            'totalDuration': get_label_length({'startTime': stay_rows.iloc[0]['charttime'], 'endTime': stay_rows.iloc[-1]['charttime']}) if len(stay_rows) > 0 else 0,
             'totalLabelDuration': sum(durations) if len(durations) > 0 else 0,
             'percentageRowsLabelled': len(stay_rows[stay_rows[ruleset['root']] == True]) / len(stay_rows) if len(stay_rows) > 0 else 0,
             'minLabelDuration': min(durations) if len(durations) > 0 else 0,

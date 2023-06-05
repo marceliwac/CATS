@@ -59,22 +59,22 @@ export default function LabelStatistics(props) {
   const { statistics } = props;
 
   const { total } = statistics;
-  const { rowCount, labelledRowCount } = total;
+  const { totalDuration, totalLabelDuration } = total;
 
   const pieData = [
     {
-      key: 'labelledRowCount',
+      key: 'totalLabelDuration',
       color: '#27d0b1',
-      value: labelledRowCount,
+      value: totalLabelDuration,
     },
     {
-      key: 'rowCount',
+      key: 'totalDuration',
       color: '#61a0ff',
-      value: rowCount - labelledRowCount,
+      value: totalDuration - totalLabelDuration,
     },
   ];
 
-  const startAngle = 360 * (1 - labelledRowCount / rowCount / 2) + 45;
+  const startAngle = 360 * (1 - totalLabelDuration / totalDuration / 2) + 45;
   const endAngle = startAngle + 360;
 
   const parameters = [

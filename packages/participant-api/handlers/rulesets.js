@@ -92,6 +92,7 @@ const StatisticsModel = yup.object().shape({
     labelCount: yup.number().integer().required(),
     minLabelDuration: yup.number().required(),
     maxLabelDuration: yup.number().required(),
+    totalDuration: yup.number().required(),
     totalLabelDuration: yup.number().required(),
     avgLabelDuration: yup.number().required(),
   }),

@@ -3,45 +3,26 @@ import {
   Bar,
   CartesianGrid,
   ComposedChart,
-  ErrorBar,
   Label,
   ReferenceLine,
   ResponsiveContainer,
   XAxis,
   YAxis,
 } from 'recharts';
-
-const colors = {
-  gray: '#e1e1e1',
-  green: '#c1e5ff',
-  yellow: '#8ecfff',
-  orange: '#8ecfff',
-  red: '#c1e5ff',
-  median: '#f17474',
-};
-
-const barSize = {
-  min: 5,
-  minOut: 20,
-  q1: 40,
-  q3: 40,
-  maxOut: 20,
-  max: 5,
-};
+import BoxPlotTick from './BoxPlotTick/BoxPlotTick';
+import RulesetConfig from '../../RulesetConfig';
 
 export default function BoxPlot(props) {
-  const { domainX, minOut, min, q1, median, q3, avg, max, maxOut, dataKey } =
-    props;
+  const { domainX, minOut, min, q1, median, q3, avg, max, maxOut } = props;
 
   const certainLowerBound = minOut > min ? minOut : min;
   const certainUpperBound = maxOut < max ? maxOut : max;
 
   const data = [
     {
-      a: [certainLowerBound, certainUpperBound],
-      b: [q1, q3],
-      c: [avg, avg],
-      z: [min, max],
+      outer: [certainLowerBound, certainUpperBound],
+      inner: [q1, q3],
+      outliers: [min, max],
     },
   ];
 
@@ -71,37 +52,6 @@ export default function BoxPlot(props) {
 
   const ticks = tickArray.map((t) => t.value);
 
-  const MyTick = (p) => {
-    const { x, y, payload } = p;
-    const matching = tickArray.find((item) => item.value === payload.value);
-    return (
-      <g transform={`translate(${x}, ${y})`}>
-        <text
-          x={0}
-          y={0}
-          dx={-20}
-          dy={24}
-          fill="#999"
-          textAnchor="end"
-          transform="rotate(-45)"
-          fontFamily="sans-serif"
-        >
-          {matching.key}
-        </text>
-        <text
-          x={0}
-          y={0}
-          dy={18}
-          fill="#666"
-          textAnchor="middle"
-          fontFamily="sans-serif"
-        >
-          {matching.value.toFixed(1)}
-        </text>
-      </g>
-    );
-  };
-
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ComposedChart data={data} layout="vertical">
@@ -111,38 +61,37 @@ export default function BoxPlot(props) {
           domain={domainX}
           interval={0}
           ticks={ticks}
-          tick={<MyTick />}
+          tick={<BoxPlotTick tickArray={tickArray} />}
           height={120}
         />
-        <YAxis yAxisId="ay" type="category" tick={false} />
-        <YAxis yAxisId="by" type="category" hide />
-        <YAxis yAxisId="cy" type="category" hide />
-        <YAxis yAxisId="dy" type="category" hide />
-        <YAxis yAxisId="ey" type="category" hide />
-        <YAxis yAxisId="fy" type="category" hide />
-        <YAxis yAxisId="zy" type="category" hide />
+        <YAxis yAxisId="innerAxis" type="category" tick={false} />
+        <YAxis yAxisId="outerAxis" type="category" hide />
+        <YAxis yAxisId="outliersAxis" type="category" hide />
+        <YAxis yAxisId="avgAxis" type="category" hide />
+        <YAxis yAxisId="medianAxis" type="category" hide />
+        <YAxis yAxisId="minOutlierAxis" type="category" hide />
+        <YAxis yAxisId="maxOutlierAxis" type="category" hide />
 
-        <Bar yAxisId="zy" dataKey="z" fill="#999" barSize={2} />
         <Bar
-          yAxisId="ay"
-          dataKey="a"
-          fill={colors.green}
-          barSize={barSize.minOut}
+          yAxisId="outliersAxis"
+          dataKey="outliers"
+          fill={RulesetConfig.colors.outliersDarker}
+          barSize={RulesetConfig.boxPlot.size.outliers}
+        />
+        <Bar
+          yAxisId="outerAxis"
+          dataKey="outer"
+          fill={RulesetConfig.colors.outer}
+          barSize={RulesetConfig.boxPlot.size.outer}
         />
 
         <Bar
-          yAxisId="by"
-          dataKey="b"
-          fill={colors.yellow}
-          barSize={barSize.q1}
+          yAxisId="innerAxis"
+          dataKey="inner"
+          fill={RulesetConfig.colors.inner}
+          barSize={RulesetConfig.boxPlot.size.inner}
         />
-        <ReferenceLine
-          yAxisId="cy"
-          x={avg}
-          strokeWidth={4}
-          stroke="transparent"
-          viewBox={{ x: 5, y: 5, width: 5, height: 5 }}
-        >
+        <ReferenceLine yAxisId="avgAxis" x={avg} stroke="transparent">
           <Label
             content={(p) => {
               const {
@@ -154,21 +103,15 @@ export default function BoxPlot(props) {
                   x2={x}
                   y1={16}
                   y2={56}
-                  stroke={colors.median}
-                  strokeWidth={4}
+                  stroke={RulesetConfig.colors.avg}
+                  strokeWidth={RulesetConfig.refLines.avg.stroke}
                 />
               );
             }}
           />
         </ReferenceLine>
 
-        <ReferenceLine
-          yAxisId="dy"
-          x={median}
-          strokeWidth={4}
-          stroke="transparent"
-          viewBox={{ x: 5, y: 5, width: 5, height: 5 }}
-        >
+        <ReferenceLine yAxisId="medianAxis" x={median} stroke="transparent">
           <Label
             content={(p) => {
               const {
@@ -180,20 +123,15 @@ export default function BoxPlot(props) {
                   x2={x}
                   y1={16}
                   y2={56}
-                  stroke="#999"
-                  strokeWidth={2}
+                  stroke={RulesetConfig.colors.median}
+                  strokeWidth={RulesetConfig.refLines.median.stroke}
                 />
               );
             }}
           />
         </ReferenceLine>
 
-        <ReferenceLine
-          yAxisId="ey"
-          x={min}
-          strokeWidth={2}
-          stroke="transparent"
-        >
+        <ReferenceLine yAxisId="minOutlierAxis" x={min} stroke="transparent">
           <Label
             content={(p) => {
               const {
@@ -205,14 +143,14 @@ export default function BoxPlot(props) {
                   x2={x}
                   y1={16}
                   y2={56}
-                  stroke="#999"
-                  strokeWidth={2}
+                  stroke={RulesetConfig.colors.outliersDarker}
+                  strokeWidth={RulesetConfig.refLines.outlier.stroke}
                 />
               );
             }}
           />
         </ReferenceLine>
-        <ReferenceLine yAxisId="fy" x={max} stroke="transparent">
+        <ReferenceLine yAxisId="maxOutlierAxis" x={max} stroke="transparent">
           <Label
             content={(p) => {
               const {
@@ -224,20 +162,13 @@ export default function BoxPlot(props) {
                   x2={x}
                   y1={16}
                   y2={56}
-                  stroke="#999"
-                  strokeWidth={2}
+                  stroke={RulesetConfig.colors.outliersDarker}
+                  strokeWidth={RulesetConfig.refLines.outlier.stroke}
                 />
               );
             }}
           />
         </ReferenceLine>
-        {/* <Bar stackId="a" dataKey={min} fill="red" /> */}
-        {/* <Bar dataKey={q1} fill="yellow" /> */}
-        {/* <Bar dataKey={median} fill="cyan" /> */}
-        {/* <Bar dataKey={avg} fill="orange" /> */}
-        {/* <Bar dataKey={q3} fill="green" /> */}
-        {/* <Bar stackId="a" dataKey={max} fill="blue" /> */}
-        {/* <Bar stackId="a" dataKey="max" fill="blue" /> */}
       </ComposedChart>
     </ResponsiveContainer>
   );
