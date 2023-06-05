@@ -12,7 +12,6 @@ import LabelStatistics from './LabelStatistics/LabelStatistics';
 import AggregateMetric from './AggregateMetric/AggregateMetric';
 
 function getReadableStatus(status) {
-  status = 'IN_PROGRESS';
   switch (status) {
     case 'PENDING':
       return (
@@ -71,8 +70,34 @@ export default function Ruleset() {
         <LabelStatistics statistics={data.statistics} />
       </div>
       <AggregateMetric
+        label="Average label duration"
         dataKey="avgLabelDuration"
         data={data.statistics.avgLabelDuration}
+      />
+      <AggregateMetric
+        label="Minimum label duration"
+        dataKey="minLabelDuration"
+        data={data.statistics.minLabelDuration}
+      />
+      <AggregateMetric
+        label="Maximum label duration"
+        dataKey="maxLabelDuration"
+        data={data.statistics.maxLabelDuration}
+      />
+      <AggregateMetric
+        label="Number of labels"
+        dataKey="labelCount"
+        data={data.statistics.labelCount}
+      />
+      <AggregateMetric
+        label="Percentage of stay labelled"
+        dataKey="percentageRowsLabelled"
+        data={data.statistics.percentageRowsLabelled}
+      />
+      <AggregateMetric
+        label="Total label duration"
+        dataKey="totalLabelDuration"
+        data={data.statistics.totalLabelDuration}
       />
     </div>
   );

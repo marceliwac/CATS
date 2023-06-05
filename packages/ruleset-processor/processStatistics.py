@@ -84,12 +84,8 @@ def get_aggregate_for(array, key):
     dmin = frame.iloc[0][key]
     dmax = frame.iloc[-1][key]
 
-    r1 = frame[(frame[key] >= minOut) & (frame[key] <= q1)]
-    r2 = frame[(frame[key] >= q1) & (frame[key] <= median)]
-    r3 = frame[(frame[key] >= median) & (frame[key] <= q3)]
-    r4 = frame[(frame[key] >= q3) & (frame[key] <= maxOut)]
-
-    vals, bins = np.histogram(frame[key], bins = 20)
+    vals, bin_edges = np.histogram(frame[key], bins = 20)
+    bins = [(bin_edges[i] + ((bin_edges[i + 1] - bin_edges[i]) / 2)) for i in range(len(bin_edges) - 1)]
     histogram = [[a,b] for a,b in list(zip(bins, vals))]
 
     return {
@@ -101,22 +97,8 @@ def get_aggregate_for(array, key):
         "q3": q3,
         "maxOut": maxOut,
         "max": dmax,
-        "r1": {
-            "lower": r1.iloc[:5][["index", "stayId", "value"]].to_dict('records'),
-            "upper": r1.iloc[-5:][["index", "stayId", "value"]].to_dict('records')
-        },
-        "r2": {
-            "lower": r2.iloc[:5][["index", "stayId", "value"]].to_dict('records'),
-            "upper": r2.iloc[-5:][["index", "stayId", "value"]].to_dict('records')
-        },
-        "r3": {
-            "lower": r3.iloc[:5][["index", "stayId", "value"]].to_dict('records'),
-            "upper": r3.iloc[-5:][["index", "stayId", "value"]].to_dict('records')
-        },
-        "r4": {
-            "lower": r4.iloc[:5][["index", "stayId", "value"]].to_dict('records'),
-            "upper": r4.iloc[-5:][["index", "stayId", "value"]].to_dict('records')
-        },
+        "lowerInterval": frame.iloc[:5][["index", "stayId", "value"]].to_dict('records'),
+        "upperInterval": frame.iloc[-5:][["index", "stayId", "value"]].to_dict('records'),
         "histogram": histogram
     }
 

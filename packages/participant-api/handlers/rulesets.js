@@ -63,22 +63,13 @@ const ParsedRulesetModel = yup.object().shape({
   relations: yup.array().of(ParsedRulesetRelation),
 });
 
-const StatisticsAggregateRangeData = yup.object().shape({
-  lower: yup.array().of(
-    yup.object().shape({
-      index: yup.number().integer(),
-      stayId: yup.number().integer(),
-      value: yup.number(),
-    })
-  ),
-  upper: yup.array().of(
-    yup.object().shape({
-      index: yup.number().integer(),
-      stayId: yup.number().integer(),
-      value: yup.number(),
-    })
-  ),
-});
+const StatisticsAggregateRangeData = yup.array().of(
+  yup.object().shape({
+    index: yup.number().integer(),
+    stayId: yup.number().integer(),
+    value: yup.number(),
+  })
+);
 
 const StatisticsAggregate = yup.object().shape({
   min: yup.number(),
@@ -89,10 +80,8 @@ const StatisticsAggregate = yup.object().shape({
   q3: yup.number(),
   maxOut: yup.number(),
   max: yup.number(),
-  r1: StatisticsAggregateRangeData,
-  r2: StatisticsAggregateRangeData,
-  r3: StatisticsAggregateRangeData,
-  r4: StatisticsAggregateRangeData,
+  lowerInterval: StatisticsAggregateRangeData,
+  upperInterval: StatisticsAggregateRangeData,
   histogram: yup.array().of(yup.array().of(yup.number())),
 });
 

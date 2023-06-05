@@ -1,8 +1,102 @@
 .aggregateMetric {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 
-  .charts {
-    width: 50%;
-    height: 20em;
+  .title {
+    width: 100%;
+    padding: 0 2em;
+    margin: 1em 0 2em 0;
+    box-sizing: border-box;
+
+    h2 {
+      font-size: 1.35em;
+      font-weight: normal;
+      color: $text-primary;
+      padding-bottom: .45em;
+      margin-bottom: .45em;
+      border-bottom: $border;
+    }
+  }
+
+  .graphsAndTable {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+    .charts {
+      width: 70%;
+      box-sizing: border-box;
+      padding-right: 4em;
+
+      .histogram {
+        height: 20em;
+      }
+
+      .boxPlot {
+        height: 12em;
+        svg {
+          padding-bottom: 14em;
+        }
+      }
+    }
+
+    .table {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      padding-right: 4em;
+
+      .tableRow {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        //border-bottom: $border;
+        margin: 0.1em 0;
+        background-color: #f9f9f9;
+
+        &:first-of-type {
+          //border-top: $border;
+        }
+
+        .index {
+          margin: 0 1em;
+          min-width: 15%;
+          color: $text-primary-lighter;
+          font-weight: normal;
+        }
+
+        .value{
+          margin-right: 1em;
+          min-width: 20%;
+          color: $text-primary;
+          font-weight: normal;
+        }
+
+        .button {
+          margin: 0 1em 0 auto;
+        }
+
+        .separator {
+          font-weight: normal;
+          color: $text-primary;
+          padding: .5em 0;
+          margin: 0 1em;
+        }
+
+        &:has(.separator) {
+          background-color: transparent;
+        }
+      }
+    }
   }
 }
