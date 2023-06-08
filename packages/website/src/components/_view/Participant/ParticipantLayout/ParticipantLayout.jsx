@@ -7,6 +7,8 @@ import AuthenticatedParticipantRoute from '../../../_functional/AuthenticatedPar
 import Ruleset from '../Ruleset/Ruleset';
 import CreateRuleset from '../CreateRuleset/CreateRuleset';
 import Rulesets from '../Rulesets/Rulesets';
+import RulesetPreview from '../RulesetPreview/RulesetPreview';
+import RulesetLabels from '../RulesetLabels/RulesetLabels';
 
 function ParticipantLayout() {
   return (
@@ -16,6 +18,8 @@ function ParticipantLayout() {
         <Route index element={<Rulesets />} />
         <Route path="create" element={<CreateRuleset />} />
         <Route path=":rulesetId" element={<Ruleset />} />
+        <Route path=":rulesetId/preview" element={<RulesetPreview />} />
+        <Route path=":rulesetId/stays/:stayId" element={<RulesetLabels />} />
       </Route>
       <Route path="stayAssignments/*">
         <Route index element={<StayAssignments />} />

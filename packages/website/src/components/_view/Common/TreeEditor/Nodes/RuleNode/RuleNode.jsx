@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './RuleNode.module.scss';
-import useTreeEditor from '../../../../../../../hooks/useTreeEditor';
+import useTreeEditor from '../../../../../../hooks/useTreeEditor';
 import RuleNodeForm from './RuleNodeForm/RuleNodeForm';
-import Menu from '../../../../../Common/Menu/Menu';
+import Menu from '../../../Menu/Menu';
 
 export default function RuleNode(props) {
-  const { nodeDatum } = props;
+  const { nodeDatum, isEditable } = props;
   const {
     attributes: { id, operation, parameter, value, leftClass, rightClass },
   } = nodeDatum;
@@ -23,7 +23,7 @@ export default function RuleNode(props) {
   return (
     <>
       <div className={styles.topRow}>
-        <Menu id={`${id}-menu`} items={menuOptions} />
+        {isEditable && <Menu id={`${id}-menu`} items={menuOptions} />}
       </div>
       <div className={`${styles.ruleNode} ${error ? styles.error : ''}`}>
         <div
@@ -32,6 +32,7 @@ export default function RuleNode(props) {
           } ${rightClass ? styles[rightClass] : ''}`}
         >
           <RuleNodeForm
+            isEditable={isEditable}
             id={id}
             operation={operation}
             parameter={parameter}

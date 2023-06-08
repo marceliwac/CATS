@@ -1,0 +1,104 @@
+.tableHeader {
+  z-index: 40;
+  // "First" element in range (in general, all elements in range, but later modified by the other
+  // selectors so effectively only the first element.
+
+  .tableHeaderTopLeft {
+    position: sticky !important;
+    z-index: 30 !important;
+    left: 0;
+    background-color: rgb(222, 238, 259, 1) !important;
+    border-right: 1px solid #ddd;
+    border-bottom: none;
+    //border-bottom: 1px solid #ddd;
+  }
+
+  .bottomBorder {
+    .tableHeaderTopLeft,
+    .tableHeaderCell {
+      border-bottom: 3px solid rgb(134, 173, 232) !important;
+    }
+  }
+
+  .tableHeaderCell {
+    border-bottom: 1px solid #ddd;
+    background-color: #ffffff !important;
+    z-index: 10 !important;
+    min-height: 5em;
+    max-height: 5em;
+
+    &:has(.inRange){
+      border-bottom: 1px solid #acd2af;
+    }
+
+    &:has(.inRange) .header {
+      border-left: 2px solid #f59393;
+      border-right: 1px solid #acd2af;
+      border-top: 2px solid #f59393;
+    }
+
+    // Last element in range
+    &:has(.inRange):has( + .tableHeaderCell .header:not(.inRange)) .header {
+      border-right: 2px solid #f59393;
+    }
+
+    &:has(.inRange) ~ .tableHeaderCell:has(.inRange) .header {
+      border-left: 2px blue;
+    }
+
+    &:last-child .header {
+      border-right: none;
+    }
+
+    .header {
+      padding: .5em;
+      position: relative;
+      background-color: rgb(222, 238, 259) !important;
+      border-top: 2px solid rgb(222, 238, 259);
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      &.inRange {
+        background-color: rgb(181, 218, 188) !important;
+      }
+
+      .dateTime {
+        padding: .5em;
+        font-family: monospace;
+        text-align: center;
+      }
+
+      .date {
+        flex-grow: 1;
+        font-weight: bold;
+      }
+
+      .time {
+        flex-grow: 1;
+      }
+
+      .iconButton {
+
+        .icon {
+          visibility: hidden;
+        }
+      }
+
+      &:hover {
+        .icon {
+          visibility: visible;
+          color: rgb(113, 141, 182) !important;
+        }
+
+        &.inRange {
+          .icon {
+            color: rgb(126 182 113) !important;
+          }
+        }
+      }
+    }
+  }
+}

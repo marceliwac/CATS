@@ -20,6 +20,7 @@ const BREADCRUMB_LUT = {
   orderedGroupAssignments: 'Ordered Group Assignments',
   assign: 'Assign',
   create: 'Create new',
+  preview: 'Preview',
   edit: 'Edit',
   signin: 'Sign In',
   signup: 'Sign Up',

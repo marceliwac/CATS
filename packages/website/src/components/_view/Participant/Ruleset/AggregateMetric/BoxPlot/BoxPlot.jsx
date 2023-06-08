@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import BoxPlotTick from './BoxPlotTick/BoxPlotTick';
 import RulesetConfig from '../../RulesetConfig';
+import BoxPlotBar from './BoxPlotBar/BoxPlotBar';
 
 export default function BoxPlot(props) {
   const { domainX, minOut, min, q1, median, q3, avg, max, maxOut } = props;
@@ -83,6 +84,7 @@ export default function BoxPlot(props) {
           dataKey="outer"
           fill={RulesetConfig.colors.outer}
           barSize={RulesetConfig.boxPlot.size.outer}
+          shape={<BoxPlotBar />}
         />
 
         <Bar
@@ -90,6 +92,7 @@ export default function BoxPlot(props) {
           dataKey="inner"
           fill={RulesetConfig.colors.inner}
           barSize={RulesetConfig.boxPlot.size.inner}
+          shape={<BoxPlotBar />}
         />
         <ReferenceLine yAxisId="avgAxis" x={avg} stroke="transparent">
           <Label

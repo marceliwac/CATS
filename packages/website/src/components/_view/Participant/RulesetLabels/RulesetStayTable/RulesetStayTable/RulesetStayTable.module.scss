@@ -1,0 +1,174 @@
+.table {
+
+  .tableContainer {
+    //overflow-y: hidden;
+    overflow-x: scroll;
+    max-height: 80vh;
+    border: 1px solid #dddddd;
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: #ffffff;
+
+      .tableCell {
+        background-color: #ffffff;
+
+        &.parameterCell {
+          background-color: #fafcff;
+        }
+
+        &.inRange {
+          background-color: rgb(222, 255, 228) !important;
+        }
+      }
+    }
+
+    &:nth-child(odd) {
+      background-color: #f7fbf7;
+
+      .tableCell {
+        background-color: #f7fbf7;
+
+        &.parameterCell {
+          background-color: #ebf1f9;
+        }
+
+        &.inRange {
+          background-color: rgb(207, 239, 213) !important;
+        }
+      }
+    }
+
+    &:first-child {
+      position: sticky;
+      top: 0;
+
+    }
+
+    &:last-child {
+      td {
+        border-bottom: none;
+      }
+
+      .tableCell.inRange {
+        border-bottom: 2px solid #f59393
+      }
+    }
+
+
+    & td:first-child.labelCell {
+      border-right: 1px solid #ddd;
+    }
+
+    & td:last-child {
+      border-right: none;
+    }
+  }
+
+  .tableCell {
+    position: relative;
+    border-right: 1px solid #ddd;
+
+    &.inRange {
+      border-left: 2px solid #f59393;
+      border-right: 1px solid #acd2af;
+      border-bottom: 1px solid #acd2af;
+    }
+
+    // Last element in range
+    &.inRange:has( + :not(.inRange)) {
+      border-right: 2px solid #f59393 !important;
+    }
+
+    &.inRange ~ .inRange {
+      border-left: none;
+    }
+  }
+
+  .parameterCell {
+    position: sticky;
+    left: 0;
+    z-index: 25;
+    padding-right: 2em;
+    min-width: 16em;
+  }
+
+  .valueCell {
+    font-family: monospace;
+    text-align: right;
+    min-width: 8em;
+    max-width: 8em;
+    word-break: break-word;
+  }
+
+  .labelCell {
+    font-size: 1em;
+    padding: .2em;
+    border-bottom: none;
+    border-right: none;
+    //border-right: 1px solid #dddddd;
+
+    &.parameterCell {
+      background-color: rgba(222, 238, 259, 1);
+      z-index: 40;
+    }
+
+    &.inRange {
+      background-color: rgb(207, 239, 213);
+      border-left: 2px solid #f59393;
+    }
+
+    // Last element in range
+    &.inRange:has( + :not(.inRange)) {
+      border-right: 2px solid #f59393 !important;
+    }
+
+    &.inRange ~ .inRange {
+      border-left: none;
+    }
+  }
+
+  .labelRow {
+    position: sticky;
+    z-index: 30;
+    background-color: rgba(222, 238, 259, 1) !important;
+  }
+
+  .lastLabel {
+    .parameterCell,
+    .labelCell {
+      border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
+
+      &.inRange {
+        border-bottom: 3px solid rgb(162, 206, 166) !important;
+      }
+    }
+  }
+}
+
+.labelCell:has( + .label1:not(.inRange)) { border-right: 1px solid #7EDA7B !important; }
+.labelCell:has( + .label2:not(.inRange)) { border-right: 1px solid #F3C673 !important; }
+.labelCell:has( + .label3:not(.inRange)) { border-right: 1px solid #EA8589 !important; }
+.labelCell:has( + .label4:not(.inRange)) { border-right: 1px solid #ED86D0 !important; }
+.labelCell:has( + .label5:not(.inRange)) { border-right: 1px solid #C788F1 !important; }
+.labelCell:has( + .label6:not(.inRange)) { border-right: 1px solid #8A92F4 !important; }
+.labelCell:has( + .label7:not(.inRange)) { border-right: 1px solid #8CDCF7 !important; }
+
+.label1 { background-color: #7EDA7B !important; border-right: 1px solid #7EDA7B !important; }
+.label2 { background-color: #F3C673 !important; border-right: 1px solid #F3C673 !important; }
+.label3 { background-color: #EA8589 !important; border-right: 1px solid #EA8589 !important; }
+.label4 { background-color: #ED86D0 !important; border-right: 1px solid #ED86D0 !important; }
+.label5 { background-color: #C788F1 !important; border-right: 1px solid #C788F1 !important; }
+.label6 { background-color: #8A92F4 !important; border-right: 1px solid #8A92F4 !important; }
+.label7 { background-color: #8CDCF7 !important; border-right: 1px solid #8CDCF7 !important; }
+
+
+
+
+
+
+
+
+
+

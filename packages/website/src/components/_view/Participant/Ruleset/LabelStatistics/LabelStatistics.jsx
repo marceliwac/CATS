@@ -1,41 +1,32 @@
 import React from 'react';
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Label,
-  Legend,
-} from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import styles from './LabelStatistics.module.scss';
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-  index,
-}) => {
+const renderCustomizedLabel = ({ cx, percent, index }) => {
   if (index === 0) {
     return (
       <>
         <text
           x={cx}
-          y="37.5%"
+          y="35%"
           textAnchor="middle"
           dominantBaseline="central"
           fontSize="1.5em"
         >
           {`${(percent * 100).toFixed(2)}%`}
         </text>
-        <text x={cx} y="52.5%" textAnchor="middle" dominantBaseline="central">
-          {index % 2 === 0 ? 'labelled' : ''}
+        <text x={cx} y="50%" textAnchor="middle" dominantBaseline="central">
+          {index % 2 === 0 ? 'of total duration' : ''}
         </text>
-        <text x={cx} y="62.5%" textAnchor="middle" dominantBaseline="central">
-          {index % 2 === 0 ? 'as weaning' : ''}
+        <text x={cx} y="60%" textAnchor="middle" dominantBaseline="central">
+          {index % 2 === 0 ? 'labelled as' : ''}
         </text>
+        <text x={cx} y="70%" textAnchor="middle" dominantBaseline="central">
+          {index % 2 === 0 ? 'weaning' : ''}
+        </text>
+        {/* <text x={cx} y="62.5%" textAnchor="middle" dominantBaseline="central"> */}
+        {/*  {index % 2 === 0 ? 'weaning' : ''} */}
+        {/* </text> */}
       </>
     );
   }

@@ -1,15 +1,23 @@
 import React from 'react';
+import uuid from 'react-uuid';
 import layoutStyles from '../../../_layouts/Layout/Layout.module.scss';
 import styles from './CreateRuleset.module.scss';
-import TreeEditor from './TreeEditor/TreeEditor';
+import TreeEditor from '../../Common/TreeEditor/TreeEditor';
 import { TreeEditorProvider } from '../../../../hooks/useTreeEditor';
-import tempData from './tempData';
 import RulesetForm from './RulesetForm/RulesetForm';
+
+const startingRuleset = {
+  attributes: {
+    id: uuid(),
+    nodeType: 'RELATION',
+    operation: 'OR',
+  },
+};
 
 export default function CreateRuleset() {
   return (
     <div className={layoutStyles.forceFullWidth}>
-      <TreeEditorProvider initialData={tempData}>
+      <TreeEditorProvider initialData={startingRuleset}>
         <div className={styles.form}>
           <RulesetForm />
         </div>

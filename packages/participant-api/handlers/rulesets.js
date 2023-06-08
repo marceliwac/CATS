@@ -1,7 +1,7 @@
 const { lambda, yup } = require('@wls/middleware');
 const { Ruleset } = require('@wls/models');
-const { v4: uuid } = require('uuid');
 const RulesetProcessorService = require('@wls/ruleset-processor-service');
+const { RawQuery, Row } = require('@wls/models-mimic');
 
 const RulesetNodeModel = yup.object().shape({
   attributes: yup.object().shape({
@@ -85,17 +85,19 @@ const StatisticsAggregate = yup.object().shape({
   histogram: yup.array().of(yup.array().of(yup.number())),
 });
 
+const StatisticsModelTotal = yup.object().shape({
+  rowCount: yup.number().integer().required(),
+  labelledRowCount: yup.number().integer().required(),
+  labelCount: yup.number().integer().required(),
+  minLabelDuration: yup.number().required(),
+  maxLabelDuration: yup.number().required(),
+  totalDuration: yup.number().required(),
+  totalLabelDuration: yup.number().required(),
+  avgLabelDuration: yup.number().required(),
+});
+
 const StatisticsModel = yup.object().shape({
-  total: yup.object().shape({
-    rowCount: yup.number().integer().required(),
-    labelledRowCount: yup.number().integer().required(),
-    labelCount: yup.number().integer().required(),
-    minLabelDuration: yup.number().required(),
-    maxLabelDuration: yup.number().required(),
-    totalDuration: yup.number().required(),
-    totalLabelDuration: yup.number().required(),
-    avgLabelDuration: yup.number().required(),
-  }),
+  total: StatisticsModelTotal,
   minLabelDuration: StatisticsAggregate,
   maxLabelDuration: StatisticsAggregate,
   avgLabelDuration: StatisticsAggregate,
@@ -110,17 +112,41 @@ const RulesetLabel = yup.object().shape({
   endTime: yup.date().required(),
 });
 
+function getRuleRelationCount(ruleset) {
+  let ruleCount = ruleset.attributes.nodeType === 'RULE' ? 1 : 0;
+  let relationCount = ruleset.attributes.nodeType === 'RELATION' ? 1 : 0;
+  if (Array.isArray(ruleset.children)) {
+    ruleset.children.forEach((child) => {
+      const rulesRelations = getRuleRelationCount(child);
+      ruleCount += rulesRelations.ruleCount;
+      relationCount += rulesRelations.relationCount;
+    });
+  }
+  return { ruleCount, relationCount };
+}
+
 module.exports.list = lambda(
   {
     group: 'participants',
     validators: {
+      query: yup.object().shape({
+        includeRuleDefinition: yup.bool(),
+        includeRuleRelationCount: yup.bool(),
+        includeRulesetStatistics: yup.bool(),
+      }),
       response: yup.array().of(
         yup.object().shape({
           id: yup.customValidators.guid(),
           name: yup.string(),
-          ruleset: RulesetModel,
-          parsedRuleset: ParsedRulesetModel,
           status: yup.mixed().oneOf(Object.values(Ruleset.STATUS)),
+          ruleCount: yup.number().integer(),
+          relationCount: yup.number().integer(),
+          ruleset: yup.lazy((value) =>
+            value ? RulesetModel : yup.string().nullable()
+          ),
+          parsedRuleset: yup.lazy((value) =>
+            value ? ParsedRulesetModel : yup.string().nullable()
+          ),
           statistics: yup.lazy((value) =>
             value ? StatisticsModel : yup.string().nullable()
           ),
@@ -149,6 +175,34 @@ module.exports.list = lambda(
             : null,
         }));
 
+        if (event.queryStringParameters) {
+          if (event.queryStringParameters.includeRuleRelationCount) {
+            rulesets = rulesets.map((ruleset) => {
+              const { ruleCount, relationCount } = getRuleRelationCount(
+                ruleset.ruleset
+              );
+              console.log({ ruleCount, relationCount });
+              return {
+                ...ruleset,
+                ruleCount,
+                relationCount,
+              };
+            });
+          }
+          rulesets.forEach((ruleset) => {
+            if (!event.queryStringParameters.includeRulesetDefinition) {
+              // eslint-disable-next-line no-param-reassign
+              delete ruleset.ruleset;
+              // eslint-disable-next-line no-param-reassign
+              delete ruleset.parsedRuleset;
+            }
+            if (!event.queryStringParameters.includeRulesetStatistics) {
+              // eslint-disable-next-line no-param-reassign
+              delete ruleset.statistics;
+            }
+          });
+        }
+
         // eslint-disable-next-line no-param-reassign
         shared.body = rulesets;
         // eslint-disable-next-line no-param-reassign
@@ -172,8 +226,13 @@ module.exports.get = lambda(
           .when('includeRulesetLabels', {
             is: true,
             then: (schema) => schema.required(),
+          })
+          .when('includeStayData', {
+            is: true,
+            then: (schema) => schema.required(),
           }),
         includeRulesetLabels: yup.bool(),
+        includeStayData: yup.bool(),
       }),
       response: yup.object().shape({
         id: yup.customValidators.guid(),
@@ -185,6 +244,13 @@ module.exports.get = lambda(
           value ? StatisticsModel : yup.string().nullable()
         ),
         labels: yup.array().of(RulesetLabel),
+        data: yup.array(),
+        parameters: yup.array().of(
+          yup.object().shape({
+            key: yup.string(),
+            label: yup.string(),
+          })
+        ),
       }),
     },
   },
@@ -200,16 +266,14 @@ module.exports.get = lambda(
           cognitoId: userId,
         });
 
-        if (
-          event.queryStringParameters &&
-          event.queryStringParameters.includeRulesetLabels &&
-          event.queryStringParameters.stayId
-        ) {
-          rulesetQuery
-            .withGraphFetched('labels')
-            .modifyGraph('labels', (query) =>
-              query.where({ stayId: event.queryStringParameters.stayId })
-            );
+        if (event.queryStringParameters && event.queryStringParameters.stayId) {
+          if (event.queryStringParameters.includeRulesetLabels) {
+            rulesetQuery
+              .withGraphFetched('labels')
+              .modifyGraph('labels', (query) =>
+                query.where({ stayId: event.queryStringParameters.stayId })
+              );
+          }
         }
 
         const ruleset = await rulesetQuery;
@@ -220,13 +284,27 @@ module.exports.get = lambda(
           return;
         }
 
-        // TODO: Get latest status for ruleset if it has not finished processing.
-
         ruleset.ruleset = JSON.parse(ruleset.rulesetJson);
         ruleset.parsedRuleset = JSON.parse(ruleset.parsedRulesetJson);
         if (ruleset.statisticsJson) {
           ruleset.statistics = JSON.parse(ruleset.statisticsJson);
         }
+
+        if (event.queryStringParameters && event.queryStringParameters.stayId) {
+          if (event.queryStringParameters.includeStayData) {
+            const knex = Row.knex();
+            const data = await RawQuery.stayData(
+              knex,
+              event.queryStringParameters.stayId
+            );
+            if (data) {
+              ruleset.data = data;
+            }
+            ruleset.parameters = Row.PARAMETERS;
+          }
+        }
+
+        console.log(ruleset.data.slice(-20));
 
         // eslint-disable-next-line no-param-reassign
         shared.body = ruleset;

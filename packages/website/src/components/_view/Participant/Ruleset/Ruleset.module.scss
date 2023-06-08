@@ -22,46 +22,14 @@
       color: $text-primary-darker;
     }
 
-    .status {
+    .right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
 
-      & > div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        height: 1.5em;
-        padding: .3em 1em .3em .7em;
-        border: 2px solid black;
-        border-radius: 1.5em;
-
-        & > p {
-          font-weight: normal;
-          margin-left: .5em;
-        }
-      }
-
-      .pending {
-        color: #666666;
-        border-color: #666666;
-        background-color: #efefef;
-      }
-
-      .inProgress {
-        color: #2966ab;
-        border-color: #1565c0;
-        background-color: #edf4ff;
-      }
-
-      .completed {
-        color: #308d4e;
-        border-color: #2ba946;
-        background-color: #effff3;
-      }
-
-      .failed {
-        color: #b01c2e;
-        border-color: #b01c2e;
-        background-color: #ffecee;
+      .status {
+        margin-right: 2em;
       }
     }
   }

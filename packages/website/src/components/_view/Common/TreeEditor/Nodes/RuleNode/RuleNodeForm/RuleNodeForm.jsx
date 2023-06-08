@@ -11,10 +11,10 @@ import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import Checkbox from '@mui/material/Checkbox';
 import styles from './RuleNodeForm.module.scss';
-import useTreeEditor from '../../../../../../../../hooks/useTreeEditor';
-import usePostInitDebouncing from '../../../../../../../../hooks/usePostInitDebouncing';
+import useTreeEditor from '../../../../../../../hooks/useTreeEditor';
+import usePostInitDebouncing from '../../../../../../../hooks/usePostInitDebouncing';
 import TreeEditorConfig from '../../../TreeEditorConfig';
-import useDidMount from '../../../../../../../../hooks/useDidMount';
+import useDidMount from '../../../../../../../hooks/useDidMount';
 
 const {
   rule: {
@@ -37,7 +37,7 @@ function getParameterUnitByOptionValue(value) {
 }
 
 export default function RuleNodeForm(props) {
-  const { id, operation, parameter, value, setError } = props;
+  const { id, operation, parameter, value, setError, isEditable } = props;
   const [operationInput, setOperationInput] = React.useState(operation);
   const [parameterInput, setParameterInput] = React.useState(parameter);
   const [valueInput, setValueInput] = React.useState(value);
@@ -108,6 +108,7 @@ export default function RuleNodeForm(props) {
           sx={{ m: 1 }}
           className={styles.parameterDropdown}
           error={parameterError}
+          disabled={!isEditable}
         >
           <InputLabel id={`${id}-parameter-label`}>
             {parameterError ? 'Parameter needed' : 'Parameter'}
@@ -139,7 +140,11 @@ export default function RuleNodeForm(props) {
         </FormControl>
       </div>
       <div className={styles.row}>
-        <FormControl sx={{ m: 1 }} className={styles.operationDropdown}>
+        <FormControl
+          sx={{ m: 1 }}
+          className={styles.operationDropdown}
+          disabled={!isEditable}
+        >
           <InputLabel id={`${id}-operation-label`}>Must be</InputLabel>
           <Select
             className={styles.select}
@@ -164,7 +169,11 @@ export default function RuleNodeForm(props) {
         </FormControl>
 
         {(valueOptions !== null && (
-          <FormControl sx={{ m: 1 }} className={styles.valueInput}>
+          <FormControl
+            sx={{ m: 1 }}
+            className={styles.valueInput}
+            disabled={!isEditable}
+          >
             <InputLabel id={`${id}-value-label`}>Value</InputLabel>
             <Select
               className={styles.select}
@@ -205,6 +214,7 @@ export default function RuleNodeForm(props) {
               sx={{ m: 1 }}
               className={styles.valueInput}
               error={valueError}
+              disabled={!isEditable}
             >
               <InputLabel id={`${id}-value-label-input`}>
                 {valueError ? 'Value needed' : 'Value'}

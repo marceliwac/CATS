@@ -1,7 +1,7 @@
 import React from 'react';
 import uuid from 'react-uuid';
 import TreeEditorContext from '../contexts/TreeEditorContext';
-import TreeEditorConfig from '../components/_view/Participant/CreateRuleset/TreeEditor/TreeEditorConfig';
+import TreeEditorConfig from '../components/_view/Common/TreeEditor/TreeEditorConfig';
 import useDidMount from './useDidMount';
 
 export default function useTreeEditor() {

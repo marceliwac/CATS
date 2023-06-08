@@ -1,10 +1,11 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import LaunchIcon from '@mui/icons-material/Launch';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './RowTable.module.scss';
 
 export default function RowTable(props) {
+  const { rulesetId } = useParams();
   const navigate = useNavigate();
   const { dataKey, lowerInterval, upperInterval } = props;
 
@@ -19,7 +20,7 @@ export default function RowTable(props) {
           <p className={styles.index}>{index}.</p>
           <p className={styles.value}>{value.toFixed(3)}</p>
           <div className={styles.button}>
-            <IconButton onClick={() => navigate(`stayId/${stayId}`)}>
+            <IconButton onClick={() => navigate(`stays/${stayId}`)}>
               <LaunchIcon />
             </IconButton>
           </div>
@@ -35,7 +36,11 @@ export default function RowTable(props) {
           <p className={styles.index}>{index}.</p>
           <p className={styles.value}>{value.toFixed(3)}</p>
           <div className={styles.button}>
-            <IconButton onClick={() => navigate(`stayId/${stayId}`)}>
+            <IconButton
+              onClick={() =>
+                navigate(`/participant/rulesets/${rulesetId}/stays/${stayId}`)
+              }
+            >
               <LaunchIcon />
             </IconButton>
           </div>

@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './RelationNode.module.scss';
-import useTreeEditor from '../../../../../../../hooks/useTreeEditor';
+import useTreeEditor from '../../../../../../hooks/useTreeEditor';
 import RelationNodeForm from './RelationNodeForm/RelationNodeForm';
-import Menu from '../../../../../Common/Menu/Menu';
+import Menu from '../../../Menu/Menu';
 
 export default function RelationNode(props) {
-  const { nodeDatum } = props;
+  const { nodeDatum, isEditable } = props;
   const {
     attributes: { id, isRoot, operation, leftClass, rightClass },
   } = nodeDatum;
@@ -32,7 +32,7 @@ export default function RelationNode(props) {
   return (
     <>
       <div className={styles.topRow}>
-        <Menu id={`${id}-menu`} items={menuOptions} />
+        {isEditable && <Menu id={`${id}-menu`} items={menuOptions} />}
       </div>
       <div className={styles.relationNode}>
         <div
@@ -41,7 +41,11 @@ export default function RelationNode(props) {
           } ${rightClass ? styles[rightClass] : ''}
          ${isRoot ? styles.root : ''}`}
         >
-          <RelationNodeForm id={id} operation={operation} />
+          <RelationNodeForm
+            id={id}
+            operation={operation}
+            isEditable={isEditable}
+          />
         </div>
       </div>
     </>

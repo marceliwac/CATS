@@ -1,7 +1,4 @@
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
-import { useNavigate } from 'react-router-dom';
-import LaunchIcon from '@mui/icons-material/Launch';
 import styles from './AggregateMetric.module.scss';
 import BoxPlot from './BoxPlot/BoxPlot';
 import Histogram from './Histogram/Histogram';

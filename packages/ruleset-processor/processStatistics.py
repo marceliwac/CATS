@@ -111,7 +111,7 @@ def compute_aggregate_statistics(statistics):
             'labelledRowCount': sum([s['labelledRowCount'] for s in statistics]),
             'labelCount': sum([s['labelCount'] for s in statistics]),
             'minLabelDuration': min([s['minLabelDuration'] for s in statistics]),
-            'maxLabelDuration': sum([s['maxLabelDuration'] for s in statistics]),
+            'maxLabelDuration': max([s['maxLabelDuration'] for s in statistics]),
             'totalDuration': sum([s['totalDuration'] for s in statistics]),
             'totalLabelDuration': sum([s['totalLabelDuration'] for s in statistics]),
             'avgLabelDuration': (sum([s['totalLabelDuration'] for s in statistics]) / sum([s['labelCount'] for s in statistics])) if sum([s['labelCount'] for s in statistics]) > 0 else 0

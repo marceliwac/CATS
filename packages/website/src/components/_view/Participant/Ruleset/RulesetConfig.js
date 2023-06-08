@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default {
   colors: {
     outliers: '#e1e1e1',
@@ -6,6 +8,7 @@ export default {
     median: '#999',
     outliersDarker: '#999',
     avg: '#f17474',
+    boxPlotOutline: '#666',
     textPrimary: '#666',
     textSecondary: '#999',
   },
