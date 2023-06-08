@@ -34,6 +34,7 @@ class Ruleset extends BaseModel {
         executionArn: { type: ['string', 'null'] },
         status: { type: 'string', enum: Object.values(STATUS) },
         statisticsJson: { type: ['string', 'null'] },
+        isShared: { type: 'boolean' },
       },
     };
   }

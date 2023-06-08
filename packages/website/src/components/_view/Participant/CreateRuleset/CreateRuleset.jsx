@@ -22,7 +22,7 @@ export default function CreateRuleset() {
           <RulesetForm />
         </div>
         <div className={styles.treeEditorWrapper}>
-          <TreeEditor />
+          <TreeEditor isEditable />
         </div>
       </TreeEditorProvider>
     </div>

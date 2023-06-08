@@ -33,32 +33,36 @@ export default function Ruleset() {
     };
   }, [data, error, isLoading, reload]);
 
-  if (isLoading) {
-    return <Loading message="Fetching ruleset..." />;
-  }
-
-  if (error || data === null) {
+  if (error || (!isLoading && data === null)) {
     return getErrorComponentFromHttpError(error);
   }
+  //
+  // if (isLoading) {
+  //   return <Loading message="Fetching ruleset..." />;
+  // }
 
   return (
     <div className={styles.ruleset}>
       <div className={styles.topRow}>
-        <h1>{data.name}</h1>
+        <h1>{(data && data.name) || 'Ruleset'}</h1>
         <div className={styles.right}>
           <div className={styles.status}>
-            <RulesetStatus status={data.status} bright />
+            <RulesetStatus status={(data && data.status) || null} bright />
           </div>
           <Button
             variant="outlined"
             startIcon={<AccountTreeOutlinedIcon />}
-            onClick={() => navigate(`/participant/rulesets/${data.id}/preview`)}
+            onClick={
+              data && data.id
+                ? () => navigate(`/participant/rulesets/${data.id}/preview`)
+                : () => {}
+            }
           >
             Preview
           </Button>
         </div>
       </div>
-      {(data.statistics && (
+      {(data && data.statistics && (
         <>
           <div className={styles.topStatistics}>
             <LabelStatistics statistics={data.statistics} />

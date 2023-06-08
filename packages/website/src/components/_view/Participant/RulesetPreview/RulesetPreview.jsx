@@ -26,7 +26,7 @@ export default function RulesetPreview() {
     <div className={layoutStyles.forceFullWidth}>
       <TreeEditorProvider initialData={data.ruleset}>
         <div className={styles.treeEditorWrapper}>
-          <TreeEditor isEditable={false} />
+          <TreeEditor isEditable />
         </div>
       </TreeEditorProvider>
     </div>

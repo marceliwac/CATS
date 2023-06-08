@@ -3,11 +3,13 @@ import InputLabel from '@mui/material/InputLabel';
 import { OutlinedInput } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './RulesetForm.module.scss';
 import useTreeEditor from '../../../../../hooks/useTreeEditor';
 import APIClient from '../../../../../util/APIClient';
 
 export default function RulesetForm() {
+  const navigate = useNavigate();
   const [name, setName] = React.useState('My ruleset');
   const [nameError, setNameError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState(null);
@@ -31,11 +33,12 @@ export default function RulesetForm() {
       setIsSubmitting(true);
       const ruleset = getRuleset();
       const parsedRuleset = getParsedRuleset();
-      await APIClient.post('/participant/rulesets', {
+      const response = await APIClient.post('/participant/rulesets', {
         name,
         ruleset,
         parsedRuleset,
       });
+      navigate(`/participant/rulesets/${response.data.id}`);
       setErrorMessage(null);
     } catch (e) {
       setErrorMessage('Could not create a ruleset! Please contact support.');

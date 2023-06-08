@@ -19,8 +19,8 @@ exports.up = async (knex) => {
       .enu('status', Object.values(Ruleset.STATUS))
       .notNullable()
       .defaultTo(Ruleset.STATUS.PENDING);
-
-    table.text('statisticsJson').defaultTo(null);
+    table.boolean('is_shared').defaultTo(false);
+    table.text('statistics_json').defaultTo(null);
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
     table.timestamp('deleted_at').defaultTo(null);
@@ -42,11 +42,26 @@ exports.up = async (knex) => {
     table.timestamp('deleted_at').defaultTo(null);
   });
 
+  await knex.schema.createTable('pinned_stays', (table) => {
+    table
+      .uuid('id')
+      .unique()
+      .notNullable()
+      .primary()
+      .defaultTo(knex.raw('uuid_generate_v4()'));
+    table.integer('stay_id').notNullable();
+    table.string('cognito_id').notNullable();
+    table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+    table.timestamp('deleted_at').defaultTo(null);
+  });
+
   await destroyConnection();
 };
 
 exports.down = async (knex) => {
   await bindDatabase();
+  await knex.schema.dropTable('pinned_stays');
   await knex.schema.dropTable('ruleset_labels');
   await knex.schema.dropTable('rulesets');
   await destroyConnection();

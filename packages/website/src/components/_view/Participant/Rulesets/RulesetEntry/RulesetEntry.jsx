@@ -28,7 +28,9 @@ export default function RulesetEntry(props) {
       <a href={`/participant/rulesets/${id}`} className={styles.data}>
         <p className={styles.name}>{name}</p>
         <p className={styles.counts}>
-          {ruleCount} rules {relationCount} relations
+          {relationCount} relation
+          {relationCount !== 1 ? 's' : ''} {ruleCount} rule
+          {ruleCount !== 1 ? 's' : ''}
         </p>
         <RulesetStatus status={status} />
       </a>

@@ -24,7 +24,7 @@ const RulesetNodeModel = yup.object().shape({
     }),
     value: yup.string().when('nodeType', {
       is: Ruleset.RULESET_NODE_TYPE.RULE,
-      then: (schema) => schema.required(),
+      then: (schema) => schema.nullable(true).required(),
     }),
   }),
   children: yup
@@ -45,9 +45,12 @@ const ParsedRulesetRule = yup.object().shape({
   parameter: yup.string().required(),
   value: yup.lazy((value) => {
     if (typeof value === 'string') {
-      return yup.string().required();
+      return yup.string().nullable(true).required();
     }
-    return yup.number().nullable().required();
+    if (value === null) {
+      return yup.mixed().nullable(true);
+    }
+    return yup.number().required();
   }),
 });
 
@@ -139,6 +142,7 @@ module.exports.list = lambda(
           id: yup.customValidators.guid(),
           name: yup.string(),
           status: yup.mixed().oneOf(Object.values(Ruleset.STATUS)),
+          isShared: yup.bool(),
           ruleCount: yup.number().integer(),
           relationCount: yup.number().integer(),
           ruleset: yup.lazy((value) =>
@@ -160,9 +164,11 @@ module.exports.list = lambda(
       async operation({ event, shared }) {
         const userId = event.requestContext.authorizer.claims.sub;
 
-        let rulesets = await Ruleset.query().where({
-          cognitoId: userId,
-        });
+        let rulesets = await Ruleset.query()
+          .where({
+            cognitoId: userId,
+          })
+          .orWhere({ isShared: true });
 
         // TODO: Get latest status for each ruleset which has not finished processing.
 
@@ -181,7 +187,6 @@ module.exports.list = lambda(
               const { ruleCount, relationCount } = getRuleRelationCount(
                 ruleset.ruleset
               );
-              console.log({ ruleCount, relationCount });
               return {
                 ...ruleset,
                 ruleCount,
@@ -237,6 +242,7 @@ module.exports.get = lambda(
       response: yup.object().shape({
         id: yup.customValidators.guid(),
         name: yup.string(),
+        isShared: yup.bool(),
         ruleset: RulesetModel,
         parsedRuleset: ParsedRulesetModel,
         status: yup.mixed().oneOf(Object.values(Ruleset.STATUS)),
@@ -261,10 +267,14 @@ module.exports.get = lambda(
         const userId = event.requestContext.authorizer.claims.sub;
         const { rulesetId } = event.pathParameters;
 
-        const rulesetQuery = Ruleset.query().findOne({
-          id: rulesetId,
-          cognitoId: userId,
-        });
+        const rulesetQuery = Ruleset.query()
+          .findOne({
+            id: rulesetId,
+          })
+          .where({
+            cognitoId: userId,
+          })
+          .orWhere({ isShared: true });
 
         if (event.queryStringParameters && event.queryStringParameters.stayId) {
           if (event.queryStringParameters.includeRulesetLabels) {
@@ -303,8 +313,6 @@ module.exports.get = lambda(
             ruleset.parameters = Row.PARAMETERS;
           }
         }
-
-        console.log(ruleset.data.slice(-20));
 
         // eslint-disable-next-line no-param-reassign
         shared.body = ruleset;

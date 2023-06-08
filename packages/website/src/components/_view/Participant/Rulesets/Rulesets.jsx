@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import styles from './Rulesets.module.scss';
 import useApiData from '../../../../hooks/useApiData';
 import Loading from '../../Common/Loading/Loading';
@@ -7,6 +8,7 @@ import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import RulesetEntry from './RulesetEntry/RulesetEntry';
 
 export default function Rulesets() {
+  const navigate = useNavigate();
   const { data, error, isLoading } = useApiData({
     path: `/participant/rulesets`,
     params: {
@@ -29,7 +31,12 @@ export default function Rulesets() {
     <div className={styles.rulesets}>
       <div className={styles.topRow}>
         <h1>Rulesets</h1>
-        <Button variant="contained">Create ruleset</Button>
+        <Button
+          variant="contained"
+          onClick={() => navigate('/participant/rulesets/create')}
+        >
+          Create ruleset
+        </Button>
       </div>
       <div className={styles.description}>
         <p>
@@ -78,7 +85,7 @@ export default function Rulesets() {
             <div className={styles.noData}>
               <p>You did not create any rulesets yet.</p>
               <p>
-                <a href="create">Create one now</a>
+                <a href="/participant/rulesets/create">Create one now</a>
               </p>
             </div>
           )}
