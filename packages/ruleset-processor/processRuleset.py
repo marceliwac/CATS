@@ -91,6 +91,16 @@ def compute_rules(frame, ruleset):
                 frame[rule['id']] = ~frame[rule['parameter']].str.contains(rule['value'])
             else:
                 frame[rule['id']] = frame[rule['parameter']] != rule['value']
+        elif rule['operation'] == 'inc':
+            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == 1
+        elif rule['operation'] == 'increm':
+            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] in [1, 0]
+        elif rule['operation'] == 'rem':
+            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == 0
+        elif rule['operation'] == 'decrem':
+            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] in [-1, 0]
+        elif rule['operation'] == 'dec':
+            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == -1
         else:
             raise Exception(f'Invalid operation in rule definition. Could not find operation for: "{rule["operation"]}".')
 

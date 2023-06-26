@@ -1,10 +1,42 @@
+import React from 'react';
+import Typography from '@mui/material/Typography';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import StraightOutlinedIcon from '@mui/icons-material/StraightOutlined';
+import TurnSlightRightOutlinedIcon from '@mui/icons-material/TurnSlightRightOutlined';
+import TurnSlightLeftOutlinedIcon from '@mui/icons-material/TurnSlightLeftOutlined';
+import ForkLeftOutlinedIcon from '@mui/icons-material/ForkLeftOutlined';
+import ForkRightOutlinedIcon from '@mui/icons-material/ForkRightOutlined';
+import RuleOutlinedIcon from '@mui/icons-material/RuleOutlined';
+import ChecklistRtlOutlinedIcon from '@mui/icons-material/ChecklistRtlOutlined';
+import PlaylistRemoveOutlinedIcon from '@mui/icons-material/PlaylistRemoveOutlined';
+import PlaylistAddCheckOutlinedIcon from '@mui/icons-material/PlaylistAddCheckOutlined';
+
 const NONE_OPTION_VALUE = '(none)';
 const OPERATION_SET = '!!';
 const OPERATION_NOT_SET = '!';
+const OPERATION_INCREASES = 'inc';
+const OPERATION_INCREASES_REMAINS = 'increm';
+const OPERATION_REMAINS = 'rem';
+const OPERATION_DECREASES = 'dec';
+const OPERATION_DECREASES_REMAINS = 'decrem';
+
+function MenuItemTypographyIcon(props) {
+  const { value } = props;
+  return (
+    <Typography
+      sx={{
+        flexGrow: 0.5,
+        fontWeight: 700,
+        textAlign: 'center',
+      }}
+    >
+      {value}
+    </Typography>
+  );
+}
+
 export default {
-  noneOptionValue: NONE_OPTION_VALUE,
-  operationNotSet: OPERATION_NOT_SET,
-  operationSet: OPERATION_SET,
   nodeSize: {
     x: 400,
     y: 250,
@@ -21,48 +53,99 @@ export default {
       {
         value: 'OR',
         label: 'At least one rule matches',
+        icon: <RuleOutlinedIcon />,
       },
       {
         value: 'AND',
         label: 'All rules match',
+        icon: <ChecklistRtlOutlinedIcon />,
       },
     ],
   },
   rule: {
+    noneOptionValue: NONE_OPTION_VALUE,
+    operationSet: OPERATION_SET,
+    operationNotSet: OPERATION_NOT_SET,
+    noValueOperations: [
+      OPERATION_SET,
+      OPERATION_NOT_SET,
+      OPERATION_INCREASES,
+      OPERATION_INCREASES_REMAINS,
+      OPERATION_REMAINS,
+      OPERATION_DECREASES,
+      OPERATION_DECREASES_REMAINS,
+    ],
     operationOptionsValue: [
       {
         value: '<',
         label: 'Smaller than',
+        icon: <MenuItemTypographyIcon value="<" />,
       },
       {
         value: '>',
         label: 'Greater than',
+        icon: <MenuItemTypographyIcon value=">" />,
       },
       {
         value: '=',
         label: 'Equal to',
+        icon: <MenuItemTypographyIcon value="=" />,
       },
       {
         value: '!=',
         label: 'Not equal to',
+        icon: <MenuItemTypographyIcon value="≠" />,
       },
       {
         value: OPERATION_SET,
         label: 'Set',
+        icon: <CheckCircleOutlinedIcon />,
       },
       {
         value: OPERATION_NOT_SET,
         label: 'Not set',
+        icon: <CancelOutlinedIcon />,
+      },
+      {
+        value: OPERATION_INCREASES,
+        label: 'Increases',
+        icon: (
+          <TurnSlightLeftOutlinedIcon sx={{ transform: 'rotate(90deg)' }} />
+        ),
+      },
+      {
+        value: OPERATION_INCREASES_REMAINS,
+        label: "Increases or doesn't change",
+        icon: <ForkLeftOutlinedIcon sx={{ transform: 'rotate(90deg)' }} />,
+      },
+      {
+        value: OPERATION_REMAINS,
+        label: "Doesn't change",
+        icon: <StraightOutlinedIcon sx={{ transform: 'rotate(90deg)' }} />,
+      },
+      {
+        value: OPERATION_DECREASES_REMAINS,
+        label: "Decreases or doesn't change",
+        icon: <ForkRightOutlinedIcon sx={{ transform: 'rotate(90deg)' }} />,
+      },
+      {
+        value: OPERATION_DECREASES,
+        label: 'Decreases',
+        icon: (
+          <TurnSlightRightOutlinedIcon sx={{ transform: 'rotate(90deg)' }} />
+        ),
       },
     ],
     operationOptionsSelection: [
       {
         value: '=',
         label: 'One of',
+        icon: <PlaylistAddCheckOutlinedIcon />,
       },
       {
         value: '!=',
         label: 'Not one of',
+        icon: <PlaylistRemoveOutlinedIcon />,
       },
     ],
     parameterOptions: [

@@ -204,6 +204,16 @@ resources:
                     - xray:GetSamplingTargets
                     - xray:GetSamplingStatisticSummaries
                   Resource: '*'
+          - PolicyName: AllowStepFunctionTrigger
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - states:StartExecution
+                    - states:DescribeExecution
+                    - states:StopExecution
+                  Resource: '*'
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
           - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole

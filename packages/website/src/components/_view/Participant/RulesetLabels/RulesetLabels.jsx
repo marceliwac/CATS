@@ -53,19 +53,6 @@ export default function RulesetLabels() {
     return getErrorComponentFromHttpError(error);
   }
 
-  data.labels = [
-    {
-      id: 'abc',
-      startTime: '2142-03-20T21:00:00.000Z',
-      endTime: '2142-03-20T23:00:00.000Z',
-    },
-    {
-      id: 'def',
-      startTime: '2142-03-21T01:00:00.000Z',
-      endTime: '2142-03-21T04:00:00.000Z',
-    },
-  ];
-
   const formattedStays = formatData(data);
 
   return (

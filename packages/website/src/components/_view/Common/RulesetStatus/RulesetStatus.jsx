@@ -54,8 +54,10 @@ export default function RulesetStatus(props) {
   }
 
   return (
-    <div className={`${styles.status} ${bright ? styles.bright : ''}`}>
-      {statusElement}
+    <div className={styles.status}>
+      <div className={`${styles.statusWrapper} ${bright ? styles.bright : ''}`}>
+        {statusElement}
+      </div>
     </div>
   );
 }

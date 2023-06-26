@@ -42,7 +42,7 @@ function hoursToString(v) {
   let str = days > 0 ? ` ${days.toFixed(0)}d${days !== '1' ? '' : ''}` : '';
   str += hours > 0 ? ` ${hours.toFixed(0)}h${hours !== 1 ? '' : ''}` : '';
   str += minutes > 0 ? ` ${minutes.toFixed(0)}m${minutes !== 1 ? '' : ''}` : '';
-
+  str = str === '' ? '0' : str;
   return str.trim();
 }
 

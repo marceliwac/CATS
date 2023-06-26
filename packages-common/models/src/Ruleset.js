@@ -14,7 +14,17 @@ const RULESET_NODE_TYPE = {
   RELATION: 'RELATION',
 };
 
-const RULE_OPERATIONS = ['>', '<', '=', '!='];
+const RULE_OPERATIONS = [
+  '>',
+  '<',
+  '=',
+  '!=',
+  'inc',
+  'increm',
+  'rem',
+  'decrem',
+  'dec',
+];
 const RELATION_OPERATIONS = ['AND', 'OR'];
 
 class Ruleset extends BaseModel {

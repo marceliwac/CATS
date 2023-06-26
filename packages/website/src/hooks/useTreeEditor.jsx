@@ -143,16 +143,16 @@ function formatRules(rules) {
   return rules.map((rule) => {
     let ruleOperation = rule.operation;
     let ruleValue = isNumeric(rule.value) ? parseFloat(rule.value) : rule.value;
-    if (ruleOperation === TreeEditorConfig.operationNotSet) {
+    if (ruleOperation === TreeEditorConfig.rule.operationNotSet) {
       ruleOperation = '=';
-      ruleValue = '';
+      ruleValue = null;
     }
-    if (ruleOperation === TreeEditorConfig.operationSet) {
+    if (ruleOperation === TreeEditorConfig.rule.operationSet) {
       ruleOperation = '!=';
-      ruleValue = '';
+      ruleValue = null;
     }
-    if (ruleValue === TreeEditorConfig.noneOptionValue) {
-      ruleValue = '';
+    if (ruleValue === TreeEditorConfig.rule.noneOptionValue) {
+      ruleValue = null;
     }
     if (ruleValue === '') {
       ruleValue = null;

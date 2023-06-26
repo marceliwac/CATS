@@ -5,11 +5,13 @@ import {
   ListItemText,
   OutlinedInput,
   FormHelperText,
+  ListItemIcon,
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import Checkbox from '@mui/material/Checkbox';
+import { ContentPaste } from '@mui/icons-material';
 import styles from './RuleNodeForm.module.scss';
 import useTreeEditor from '../../../../../../../hooks/useTreeEditor';
 import usePostInitDebouncing from '../../../../../../../hooks/usePostInitDebouncing';
@@ -22,8 +24,7 @@ const {
     operationOptionsSelection,
     parameterOptions,
     parameterSelection,
-    operationNotSet,
-    operationSet,
+    noValueOperations,
   },
 } = TreeEditorConfig;
 
@@ -33,6 +34,15 @@ function getParameterUnitByOptionValue(value) {
   );
   return matchingParameterOptions.length > 0
     ? matchingParameterOptions[0].unit
+    : '';
+}
+
+function getOptionLabel(value, hasValueOptions) {
+  const matchingParameterOptions = hasValueOptions
+    ? operationOptionsSelection.filter((option) => option.value === value)
+    : operationOptionsValue.filter((option) => option.value === value);
+  return matchingParameterOptions.length > 0
+    ? matchingParameterOptions[0].label
     : '';
 }
 
@@ -58,8 +68,7 @@ export default function RuleNodeForm(props) {
 
   React.useEffect(() => {
     const vError =
-      valueInput === '' &&
-      ![operationNotSet, operationSet].includes(operationInput);
+      valueInput === '' && !noValueOperations.includes(operationInput);
     const pError = parameterInput === '';
     setValueError(vError);
     setParameterError(pError);
@@ -153,6 +162,9 @@ export default function RuleNodeForm(props) {
             label="Must be"
             value={operationInput}
             onChange={(e) => setOperationInput(e.target.value)}
+            renderValue={(selected) =>
+              getOptionLabel(selected, valueOptions !== null)
+            }
           >
             {(valueOptions !== null
               ? operationOptionsSelection
@@ -162,7 +174,8 @@ export default function RuleNodeForm(props) {
                 key={`${id}-operation-${option.value}`}
                 value={option.value}
               >
-                {option.label}
+                <ListItemIcon>{option.icon}</ListItemIcon>
+                <ListItemText>{option.label}</ListItemText>
               </MenuItem>
             ))}
           </Select>
@@ -209,7 +222,7 @@ export default function RuleNodeForm(props) {
             </Select>
           </FormControl>
         )) ||
-          (![operationSet, operationNotSet].includes(operationInput) && (
+          (!noValueOperations.includes(operationInput) && (
             <FormControl
               sx={{ m: 1 }}
               className={styles.valueInput}

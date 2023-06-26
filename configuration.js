@@ -58,7 +58,7 @@ const serviceNames = {
   website: `${config.stackNamePrefix}-website`,
   migrations: `${config.stackNamePrefix}-migrations`,
   notifications: `${config.stackNamePrefix}-notifications`,
-  rulesetProcessor: `${config.stackNamePrefix}-ruleset-processor`,
+  rulesetProcessor: `${config.stackNamePrefix}-ruleset-processor-two`,
 };
 
 function validateStage(stage) {

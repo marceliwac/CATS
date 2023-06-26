@@ -12,14 +12,14 @@
       background-color: #ffffff;
 
       .tableCell {
-        background-color: #ffffff;
+        background-color: rgba(97, 160, 255, 0.03);
 
         &.parameterCell {
           background-color: #fafcff;
         }
 
         &.inRange {
-          background-color: rgb(222, 255, 228) !important;
+          background-color: rgba(39, 208, 177, 0.10) !important;
         }
       }
     }
@@ -28,14 +28,14 @@
       background-color: #f7fbf7;
 
       .tableCell {
-        background-color: #f7fbf7;
+        background-color: rgba(97, 160, 255, 0.10);
 
         &.parameterCell {
           background-color: #ebf1f9;
         }
 
         &.inRange {
-          background-color: rgb(207, 239, 213) !important;
+          background-color: rgba(39, 208, 177, 0.15) !important;
         }
       }
     }
@@ -52,7 +52,7 @@
       }
 
       .tableCell.inRange {
-        border-bottom: 2px solid #f59393
+        border-bottom: 2px solid #27d0b1
       }
     }
 
@@ -71,17 +71,17 @@
     border-right: 1px solid #ddd;
 
     &.inRange {
-      border-left: 2px solid #f59393;
-      border-right: 1px solid #acd2af;
-      border-bottom: 1px solid #acd2af;
+      border-left: 2px solid #27d0b1;
+      border-right: 1px solid #bae7de;
+      border-bottom: 1px solid #bae7de;
     }
 
     // Last element in range
     &.inRange:has( + :not(.inRange)) {
-      border-right: 2px solid #f59393 !important;
+      border-right: 2px solid #27d0b1 !important;
     }
 
-    &.inRange ~ .inRange {
+    &.inRange + .inRange {
       border-left: none;
     }
   }
@@ -115,16 +115,15 @@
     }
 
     &.inRange {
-      background-color: rgb(207, 239, 213);
-      border-left: 2px solid #f59393;
+      border-left: 2px solid #27d0b1;
     }
 
     // Last element in range
     &.inRange:has( + :not(.inRange)) {
-      border-right: 2px solid #f59393 !important;
+      border-right: 2px solid #27d0b1 !important;
     }
 
-    &.inRange ~ .inRange {
+    &.inRange + .inRange {
       border-left: none;
     }
   }
@@ -136,32 +135,25 @@
   }
 
   .lastLabel {
-    .parameterCell,
-    .labelCell {
+    .parameterCell {
       border-bottom: 3px solid rgba(134, 173, 232, 1) !important;
+    }
+
+    .labelCell:not(.parameterCell){
+      border-bottom: 3px solid #61a0ff !important;
 
       &.inRange {
-        border-bottom: 3px solid rgb(162, 206, 166) !important;
+        border-bottom: 3px solid #27d0b1 !important;
       }
     }
   }
 }
 
-.labelCell:has( + .label1:not(.inRange)) { border-right: 1px solid #7EDA7B !important; }
-.labelCell:has( + .label2:not(.inRange)) { border-right: 1px solid #F3C673 !important; }
-.labelCell:has( + .label3:not(.inRange)) { border-right: 1px solid #EA8589 !important; }
-.labelCell:has( + .label4:not(.inRange)) { border-right: 1px solid #ED86D0 !important; }
-.labelCell:has( + .label5:not(.inRange)) { border-right: 1px solid #C788F1 !important; }
-.labelCell:has( + .label6:not(.inRange)) { border-right: 1px solid #8A92F4 !important; }
-.labelCell:has( + .label7:not(.inRange)) { border-right: 1px solid #8CDCF7 !important; }
+.labelCell:has( + .label:not(.inRange)) { border-right: 1px solid #27d0b1 !important; }
+.labelCell:has( + .nonLabel:not(.inRange)) { border-right: 1px solid #61a0ff !important; }
 
-.label1 { background-color: #7EDA7B !important; border-right: 1px solid #7EDA7B !important; }
-.label2 { background-color: #F3C673 !important; border-right: 1px solid #F3C673 !important; }
-.label3 { background-color: #EA8589 !important; border-right: 1px solid #EA8589 !important; }
-.label4 { background-color: #ED86D0 !important; border-right: 1px solid #ED86D0 !important; }
-.label5 { background-color: #C788F1 !important; border-right: 1px solid #C788F1 !important; }
-.label6 { background-color: #8A92F4 !important; border-right: 1px solid #8A92F4 !important; }
-.label7 { background-color: #8CDCF7 !important; border-right: 1px solid #8CDCF7 !important; }
+.label { background-color: #27d0b1 !important; border-right: 1px solid #27d0b1 !important; }
+.nonLabel { background-color: #61a0ff !important; border-right: 1px solid #61a0ff !important; }
 
 
 

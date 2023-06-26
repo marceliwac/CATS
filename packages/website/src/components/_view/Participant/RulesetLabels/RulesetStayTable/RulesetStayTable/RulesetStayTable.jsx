@@ -7,10 +7,19 @@ import TableRow from '@mui/material/TableRow';
 import styles from './RulesetStayTable.module.scss';
 import RulesetTableSelectionToolbar from '../RulesetStayTableSelectionToolbar/RulesetStayTableSelectionToolbar';
 import RulesetStayTableHeader from '../RulesetStayTableHeader/RulesetStayTableHeader';
-import RulesetLabelRows from './RulesetLabelRows/RulesetLabelRows';
+import RulesetLabelRow from './RulesetLabelRow/RulesetLabelRow';
 
 export default function RulesetStayTable(props) {
   const { title, labels, rows, columns } = props;
+
+  function isWithinOneOfLabels(charttime) {
+    for (let i = 0; i < labels.length; i += 1) {
+      if (charttime >= labels[i].startTime && charttime <= labels[i].endTime) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   return (
     <div className={styles.table}>
@@ -19,7 +28,7 @@ export default function RulesetStayTable(props) {
         <MuiTable aria-labelledby="tableTitle" size="medium" stickyHeader>
           <RulesetStayTableHeader labels={labels} columns={columns} />
           <TableBody>
-            <RulesetLabelRows labels={labels} columns={columns} />
+            <RulesetLabelRow labels={labels} columns={columns} />
             {rows.map((row) => (
               <TableRow tabIndex={-1} key={row.id} className={styles.tableRow}>
                 {columns.map((column, columnIndex) => {
@@ -46,7 +55,9 @@ export default function RulesetStayTable(props) {
                     <TableCell
                       key={key}
                       align="right"
-                      className={`${styles.valueCell} ${styles.tableCell}`}
+                      className={`${styles.valueCell} ${styles.tableCell} ${
+                        isWithinOneOfLabels(column.id) ? styles.inRange : ''
+                      }`}
                     >
                       {value}
                     </TableCell>

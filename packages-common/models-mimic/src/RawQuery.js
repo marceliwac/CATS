@@ -5,6 +5,7 @@ const SQL_DIR_PATH = './sql';
 const STAYS_QUERY = 'stays.sql';
 const STAY_DETAILS_QUERY = 'stay_details.sql';
 const STAY_DATA_QUERY = 'stay_data.sql';
+const STAY_DATA_V3_QUERY = 'stay_data_v3.sql';
 
 function readFile(filename) {
   return fs
@@ -68,8 +69,28 @@ async function stayData(knex, stayId, simplify = true) {
   return null;
 }
 
+async function stayDataV3(knex, stayId, simplify = true) {
+  const result = await knex.raw(readFile(STAY_DATA_V3_QUERY), stayId);
+  if (Array.isArray(result.rows)) {
+    if (simplify) {
+      return result.rows.map((row) => {
+        const simplified = {};
+        Object.keys(row).forEach((key) => {
+          if (row[key] !== null) {
+            simplified[key] = row[key];
+          }
+        });
+        return simplified;
+      });
+    }
+    return result.rows;
+  }
+  return null;
+}
+
 module.exports = {
   stayDetails,
   stayData,
+  stayDataV3,
   stays,
 };

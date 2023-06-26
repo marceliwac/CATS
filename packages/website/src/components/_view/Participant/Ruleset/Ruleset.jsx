@@ -4,7 +4,6 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import Button from '@mui/material/Button';
 import styles from './Ruleset.module.scss';
 import useApiData from '../../../../hooks/useApiData';
-import Loading from '../../Common/Loading/Loading';
 import { getErrorComponentFromHttpError } from '../../Common/Error/Error';
 import LabelStatistics from './LabelStatistics/LabelStatistics';
 import AggregateMetric from './AggregateMetric/AggregateMetric';
@@ -21,7 +20,7 @@ export default function Ruleset() {
 
   React.useEffect(() => {
     let timeout;
-    if (!error && !isLoading && data && !data.statistics) {
+    if (!error && !isLoading && data && data.status === 'IN_PROGRESS') {
       timeout = setTimeout(() => {
         reload();
       }, 5000);
@@ -36,10 +35,6 @@ export default function Ruleset() {
   if (error || (!isLoading && data === null)) {
     return getErrorComponentFromHttpError(error);
   }
-  //
-  // if (isLoading) {
-  //   return <Loading message="Fetching ruleset..." />;
-  // }
 
   return (
     <div className={styles.ruleset}>
@@ -98,14 +93,23 @@ export default function Ruleset() {
             data={data.statistics.totalLabelDuration}
           />
         </>
-      )) || (
-        <>
-          <div className={styles.topStatistics}>
-            <LabelStatisticsSkeleton />
+      )) ||
+        (data && data.status === 'FAILED' && (
+          <div className={styles.failedRuleset}>
+            <h3>Could not process ruleset!</h3>
+            <p>
+              It looks like something went wrong when trying to process this
+              ruleset. If this problem persists, please contact support.
+            </p>
           </div>
-          <AggregateMetricSkeleton />
-        </>
-      )}
+        )) || (
+          <>
+            <div className={styles.topStatistics}>
+              <LabelStatisticsSkeleton />
+            </div>
+            <AggregateMetricSkeleton />
+          </>
+        )}
     </div>
   );
 }

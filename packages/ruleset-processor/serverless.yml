@@ -58,6 +58,16 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
     handler: processStatistics.handler
     tracing: Active
+  updateStatus:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: updateStatus.handler
+    tracing: Active
 
 stepFunctions:
   stateMachines:
@@ -77,6 +87,9 @@ stepFunctions:
             OutputPath: "$.Contents"
             ResultSelector:
               Contents.$: "$.Contents[?(@.Size > 0)]"
+            Catch:
+              - ErrorEquals: ["States.ALL"]
+                Next: NotifyOfFailure
           TriggerLambdaForEachFile:
             Type: Map
             ItemProcessor:
@@ -99,6 +112,9 @@ stepFunctions:
               ruleset.$: "$$.Execution.Input.ruleset"
               bucket: ${cf:${self:custom.config.stackName.infrastructure}.Stage3DataS3BucketName}
             Next: ProcessStatistics
+            Catch:
+              - ErrorEquals: ["States.ALL"]
+                Next: NotifyOfFailure
           ProcessStatistics:
             Type: Task
             Resource: arn:aws:states:::lambda:invoke
@@ -112,9 +128,25 @@ stepFunctions:
                 labelsFilenames.$: "$.[*].labelsFilename"
                 bucket: ${cf:${self:custom.config.stackName.infrastructure}.Stage3DataS3BucketName}
             End: true
+            Catch:
+              - ErrorEquals: ["States.ALL"]
+                Next: NotifyOfFailure
+          NotifyOfFailure:
+            Type: Task
+            Resource: arn:aws:states:::lambda:invoke
+            OutputPath: "$.Payload"
+            Parameters:
+              FunctionName:
+                Ref: UpdateStatusLambdaFunction
+              Payload:
+                ruleset.$: "$$.Execution.Input.ruleset"
+                status: "FAILED"
+            End: true
         TimeoutSeconds: 600
       dependsOn:
         - ProcessRulesetLambdaFunction
+        - ProcessStatisticsLambdaFunction
+        - UpdateStatusLambdaFunction
 
 resources:
   Resources:
@@ -135,5 +167,14 @@ resources:
         Action: lambda:InvokeFunction
         FunctionName:
           Ref: ProcessStatisticsLambdaFunction
+        Principal: ${cf:${self:custom.config.stackName.infrastructure}.StepFunctionRulesetProcessorRoleArn}
+    UpdateStatusGetInvokedByRulesetProcessorRolePermission:
+      Type: AWS::Lambda::Permission
+      DependsOn:
+        - UpdateStatusLambdaFunction
+      Properties:
+        Action: lambda:InvokeFunction
+        FunctionName:
+          Ref: UpdateStatusLambdaFunction
         Principal: ${cf:${self:custom.config.stackName.infrastructure}.StepFunctionRulesetProcessorRoleArn}
 

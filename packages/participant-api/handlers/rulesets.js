@@ -2,6 +2,7 @@ const { lambda, yup } = require('@wls/middleware');
 const { Ruleset } = require('@wls/models');
 const RulesetProcessorService = require('@wls/ruleset-processor-service');
 const { RawQuery, Row } = require('@wls/models-mimic');
+const log = require('@wls/log');
 
 const RulesetNodeModel = yup.object().shape({
   attributes: yup.object().shape({
@@ -370,6 +371,7 @@ module.exports.post = lambda(
             ...event.body.parsedRuleset,
           });
         } catch (error) {
+          log.error(error);
           newStatus = Ruleset.STATUS.FAILED;
         }
 

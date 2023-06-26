@@ -53,13 +53,13 @@ def insert_labels_to_db(labels, ruleset):
     if len(labels) > 0:
       db = get_db()
       with db.connect() as connection:
-        insertable_labels = [f"'{label['stayId']}','{ruleset['id']}','{label['startTime']}',  '{label['endTime']}'" for label in labels]
+        insertable_labels = [f"'{label['stayId']}','{ruleset['id']}','{label['startTime']}','{label['endTime']}'" for label in labels]
         insertable = "(" + "),(".join(insertable_labels) + ")"
         sql = f'''
         INSERT INTO ruleset_labels (stay_id, ruleset_id, start_time, end_time) VALUES {insertable};
         '''
-#         db.execute(sql)
-      print(sql)
+        print(sql)
+        db.execute(sql)
     xray_recorder.end_subsegment()
 
 def flatten(list_of_lists):
@@ -133,10 +133,10 @@ def update_ruleset_statistics(statistics, ruleset):
     db = get_db()
     with db.connect() as connection:
       sql = f'''
-      UPDATE rulesets SET statistics = '{insertable}' WHERE id = {ruleset['id']};
+      UPDATE rulesets SET statistics_json = '{insertable}', status='COMPLETED' WHERE id ='{ruleset['id']}';
       '''
       print(sql)
-#       db.execute(sql)
+      db.execute(sql)
     xray_recorder.end_subsegment()
 
 def handler(event, context):

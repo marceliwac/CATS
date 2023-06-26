@@ -39,4 +39,25 @@
     width: 100%;
     padding: 1em;
   }
+
+  .failedRuleset {
+    padding: 2em;
+    width: 30em;
+    margin: 4em auto;
+
+    h3 {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: normal;
+      color: $text-primary-lighter;
+      margin-bottom: 1em;
+    }
+
+    p {
+      line-height: 1.5;
+      text-align: center;
+      font-size: 1.1em;
+      color: $text-primary;
+    }
+  }
 }
