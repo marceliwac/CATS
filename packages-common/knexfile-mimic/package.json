@@ -1,5 +1,5 @@
 {
-  "name": "@wls/knexfile-mimic",
+  "name": "@cats/knexfile-mimic",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -11,11 +11,11 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.5.0",
-    "@wls/log": "1.0.0",
+    "@cats/log": "1.0.0",
     "knex": "^2.1.0",
     "pg": "^8.5.1"
   },
   "devDependencies": {
-    "@wls/eslint-config": "1.0.0"
+    "@cats/eslint-config": "1.0.0"
   }
 }

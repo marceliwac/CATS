@@ -19,7 +19,8 @@ export default function RulesetEntry(props) {
     },
     {
       label: `Duplicate`,
-      handler: () => navigate(`/participant/rulesets/create?entrypoint=${id}`),
+      handler: () =>
+        navigate(`/participant/rulesets/create?entrypointRulesetId=${id}`),
     },
   ];
 

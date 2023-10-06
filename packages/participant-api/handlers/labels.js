@@ -1,5 +1,5 @@
-const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment, Label } = require('@wls/models');
+const { lambda, yup } = require('@cats/middleware');
+const { StayAssignment, Label } = require('@cats/models');
 
 module.exports.post = lambda(
   {

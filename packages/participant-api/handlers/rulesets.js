@@ -1,8 +1,8 @@
-const { lambda, yup } = require('@wls/middleware');
-const { Ruleset } = require('@wls/models');
-const RulesetProcessorService = require('@wls/ruleset-processor-service');
-const { RawQuery, Row } = require('@wls/models-mimic');
-const log = require('@wls/log');
+const { lambda, yup } = require('@cats/middleware');
+const { Ruleset, PinnedStay } = require('@cats/models');
+const RulesetProcessorService = require('@cats/ruleset-processor-service');
+const { RawQuery, Row } = require('@cats/models-mimic');
+const log = require('@cats/log');
 
 const RulesetNodeModel = yup.object().shape({
   attributes: yup.object().shape({
@@ -114,6 +114,14 @@ const RulesetLabel = yup.object().shape({
   id: yup.customValidators.guid().required(),
   startTime: yup.date().required(),
   endTime: yup.date().required(),
+  metadata: yup.object().shape({
+    appliedRules: yup.array().of(
+      yup.object().shape({
+        charttime: yup.date().required(),
+        ruleIds: yup.array().of(yup.string()).required(),
+      })
+    ),
+  }),
 });
 
 function getRuleRelationCount(ruleset) {
@@ -244,6 +252,7 @@ module.exports.get = lambda(
         id: yup.customValidators.guid(),
         name: yup.string(),
         isShared: yup.bool(),
+        isStayPinned: yup.bool(),
         ruleset: RulesetModel,
         parsedRuleset: ParsedRulesetModel,
         status: yup.mixed().oneOf(Object.values(Ruleset.STATUS)),
@@ -269,13 +278,15 @@ module.exports.get = lambda(
         const { rulesetId } = event.pathParameters;
 
         const rulesetQuery = Ruleset.query()
-          .findOne({
-            id: rulesetId,
-          })
           .where({
+            id: rulesetId,
             cognitoId: userId,
           })
-          .orWhere({ isShared: true });
+          .orWhere({
+            id: rulesetId,
+            isShared: true,
+          })
+          .first();
 
         if (event.queryStringParameters && event.queryStringParameters.stayId) {
           if (event.queryStringParameters.includeRulesetLabels) {
@@ -288,6 +299,7 @@ module.exports.get = lambda(
         }
 
         const ruleset = await rulesetQuery;
+        console.log('FOUND RULESET:', ruleset);
 
         if (!ruleset) {
           // eslint-disable-next-line no-param-reassign
@@ -295,8 +307,24 @@ module.exports.get = lambda(
           return;
         }
 
+        console.log(ruleset);
+
         ruleset.ruleset = JSON.parse(ruleset.rulesetJson);
         ruleset.parsedRuleset = JSON.parse(ruleset.parsedRulesetJson);
+        if (Array.isArray(ruleset.labels)) {
+          ruleset.labels = ruleset.labels.map((label) => {
+            if (label.metadataJson) {
+              return {
+                ...label,
+                metadata: JSON.parse(label.metadataJson),
+              };
+            }
+            return label;
+          });
+        }
+
+        console.log(ruleset);
+
         if (ruleset.statisticsJson) {
           ruleset.statistics = JSON.parse(ruleset.statisticsJson);
         }
@@ -304,7 +332,7 @@ module.exports.get = lambda(
         if (event.queryStringParameters && event.queryStringParameters.stayId) {
           if (event.queryStringParameters.includeStayData) {
             const knex = Row.knex();
-            const data = await RawQuery.stayData(
+            const data = await RawQuery.stayDataV3(
               knex,
               event.queryStringParameters.stayId
             );
@@ -312,8 +340,15 @@ module.exports.get = lambda(
               ruleset.data = data;
             }
             ruleset.parameters = Row.PARAMETERS;
+            const isPinned = await PinnedStay.query().findOne({
+              stayId: event.queryStringParameters.stayId,
+              cognitoId: userId,
+            });
+            ruleset.isStayPinned = !!isPinned;
           }
         }
+        console.log('RULESET');
+        console.log(ruleset);
 
         // eslint-disable-next-line no-param-reassign
         shared.body = ruleset;
@@ -332,6 +367,7 @@ module.exports.post = lambda(
         name: yup.string().required(),
         ruleset: RulesetModel.required(),
         parsedRuleset: ParsedRulesetModel.required(),
+        isShared: yup.bool(),
       }),
       response: yup.object().shape({
         id: yup.customValidators.guid(),
@@ -356,6 +392,7 @@ module.exports.post = lambda(
           cognitoId: userId,
           rulesetJson: JSON.stringify(event.body.ruleset),
           parsedRulesetJson: JSON.stringify(event.body.parsedRuleset),
+          isShared: event.body.isShared,
         });
 
         const rulesetProcessorService = new RulesetProcessorService({

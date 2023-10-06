@@ -163,3 +163,44 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  # PINNED STAYS
+  listPinnedStays:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/pinnedStays.list
+    events:
+      - http:
+          method: GET
+          path: /pinnedStays
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
+
+  updatePinnedStay:
+    vpc:
+      securityGroupIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
+      subnetIds:
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
+        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
+    handler: handlers/pinnedStays.put
+    events:
+      - http:
+          method: PUT
+          path: /pinnedStays/{stayId}
+          cors:
+            origin: '*'
+            allowCredentials: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}

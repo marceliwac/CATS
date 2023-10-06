@@ -1,5 +1,5 @@
 {
-  "name": "@wls/user-service",
+  "name": "@cats/user-service",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -11,9 +11,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.85.0",
-    "@wls/log": "1.0.0"
+    "@cats/log": "1.0.0"
   },
   "devDependencies": {
-    "@wls/eslint-config": "1.0.0"
+    "@cats/eslint-config": "1.0.0"
   }
 }

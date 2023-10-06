@@ -74,16 +74,16 @@ export default function Navbar() {
           >
             <NavbarSubItem path="/participant/rulesets" label="My rulesets" />
           </NavbarItem>
-          {/* <NavbarItem */}
-          {/*  path="/participant/stayAssignments" */}
-          {/*  icon={<AssignmentIcon />} */}
-          {/*  label="Stay assignments" */}
-          {/* > */}
-          {/*  <NavbarSubItem */}
-          {/*    path="/participant/stayAssignments" */}
-          {/*    label="Assigned to me" */}
-          {/*  /> */}
-          {/* </NavbarItem> */}
+          <NavbarItem
+            path="/participant/stayAssignments"
+            icon={<AssignmentIcon />}
+            label="Stay assignments"
+          >
+            <NavbarSubItem
+              path="/participant/stayAssignments"
+              label="Assigned to me"
+            />
+          </NavbarItem>
           <NavbarItem path="/help" icon={<HelpIcon />} label="Help">
             <NavbarSubItem
               path="/help/instructions#using_the_tool"

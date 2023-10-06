@@ -71,12 +71,24 @@ PARAMETER_DTYPES = {
 }
 
 
+def explanation_function(row, ruleset):
+    applied_rules = []
+    for rule in ruleset['rules']:
+        if pd.notna(row[rule['id']]) and row[rule['id']]:
+            applied_rules.append(rule['id'])
+    return ','.join(applied_rules)
+
+
 def compute_rules(frame, ruleset):
     for rule in ruleset['rules']:
         if rule['operation'] == '<':
             frame[rule['id']] = frame[rule['parameter']] < rule['value']
+        elif rule['operation'] == '<=':
+            frame[rule['id']] = frame[rule['parameter']] <= rule['value']
         elif rule['operation'] == '>':
             frame[rule['id']] = frame[rule['parameter']] > rule['value']
+        elif rule['operation'] == '>=':
+            frame[rule['id']] = frame[rule['parameter']] >= rule['value']
         elif rule['operation'] == '=':
             if pd.isna(rule['value']):
                 frame[rule['id']] = pd.isna(frame[rule['parameter']])
@@ -94,15 +106,17 @@ def compute_rules(frame, ruleset):
         elif rule['operation'] == 'inc':
             frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == 1
         elif rule['operation'] == 'increm':
-            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] in [1, 0]
+            frame[rule['id']] = (frame[f'{rule["parameter"]}_trend'] == 1) | (frame[f'{rule["parameter"]}_trend'] == 0)
         elif rule['operation'] == 'rem':
             frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == 0
         elif rule['operation'] == 'decrem':
-            frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] in [-1, 0]
+            frame[rule['id']] = (frame[f'{rule["parameter"]}_trend'] == -1) | (frame[f'{rule["parameter"]}_trend'] == 0)
         elif rule['operation'] == 'dec':
             frame[rule['id']] = frame[f'{rule["parameter"]}_trend'] == -1
         else:
             raise Exception(f'Invalid operation in rule definition. Could not find operation for: "{rule["operation"]}".')
+
+    frame['applied_rules'] = frame.apply(lambda x: explanation_function(x, ruleset), axis=1)
 
 
 def compute_relations(frame, ruleset):
@@ -146,8 +160,8 @@ def fetch_data(bucket, filename):
 def get_db():
     xray_recorder.begin_subsegment('Get database credentials')
     client = boto3.client('secretsmanager', region_name=REGION)
-    wls = json.loads(client.get_secret_value(SecretId = DATABASE_SECRET_NAME)['SecretString'])
-    connection_string = f"postgresql://{wls['username']}:{wls['password']}@{wls['host']}:{str(wls['port'])}/{wls['dbname']}"
+    secret_json = json.loads(client.get_secret_value(SecretId = DATABASE_SECRET_NAME)['SecretString'])
+    connection_string = f"postgresql://{secret_json['username']}:{secret_json['password']}@{secret_json['host']}:{str(secret_json['port'])}/{secret_json['dbname']}"
     db = sqlalchemy.create_engine(connection_string)
     xray_recorder.end_subsegment()
     return db
@@ -165,6 +179,7 @@ def get_label_length(label):
 # Compute labels for a specific stay
 def compute_labels_for_stay(frame, ruleset, stay_id):
     xray_recorder.begin_subsegment('Compute labels for stay')
+    applied_rules = []
     labels = []
     in_label = False
     start_time = None
@@ -172,6 +187,10 @@ def compute_labels_for_stay(frame, ruleset, stay_id):
 
     for index, row in frame.iterrows():
         if row[ruleset['root']] == True:
+            applied_rules.append({
+                'charttime': row['charttime'],
+                'ruleIds': [ruleId for ruleId in row['applied_rules'].split(',') if ruleId != '']
+            })
             if not in_label:
                 in_label = True
                 start_time = row['charttime']
@@ -179,17 +198,20 @@ def compute_labels_for_stay(frame, ruleset, stay_id):
             labels.append({
                 'stayId': stay_id,
                 'startTime': start_time,
-                'endTime': previous_row['charttime']
+                'endTime': previous_row['charttime'],
+                'metadataJson': {'appliedRules': applied_rules}
             })
             in_label = False
             start_time = None
+            applied_rules = []
         previous_row = row
 
     if in_label:
         labels.append({
             'stayId': stay_id,
             'startTime': start_time,
-            'endTime': previous_row['charttime']
+            'endTime': previous_row['charttime'],
+            'metadataJson': {'appliedRules': applied_rules}
         })
     xray_recorder.end_subsegment()
     return labels
@@ -244,7 +266,6 @@ def encode_json(object):
 
 
 def handler(event, context):
-    xray_recorder.begin_segment('Main handler')
     ruleset = event['ruleset']
     bucket = event['bucket']
     filename = event['filename']
@@ -255,5 +276,4 @@ def handler(event, context):
     labels_filename = get_labels_filename(filename, ruleset)
     save_to_s3(encode_json(statistics), bucket, get_statistics_filename(filename, ruleset), 'application/json')
     save_to_s3(encode_json(labels), bucket, get_labels_filename(filename, ruleset), 'application/json')
-    xray_recorder.end_segment()
     return {"statisticsFilename": statistics_filename, "labelsFilename": labels_filename}

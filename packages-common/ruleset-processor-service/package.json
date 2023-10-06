@@ -1,5 +1,5 @@
 {
-  "name": "@wls/ruleset-processor-service",
+  "name": "@cats/ruleset-processor-service",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -11,9 +11,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/client-sfn": "^3.342.0",
-    "@wls/log": "1.0.0"
+    "@cats/log": "1.0.0"
   },
   "devDependencies": {
-    "@wls/eslint-config": "1.0.0"
+    "@cats/eslint-config": "1.0.0"
   }
 }

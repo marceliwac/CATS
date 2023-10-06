@@ -2,6 +2,7 @@ import os
 import time
 import json
 import boto3
+import math
 import pandas as pd
 import numpy as np
 import sqlalchemy
@@ -13,6 +14,7 @@ xray_recorder.configure(service='Process Statistics')
 
 DATABASE_SECRET_NAME = os.environ['DATABASE_SECRET_NAME']
 REGION = os.environ['REGION']
+LABEL_INSERT_BATCH_SIZE = 1000
 
 
 class NpEncoder(json.JSONEncoder):
@@ -29,8 +31,8 @@ class NpEncoder(json.JSONEncoder):
 def get_db():
     xray_recorder.begin_subsegment('Get database credentials')
     client = boto3.client('secretsmanager', region_name=REGION)
-    wls = json.loads(client.get_secret_value(SecretId = DATABASE_SECRET_NAME)['SecretString'])
-    connection_string = f"postgresql://{wls['username']}:{wls['password']}@{wls['host']}:{str(wls['port'])}/{wls['dbname']}"
+    secret_json = json.loads(client.get_secret_value(SecretId = DATABASE_SECRET_NAME)['SecretString'])
+    connection_string = f"postgresql://{secret_json['username']}:{secret_json['password']}@{secret_json['host']}:{str(secret_json['port'])}/{secret_json['dbname']}"
     db = sqlalchemy.create_engine(connection_string)
     xray_recorder.end_subsegment()
     return db
@@ -51,16 +53,20 @@ def load_files(bucket, filenames):
 def insert_labels_to_db(labels, ruleset):
     xray_recorder.begin_subsegment('Insert annotations')
     if len(labels) > 0:
-      db = get_db()
-      with db.connect() as connection:
-        insertable_labels = [f"'{label['stayId']}','{ruleset['id']}','{label['startTime']}','{label['endTime']}'" for label in labels]
-        insertable = "(" + "),(".join(insertable_labels) + ")"
-        sql = f'''
-        INSERT INTO ruleset_labels (stay_id, ruleset_id, start_time, end_time) VALUES {insertable};
-        '''
-        print(sql)
-        db.execute(sql)
+        db = get_db()
+        with db.connect() as connection:
+            for i in range(math.ceil((len(labels) + 1)/ LABEL_INSERT_BATCH_SIZE)):
+                batch_labels = labels[(i * LABEL_INSERT_BATCH_SIZE):((i + 1) * LABEL_INSERT_BATCH_SIZE)]
+                if len(batch_labels) > 0:
+                  insertable_labels = [f"'{label['stayId']}','{ruleset['id']}','{label['startTime']}','{label['endTime']}','{json.dumps(label['metadataJson'])}'" for label in batch_labels]
+                  insertable = "(" + "),(".join(insertable_labels) + ")"
+                  sql = f'''
+                  INSERT INTO ruleset_labels (stay_id, ruleset_id, start_time, end_time, metadata_json) VALUES {insertable};
+                  '''
+                  print(sql)
+                  db.execute(sql)
     xray_recorder.end_subsegment()
+
 
 def flatten(list_of_lists):
     return [item for sublist in list_of_lists for item in sublist]

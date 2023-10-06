@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import styles from './RulesetStayTableSelectionToolbar.module.scss';
 
 export default function RulesetStayTableSelectionToolbar(props) {
@@ -15,10 +16,13 @@ export default function RulesetStayTableSelectionToolbar(props) {
             {topButtons.map((button, i) => (
               <Button
                 key={button.label}
-                variant={button.variant || i === 0 ? 'contained' : 'outlined'}
+                variant={button.variant || 'contained'}
                 disabled={button.handler === null}
                 onClick={button.handler === null ? () => {} : button.handler}
               >
+                {button.icon && (
+                  <span className={styles.icon}>{button.icon}</span>
+                )}
                 {button.label}
               </Button>
             ))}

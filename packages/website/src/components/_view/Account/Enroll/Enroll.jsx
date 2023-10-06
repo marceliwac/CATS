@@ -28,8 +28,8 @@ export default function Enroll() {
         To enroll in the study, you should follow the three-step process
         outlined below. If at any point in time you run into any technical
         problems, or would simply like to learn more about the study, please
-        contact Marceli Wac at{' '}
-        <a href="mailto:m.wac@bristol.ac.uk">m.wac@bristol.ac.uk</a>.
+        contact support at{' '}
+        <a href="mailto:support@xxxxxxxxx.com">support@xxxxxxxxx.com</a>.
       </p>
       <div className={styles.process}>
         <div className={styles.step}>

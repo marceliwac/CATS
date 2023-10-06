@@ -10,7 +10,8 @@ import RulesetStayTableHeader from '../RulesetStayTableHeader/RulesetStayTableHe
 import RulesetLabelRow from './RulesetLabelRow/RulesetLabelRow';
 
 export default function RulesetStayTable(props) {
-  const { title, labels, rows, columns } = props;
+  const { title, labels, ruleset, parameters, rows, columns, topButtons } =
+    props;
 
   function isWithinOneOfLabels(charttime) {
     for (let i = 0; i < labels.length; i += 1) {
@@ -23,12 +24,19 @@ export default function RulesetStayTable(props) {
 
   return (
     <div className={styles.table}>
-      {!!title && <RulesetTableSelectionToolbar title={title} />}
+      {!!title && (
+        <RulesetTableSelectionToolbar title={title} topButtons={topButtons} />
+      )}
       <TableContainer className={styles.tableContainer}>
         <MuiTable aria-labelledby="tableTitle" size="medium" stickyHeader>
           <RulesetStayTableHeader labels={labels} columns={columns} />
           <TableBody>
-            <RulesetLabelRow labels={labels} columns={columns} />
+            <RulesetLabelRow
+              labels={labels}
+              ruleset={ruleset}
+              parameters={parameters}
+              columns={columns}
+            />
             {rows.map((row) => (
               <TableRow tabIndex={-1} key={row.id} className={styles.tableRow}>
                 {columns.map((column, columnIndex) => {

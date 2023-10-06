@@ -14,6 +14,7 @@ module.exports = class RulesetLabel extends BaseModel {
         rulesetId: { type: 'string', format: 'uuid' },
         startTime: { type: 'string', format: 'date-time' },
         endTime: { type: 'string', format: 'date-time' },
+        metadataJson: { type: 'string' },
       },
     };
   }

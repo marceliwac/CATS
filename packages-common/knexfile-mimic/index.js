@@ -2,7 +2,7 @@ const {
   SecretsManagerClient,
   GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager');
-const log = require('@wls/log');
+const log = require('@cats/log');
 
 const isLocal = process.env.IS_LOCAL;
 const region = process.env.REGION;

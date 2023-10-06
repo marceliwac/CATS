@@ -1,6 +1,6 @@
-const { lambda, yup } = require('@wls/middleware');
-const { OrderedGroupAssignment, StayAssignment } = require('@wls/models');
-const { Row, RawQuery } = require('@wls/models-mimic');
+const { lambda, yup } = require('@cats/middleware');
+const { OrderedGroupAssignment, StayAssignment } = require('@cats/models');
+const { Row, RawQuery } = require('@cats/models-mimic');
 
 function getWeightedStays(stays, distinctStayAssignments) {
   const distinctStayAssignmentStayIds = Array.from(

@@ -126,6 +126,18 @@
     &.inRange + .inRange {
       border-left: none;
     }
+
+    .matches {
+      font-size: .9em;
+      text-align: center;
+      font-weight: 500;
+
+      &.noMatches {
+        font-style: italic;
+        font-weight: 400
+      ;
+      }
+    }
   }
 
   .labelRow {
@@ -155,9 +167,24 @@
 .label { background-color: #27d0b1 !important; border-right: 1px solid #27d0b1 !important; }
 .nonLabel { background-color: #61a0ff !important; border-right: 1px solid #61a0ff !important; }
 
+.tooltip {
+  h1 {
+    font-size: 1.4em;
+    font-weight: bold;
+    padding-bottom: .5em;
+    margin-bottom: .5em;
+    border-bottom: 1px solid #ccc;
+  }
 
+  div {
+    margin: .3em 0 0 0;
 
+    p {
+      font-size: 1.25em;
+    }
+  }
 
+}
 
 
 

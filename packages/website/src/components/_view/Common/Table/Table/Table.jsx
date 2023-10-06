@@ -219,10 +219,12 @@ export default function Table(props) {
     columns,
     topButtons,
     linkFunction,
+    linkFunctionColumn,
     stickyHeader,
     stickyFirstCell,
     allowPagination,
     pageSize,
+    keyColumn,
   } = props;
   const rowLinkColumns =
     (typeof rowLinks === 'object' &&
@@ -334,7 +336,7 @@ export default function Table(props) {
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={keyColumn ? row[keyColumn] : row.id}
                     selected={isItemSelected}
                   >
                     {allowSelect && (
@@ -419,7 +421,11 @@ export default function Table(props) {
                       <TableCell padding="checkbox" align="center">
                         <Link
                           className={styles.buttonLink}
-                          to={linkFunction(row.id)}
+                          to={linkFunction(
+                            linkFunctionColumn
+                              ? row[linkFunctionColumn]
+                              : row.id
+                          )}
                         >
                           <ArrowForwardIcon />
                         </Link>

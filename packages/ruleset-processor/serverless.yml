@@ -58,6 +58,8 @@ functions:
         - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
     handler: processStatistics.handler
     tracing: Active
+    memorySize: ${self:custom.config.lambda.rulesetProcessorStatistics.memorySize}
+    timeout: ${self:custom.config.lambda.rulesetProcessorStatistics.timeout}
   updateStatus:
     vpc:
       securityGroupIds:

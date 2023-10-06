@@ -1,4 +1,4 @@
-const log = require('@wls/log');
+const log = require('@cats/log');
 const { HttpResponse } = require('micro-aws-lambda');
 
 function buildErrorObject(message, error) {

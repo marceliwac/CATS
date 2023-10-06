@@ -9,6 +9,7 @@ import CreateRuleset from '../CreateRuleset/CreateRuleset';
 import Rulesets from '../Rulesets/Rulesets';
 import RulesetPreview from '../RulesetPreview/RulesetPreview';
 import RulesetLabels from '../RulesetLabels/RulesetLabels';
+import RulesetStays from '../RulesetStays/RulesetStays';
 
 function ParticipantLayout() {
   return (
@@ -19,6 +20,7 @@ function ParticipantLayout() {
         <Route path="create" element={<CreateRuleset />} />
         <Route path=":rulesetId" element={<Ruleset />} />
         <Route path=":rulesetId/preview" element={<RulesetPreview />} />
+        <Route path=":rulesetId/stays" element={<RulesetStays />} />
         <Route path=":rulesetId/stays/:stayId" element={<RulesetLabels />} />
       </Route>
       <Route path="stayAssignments/*">

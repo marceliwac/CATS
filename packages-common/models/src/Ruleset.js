@@ -16,7 +16,9 @@ const RULESET_NODE_TYPE = {
 
 const RULE_OPERATIONS = [
   '>',
+  '>=',
   '<',
+  '<=',
   '=',
   '!=',
   'inc',
@@ -40,7 +42,7 @@ class Ruleset extends BaseModel {
         cognitoId: { type: 'string' },
         name: { type: 'string' },
         rulesetJson: { type: 'string' },
-        parsedExecutionJson: { type: 'string' },
+        parsedRulesetJson: { type: 'string' },
         executionArn: { type: ['string', 'null'] },
         status: { type: 'string', enum: Object.values(STATUS) },
         statisticsJson: { type: ['string', 'null'] },

@@ -1,12 +1,12 @@
 {
-  "name": "@wls/ruleset-processor",
+  "name": "@cats/ruleset-processor",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
     "build": "serverless package --stage=${STAGE} --package=build",
     "deploy": "serverless deploy --stage=${STAGE} --package=build",
-    "local": "serverless offline --httpPort 4000 --aws-profile=marceliwac-uni",
+    "local": "serverless offline --httpPort 4000",
     "remove": "serverless remove --stage=${STAGE}"
   },
   "author": "Marceli Wac",

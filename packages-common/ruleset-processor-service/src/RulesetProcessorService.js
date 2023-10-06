@@ -1,6 +1,6 @@
 const { SFNClient, StartExecutionCommand } = require('@aws-sdk/client-sfn');
 
-const log = require('@wls/log');
+const log = require('@cats/log');
 
 module.exports = class RulesetProcessorService {
   constructor({ stateMachineArn, region }) {

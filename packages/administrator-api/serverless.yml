@@ -429,23 +429,3 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}
-
-  temp:
-    vpc:
-      securityGroupIds:
-        - ${cf:${self:custom.config.stackName.prerequisites}.GeneralSecurityGroup}
-      subnetIds:
-        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet1}
-        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet2}
-        - ${cf:${self:custom.config.stackName.prerequisites}.PrivateSubnet3}
-    handler: handlers/temp.temp
-    events:
-      - http:
-          method: GET
-          path: /temp
-          cors:
-            origin: '*'
-            allowCredentials: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId: ${cf:${self:custom.config.stackName.infrastructure}.ApiGatewayAuthorizerId}

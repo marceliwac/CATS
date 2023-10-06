@@ -1,7 +1,7 @@
 const knex = require('knex');
 const objection = require('objection');
-const knexfile = require('@wls/knexfile-mimic');
-const log = require('@wls/log');
+const knexfile = require('@cats/knexfile-mimic');
+const log = require('@cats/log');
 const BaseModel = require('./src/BaseModel');
 
 async function bindDatabase() {
