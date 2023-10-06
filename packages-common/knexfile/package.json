@@ -7,8 +7,6 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.5.0",
     "@cats/log": "1.0.0",

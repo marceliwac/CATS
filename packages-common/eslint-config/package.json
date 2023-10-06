@@ -1,14 +1,12 @@
 {
   "name": "@cats/eslint-config",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint": "^7.11.0",

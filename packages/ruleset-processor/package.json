@@ -9,8 +9,6 @@
     "local": "serverless offline --httpPort 4000",
     "remove": "serverless remove --stage=${STAGE}"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "serverless-offline": "^8.1.0"
   },

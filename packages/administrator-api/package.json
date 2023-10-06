@@ -10,8 +10,6 @@
     "deploy": "serverless deploy --stage=${STAGE}",
     "remove": "serverless remove --stage=${STAGE}"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "@cats/log": "1.0.0",
     "@cats/middleware": "1.0.0",

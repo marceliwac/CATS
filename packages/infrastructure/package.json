@@ -6,7 +6,5 @@
   "scripts": {
     "deploy": "serverless deploy --stage=${STAGE}",
     "remove": "serverless remove --stage=${STAGE}"
-  },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED"
+  }
 }
