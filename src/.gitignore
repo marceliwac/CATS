@@ -1,0 +1,12 @@
+.serverless
+.idea
+.npm
+.env
+.eslintcache
+.DS_Store
+node_modules
+lerna-debug.log
+*lerna_backup*
+build
+dist
+secrets.js
