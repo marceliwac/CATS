@@ -14,17 +14,21 @@ const BREADCRUMB_LUT = {
   administrators: 'Administrators',
   participants: 'Participants',
   invite: 'Invite',
+  rulesets: 'Rulesets',
+  stays: 'Stays',
   stayAssignments: 'Stay Assignments',
   groupAssignments: 'Group Assignments',
   orderedGroupAssignments: 'Ordered Group Assignments',
   assign: 'Assign',
   create: 'Create new',
+  preview: 'Preview',
   edit: 'Edit',
   signin: 'Sign In',
   signup: 'Sign Up',
 };
 
 const UUID_REGEX = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/i;
+const STAY_ID_REGEX = /^3\d{7}/i;
 
 function getRootFilteredBreadcrumbs(breadcrumbs) {
   if (
@@ -61,6 +65,8 @@ export default function TopBar() {
     let label = '?';
     if (UUID_REGEX.test(crumb) && index !== 0) {
       label = crumb.substring(0, 8);
+    } else if (STAY_ID_REGEX.test(crumb) && index !== 0) {
+      label = crumb;
     } else if (
       Object.keys(BREADCRUMB_LUT)
         .map((c) => c.toLowerCase())

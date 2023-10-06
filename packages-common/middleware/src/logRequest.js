@@ -1,4 +1,4 @@
-const log = require('@wls/log');
+const log = require('@cats/log');
 
 /**
  * Log the received request. Logging will only take place in a non-production environment.

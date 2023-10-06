@@ -1,0 +1,79 @@
+.topRow {
+  height: 0;
+  position: relative;
+  bottom: 2.5em;
+}
+
+.relationNode {
+  width: 400px;
+  box-sizing: border-box;
+  border: $border;
+  border-radius: $border-radius;
+  background-color: white;
+  overflow: hidden;
+
+  &.error {
+    border: 1px solid #d32f2f;
+
+    .innerWrapper {
+      background-color: #ffeeee;
+      background-image: none  !important;;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+    }
+  }
+
+  .innerWrapper {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: .5em 1em 1em 1em;
+
+    &.left-or {
+      border-left: $or-border;
+
+      &.right-or {
+        background-image: $or-or-background;
+      }
+
+      &.right-and {
+        background-image: $or-and-background;
+      }
+    }
+
+    &.left-and {
+      border-left: $and-border;
+
+      &.right-or {
+        background-image: $and-or-background;
+      }
+
+      &.right-and {
+        background-image: $and-and-background;
+      }
+    }
+
+    &.root {
+      border-left: $root-border;
+
+      &.right-or {
+        background-image: $root-or-background;
+      }
+
+      &.right-and {
+        background-image: $root-and-background;
+      }
+    }
+
+    &.right-or {
+      border-right: $or-border;
+    }
+
+    &.right-and {
+      border-right: $and-border;
+    }
+  }
+}

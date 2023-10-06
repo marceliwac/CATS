@@ -1,3 +1,3 @@
-const eslintConfig = require('@wls/eslint-config');
+const eslintConfig = require('@cats/eslint-config');
 
 module.exports = eslintConfig.frontend;

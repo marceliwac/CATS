@@ -2,7 +2,7 @@ const BaseModel = require('./BaseModel');
 
 module.exports = class Row extends BaseModel {
   static get tableName() {
-    return 'mimiciv_derived.wsl_stage_1';
+    return 'mimiciv_derived.cats';
   }
 
   static get PARAMETERS() {

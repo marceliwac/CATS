@@ -1,0 +1,25 @@
+.relationNodeForm {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .operationDropdown {
+    width: 100%;
+    margin: 1em 0 0 0;
+  }
+
+  .select {
+    background-color: white;
+  }
+}

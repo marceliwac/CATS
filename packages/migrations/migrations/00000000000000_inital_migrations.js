@@ -1,4 +1,4 @@
-const { bindDatabase, destroyConnection } = require('@wls/models');
+const { bindDatabase, destroyConnection } = require('@cats/models');
 
 exports.up = async (knex) => {
   await bindDatabase();

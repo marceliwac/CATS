@@ -1,6 +1,6 @@
 {
-    "name": "Weaning Labelling Study",
-    "short_name": "Weaning Labelling Study",
+    "name": "CATS Data Annotation",
+    "short_name": "CATS",
     "icons": [
         {
             "src": "android-chrome-192x192.png",

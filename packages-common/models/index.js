@@ -1,7 +1,7 @@
 const knex = require('knex');
 const objection = require('objection');
-const knexfile = require('@wls/knexfile');
-const log = require('@wls/log');
+const knexfile = require('@cats/knexfile');
+const log = require('@cats/log');
 const BaseModel = require('./src/BaseModel');
 
 async function bindDatabase() {
@@ -35,4 +35,7 @@ module.exports = {
   StayAssignment: require('./src/StayAssignment'),
   GroupAssignment: require('./src/GroupAssignment'),
   OrderedGroupAssignment: require('./src/OrderedGroupAssignment'),
+  Ruleset: require('./src/Ruleset'),
+  RulesetLabel: require('./src/RulesetLabel'),
+  PinnedStay: require('./src/PinnedStay'),
 };

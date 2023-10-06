@@ -1,6 +1,6 @@
-const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment } = require('@wls/models');
-const { Row, RawQuery } = require('@wls/models-mimic');
+const { lambda, yup } = require('@cats/middleware');
+const { StayAssignment } = require('@cats/models');
+const { Row, RawQuery } = require('@cats/models-mimic');
 
 module.exports.list = lambda(
   {
@@ -137,7 +137,7 @@ module.exports.get = lambda(
             }
           }
           if (event.queryStringParameters.includeStayData) {
-            const data = await RawQuery.stayData(knex, stayAssignment.stayId);
+            const data = await RawQuery.stayDataV3(knex, stayAssignment.stayId);
             if (data) {
               stayAssignment.data = data;
             }

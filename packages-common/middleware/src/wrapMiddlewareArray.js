@@ -1,9 +1,9 @@
-const log = require('@wls/log');
-const { destroyConnection, bindDatabase } = require('@wls/models');
+const log = require('@cats/log');
+const { destroyConnection, bindDatabase } = require('@cats/models');
 const {
   destroyConnection: destroyConnectionMimic,
   bindDatabase: bindDatabaseMimic,
-} = require('@wls/models-mimic');
+} = require('@cats/models-mimic');
 const handleMiddlewareError = require('./helpers/handleMiddlewareError');
 
 function wrapMiddlewareArray(operations) {

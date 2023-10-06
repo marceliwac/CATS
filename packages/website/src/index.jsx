@@ -8,6 +8,7 @@ import AdministratorLayout from './components/_view/Administrator/AdministratorL
 import NotFound from './components/_view/Common/NotFound/NotFound';
 import Support from './components/_view/Support/Support';
 import ParticipantLayout from './components/_view/Participant/ParticipantLayout/ParticipantLayout';
+import HelpInstructions from './components/_view/Help/HelpInstructions/HelpInstructions';
 
 function RootRedirect() {
   const auth = useAuth();
@@ -35,8 +36,16 @@ ReactDOM.render(
             path="/enroll"
             element={<Navigate replace to="/account/enroll" />}
           />
+          <Route
+            path="/enrol"
+            element={<Navigate replace to="/account/enroll" />}
+          />
           <Route path="/" element={<Layout />}>
             <Route index element={<RootRedirect />} />
+            <Route path="help/*">
+              <Route index element={<Navigate to="instructions" />} />
+              <Route path="instructions" element={<HelpInstructions />} />
+            </Route>
             <Route path="/account/*" element={<AccountLayout />} />
             <Route path="/administrator/*" element={<AdministratorLayout />} />
             <Route path="/participant/*" element={<ParticipantLayout />} />

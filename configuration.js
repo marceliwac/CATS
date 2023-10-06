@@ -5,7 +5,7 @@ const AVAILABLE_STAGES = ['development', 'staging', 'production'];
 
 const config = {
   // Application name used for the invitation email
-  applicationName: 'Weaning Labelling Study',
+  applicationName: 'CATS',
 
   // Region of the deployment, has to match .gitlab-ci.yml region
   region: 'eu-west-1',
@@ -14,32 +14,35 @@ const config = {
   certificateRegion: 'us-east-1',
 
   // Prefix for the name of the stack
-  stackNamePrefix: 'wls',
+  stackNamePrefix: 'cats',
 
-  // Database behaviour on stack deletion
-  baseDomain: 'wl.marceliwac.com',
+  // Domain name that will serve as a base for deployments
+  baseDomain: 'cats.xxxxxxxxx.com',
 
-  // SES domain name for email sending configuration
-  sesDomain: 'wl.marceliwac.com',
+  // SES domain name for email sending configuration (needs to be manually created)
+  sesDomain: 'cats.xxxxxxxxx.com',
 
   // ID for the hosted zone containing the base domain (needs to be manually created)
-  hostedZoneId: 'Z0390489281R7LFG1MW09',
+  hostedZoneId: 'xxxxxxxxxxxxxxxxxxxxx',
 
-  // Name of the hosted zone
-  hostedZoneName: 'wl.marceliwac.com.', // TODO: If this does not work, add the dot at the end.
+  // Name of the hosted zone (needs dot at the end, needs to be manually created)
+  hostedZoneName: 'cats.xxxxxxxxx.com.',
 
   // API domain prefix
   apiPrefix: 'api',
 
   // ID of the User Pool (with the region qualifier) (needs to be manually updated)
-  userPoolId: 'eu-west-1_u3rCCkiLU', // TODO Automate this by moving it to AWS SSM
+  userPoolId: 'eu-west-1_xxxxxxxxx', // TODO Automate this by moving it to AWS SSM
 
   // ID of the User Pool Client for the website (needs to be manually updated)
-  userPoolClientWebsiteId: '74i6cr0qnp0mf6krt9sn5p8lqo', // TODO Automate this by moving it to AWS SSM
+  userPoolClientWebsiteId: 'xxxxxxxxxxxxxxxxxxxxxxxxxx', // TODO Automate this by moving it to AWS SSM
+
+  // ARN of the step function that processes the ruleset (needs to be plugged in after creating the stack)
+  rulesetProcessorStateMachineArn: 'arn:aws:states:eu-west-1:xxxxxxxxxxxx:stateMachine:RulesetProcessor', // TODO Automate this by moving it to AWS SSM
 
   // ARN of the identity for cognito emails (needs to be manually created)
-  cognitoSourceArn:
-    'arn:aws:ses:us-east-1:211056341960:identity/wl.marceliwac.com',
+  cognitoSourceArn: 'arn:aws:ses:us-east-1:xxxxxxxxxxxx:identity/cats.xxxxxxxxx.com',
+
 };
 
 const serviceNames = {
@@ -52,6 +55,7 @@ const serviceNames = {
   website: `${config.stackNamePrefix}-website`,
   migrations: `${config.stackNamePrefix}-migrations`,
   notifications: `${config.stackNamePrefix}-notifications`,
+  rulesetProcessor: `${config.stackNamePrefix}-ruleset-processor`,
 };
 
 function validateStage(stage) {
@@ -153,6 +157,14 @@ const shared = {
       memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
       timeout: 120,
     },
+    rulesetProcessor: {
+      memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
+      timeout: 120,
+    },
+    rulesetProcessorStatistics: {
+      memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE * 4,
+      timeout: 300,
+    },
   },
 
   lambdaEnvironment: (stage) => {
@@ -166,6 +178,7 @@ const shared = {
       WEBSITE_URL: `https://${domains.website}`,
       DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
       MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
+      RULESET_PROCESSOR_STATE_MACHINE_ARN: config.rulesetProcessorStateMachineArn,
     };
   },
 
@@ -178,6 +191,18 @@ const shared = {
       REGION: config.region,
       APPLICATION_NAME: config.applicationName,
       WEBSITE_URL: `https://${domains.website}`,
+      DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
+      MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
+    };
+  },
+
+  rulesetProcessorLambdaEnvironment: (stage) => {
+    validateStage(stage);
+    const domains = getDomains(stage);
+    return {
+      CONSOLE_LOG_LEVEL: 'debug',
+      STAGE: stage,
+      REGION: config.region,
       DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).application,
       MIMIC_DATABASE_SECRET_NAME: getDatabaseSecretNames(stage).mimic,
     };
@@ -211,10 +236,11 @@ const shared = {
       REACT_APP_COGNITO_REDIRECT_SIGN_OUT: logoutUrl,
       REACT_APP_COGNITO_AUTH_COOKIE_DOMAIN: domains.website,
       REACT_APP_COGNITO_AUTH_COOKIE_SECURE: stage !== 'development',
+      // Optional links to use in the front-end
       REACT_APP_CONSENT_FORM_LINK:
-        'https://eu1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhDgXGlU5-PuZC8T00AI02tAUc_OECNxi3Vwbg6VopfXT1fDaXAJkWtKyos6vwAm4VA*',
+        'https://xxxxxxxxx.com/consent',
       REACT_APP_PARTICIPANT_INFORMATION_SHEET_LINK:
-        'https://acrobat.adobe.com/link/track?uri=urn:aaid:scds:US:0e2b403f-fbc8-4d4c-972f-7432e1c21a25',
+        'https://xxxxxxxxx.com/pis',
     };
   },
 };
@@ -237,6 +263,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('development'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('development'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('development'),
     },
     staging: {
       region: config.region,
@@ -257,6 +285,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('staging'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('staging'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('staging'),
     },
     production: {
       region: config.region,
@@ -276,7 +306,7 @@ module.exports = {
       lambda: {
         ...shared.lambda,
         memorySize: SINGLE_CORE_MAX_CPU_MEM_SIZE,
-        timeout: 10,
+        timeout: 20,
       },
       lambdaEnvironment: {
         ...shared.lambdaEnvironment('production'),
@@ -286,6 +316,8 @@ module.exports = {
       websiteEnvironment: shared.websiteEnvironment('production'),
       cognitoTriggerLambdaEnvironment:
         shared.cognitoTriggerLambdaEnvironment('production'),
+      rulesetProcessorLambdaEnvironment:
+        shared.rulesetProcessorLambdaEnvironment('production'),
     },
   },
 };

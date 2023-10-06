@@ -1,0 +1,30 @@
+.rulesetForm {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  width: 25em;
+  background-color: white;
+  border: $border;
+  border-radius: $border-radius;
+  padding: 1em 1em 1em 1em;
+  box-sizing: border-box;
+  margin: 1em;
+  box-shadow: 0 0 .5em #ddd;
+  z-index: 1000;
+
+  .name {
+    margin: .25em 0 0 0;
+  }
+
+  .button {
+    margin: 1em 0 0 0;
+  }
+
+  .errorMessage {
+    margin: 1em 0 0 0;
+    color: #d32f2f;
+    font-weight: 300;
+    font-size: .9em;
+  }
+}

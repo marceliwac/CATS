@@ -1,0 +1,226 @@
+.aggregateMetric {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  .title {
+    width: 20em;
+    margin: 2em 2em 4em 2em;
+    box-sizing: border-box;
+    height: 1.5em;
+  }
+
+  .graphsAndTable {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 2em 0 1em;
+    box-sizing: border-box;
+
+    .charts {
+      width: 70%;
+      box-sizing: border-box;
+      padding-right: 3em;
+      padding-bottom: 2em;
+
+      .histogram {
+        height: 20em;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        margin: 0 0 0 1em;
+        border-bottom: #f5f5f5 solid .5em;
+        border-left: #f5f5f5 solid .5em;
+        box-sizing: border-box;
+        padding-left: 1em;
+        padding-bottom: 1em;
+
+        & > div {
+          width: 6.66666%;
+          margin: 0 1em 0 0;
+          box-sizing: border-box;
+          background-color: #eaeaea;
+
+          &:nth-child(1) {
+            height: 50%;
+          }
+
+          &:nth-child(2) {
+            height: 55%;
+          }
+
+          &:nth-child(3) {
+            height: 75%;
+          }
+
+          &:nth-child(4) {
+            height: 90%;
+          }
+
+          &:nth-child(5) {
+            height: 60%;
+          }
+
+          &:nth-child(6) {
+            height: 35%;
+          }
+
+          &:nth-child(7) {
+            height: 10%;
+          }
+
+          &:nth-child(8) {
+            height: 8%;
+          }
+
+          &:nth-child(9) {
+            height: 5%;
+          }
+
+          &:nth-child(10) {
+            height: 13%;
+          }
+
+          &:nth-child(11) {
+            height: 22%;
+          }
+
+          &:nth-child(12) {
+            height: 34%;
+          }
+
+          &:nth-child(13) {
+            height: 20%;
+          }
+
+          &:nth-child(14) {
+            height: 11%;
+          }
+
+          &:nth-child(15) {
+            height: 5%;
+          }
+        }
+      }
+
+      .boxPlot {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 8em;
+        margin: .5em 1em 0 1em;
+        padding: 1em;
+        border-bottom: #f5f5f5 solid .5em;
+        border-left: #f5f5f5 solid .5em;
+        box-sizing: border-box;
+
+        & > div {
+
+          &:nth-child(1) {
+            width: 20%;
+            height: .5em;
+            background-color: #f5f5f5;
+          }
+          &:nth-child(2) {
+            width: 10%;
+            height: 1.25em;
+            background-color: #efefef;
+          }
+          &:nth-child(3) {
+            width: 30%;
+            height: 2.5em;
+            background-color: #eaeaea;
+          }
+          &:nth-child(4) {
+            width: 20%;
+            height: 1.25em;
+            background-color: #efefef;
+          }
+          &:nth-child(5) {
+            width: 20%;
+            height: .5em;
+            background-color: #f5f5f5;
+          }
+        }
+      }
+    }
+
+    .table {
+      width: 30%;
+
+      & > div {
+        height: 2.2em;
+        margin: .5em 0;
+        width: 100%;
+        background-color: #f5f5f5;
+
+        &.separator {
+          height: 1em;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+//.skeletonLight {
+//  background-color: #f5f5f5;
+//}
+
+//.skeletonDark {
+//  background-color: #eaeaea;
+//}
+
+
+
+.skeletonLight {
+  background: linear-gradient(
+                  120deg,
+                  #efefef 30%,
+                  #f5f5f5 38%,
+                  #f5f5f5 40%,
+                  #efefef 48%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: load 1.5s infinite;
+}
+
+.skeletonMedium {
+  background: linear-gradient(
+                  120deg,
+                  #eaeaea 30%,
+                  #f5f5f5 38%,
+                  #f5f5f5 40%,
+                  #eaeaea 48%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: load 1.5s infinite;
+}
+
+.skeletonDark {
+  background: linear-gradient(
+                  120deg,
+                  #e5e5e5 30%,
+                  #f0f0f0 38%,
+                  #f0f0f0 40%,
+                  #e5e5e5 48%
+  );
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  animation: load 1.5s infinite;
+}
+
+@keyframes load {
+  100% {
+    background-position: -100% 0;
+  }
+}

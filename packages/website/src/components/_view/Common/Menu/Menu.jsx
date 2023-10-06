@@ -1,5 +1,5 @@
 import React from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import MuiMenu from '@mui/material/Menu';
@@ -28,7 +28,7 @@ export default function Menu(props) {
       aria-expanded={anchorElement ? 'true' : undefined}
       onClick={(e) => handleClick(e)}
     >
-      <MoreVertIcon />
+      <MoreHorizIcon />
     </IconButton>
   );
 

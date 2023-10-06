@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Weaning Labelling Study</title>
+    <title>CATS: Data Annotation</title>
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -33,6 +33,15 @@
       content="%PUBLIC_URL%/img/favicon/browserconfig.xml"
     />
     <meta name="theme-color" content="#ffffff" />
+    <style>
+      .recharts-wrapper .recharts-cartesian-grid-horizontal line:first-child,
+      .recharts-wrapper .recharts-cartesian-grid-horizontal line:last-child,
+      /*.recharts-wrapper .recharts-cartesian-grid-vertical line:first-child,*/
+      .recharts-wrapper .recharts-cartesian-grid-vertical line:last-child
+      {
+        stroke-opacity: 0 !important;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

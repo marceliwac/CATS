@@ -1,5 +1,5 @@
-const log = require('@wls/log');
-const { UserService } = require('@wls/user-service');
+const log = require('@cats/log');
+const { UserService } = require('@cats/user-service');
 const { createNeededResources } = require('./utils');
 
 const DEFAULT_SIGNUP_GROUP = 'participants';

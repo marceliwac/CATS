@@ -1,4 +1,4 @@
-const log = require('@wls/log');
+const log = require('@cats/log');
 
 class CustomMessage {
   constructor(kwargs) {
@@ -28,7 +28,7 @@ class CustomMessage {
     }
 
     this.headerName = headerName;
-    this.signature = `<b>Sincerely<br/>Marceli Wac<br/><br/></b><em>For any help regarding this study please contact me directly at: m.wac@bristol.ac.uk</em>`;
+    this.signature = `<b>Sincerely<br/>Yourfirsname Yourlastname<br/><br/></b><em>For any help regarding this study please contact me directly at: youremailaddress@xxxxxxxxx.com</em>`;
 
     this.completeSignupBareLink = completeSignupBareLink;
     this.completeManualSignupBareLink = completeManualSignupBareLink;

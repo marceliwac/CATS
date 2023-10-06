@@ -11,7 +11,7 @@ const {
   AdminEnableUserCommand,
 } = require('@aws-sdk/client-cognito-identity-provider');
 
-const log = require('@wls/log');
+const log = require('@cats/log');
 const {
   GROUPS,
   WHITELISTED_ATTRIBUTES,
@@ -68,6 +68,8 @@ function formatUser(userObject) {
     id: userObject.Username,
     status: userObject.UserStatus,
     isEnabled: userObject.Enabled,
+    createdAt: userObject.UserCreateDate,
+    updatedAt: userObject.UserLastModifiedDate,
   };
 
   if (userObject.Attributes) {
@@ -215,6 +217,7 @@ module.exports = class UserService {
     const command = new ListUsersInGroupCommand({
       UserPoolId: this.userPoolId,
       GroupName: groupName,
+      Limit: 60,
     });
 
     const result = await this.client.send(command);

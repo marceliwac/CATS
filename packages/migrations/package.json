@@ -1,27 +1,27 @@
 {
-  "name": "@wls/migrations",
+  "name": "@cats/migrations",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "local": "IS_LOCAL=true LOCAL_CONNECTION_STRING='pg://postgres:postgres@localhost:5432/wls' serverless offline --useChildProcesses--httpPort=4002 --lambdaPort=4003",
+    "local": "IS_LOCAL=true LOCAL_CONNECTION_STRING='pg://postgres:postgres@localhost:5432/cats' serverless offline --useChildProcesses --httpPort=4002 --lambdaPort=4003 --stage=${STAGE}",
     "deploy": "serverless deploy --stage=${STAGE}",
     "remove": "serverless remove --stage=${STAGE}"
   },
   "author": "Marceli Wac",
   "license": "UNLICENSED",
   "dependencies": {
-    "@wls/knexfile": "1.0.0",
-    "@wls/log": "1.0.0",
-    "@wls/models": "1.0.0",
+    "@cats/knexfile": "1.0.0",
+    "@cats/log": "1.0.0",
+    "@cats/models": "1.0.0",
     "knex": "^2.1.0",
     "objection": "^3.0.1",
     "pg": "^8.5.1"
   },
   "devDependencies": {
-    "@wls/eslint-config": "1.0.0",
+    "@cats/eslint-config": "1.0.0",
     "serverless-offline": "^8.7.0",
     "serverless-plugin-include-dependencies": "^5.0.0",
     "serverless-plugin-common-excludes": "^4.0.0"

@@ -62,21 +62,6 @@ resources:
               - CognitoUserPoolUserPool
               - Arn
 
-    ApiGatewayCloudwatchLogsRole:
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service:
-                  - apigateway.amazonaws.com
-              Action: sts:AssumeRole
-        Path: /
-        ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
-
     DbSecurityGroup:
       Type: AWS::EC2::SecurityGroup
       Properties:
@@ -219,9 +204,140 @@ resources:
                     - xray:GetSamplingTargets
                     - xray:GetSamplingStatisticSummaries
                   Resource: '*'
+          - PolicyName: AllowStepFunctionTrigger
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - states:StartExecution
+                    - states:DescribeExecution
+                    - states:StopExecution
+                  Resource: '*'
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
           - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
+    LambdaRulesetProcessorRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Path: /
+        Policies:
+          - PolicyName: AllowDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: DatabaseSecret
+          - PolicyName: AllowMIMICDatabaseSecretAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:DescribeSecret
+                    - secretsmanager:GetSecretValue
+                  Resource:
+                    Ref: MIMICDatabaseSecret
+          - PolicyName: AllowXRayTracePush
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - xray:PutTraceSegments
+                    - xray:PutTelemetryRecords
+                    - xray:GetSamplingRules
+                    - xray:GetSamplingTargets
+                    - xray:GetSamplingStatisticSummaries
+                  Resource: '*'
+          - PolicyName: AllowStage3DataS3GetPutObject
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:GetObject
+                    - s3:PutObject
+                    - s3:DeleteObjects
+                  Resource:
+                    Fn::Join:
+                      - "/"
+                      - - Fn::GetAtt:
+                          - Stage3DataS3Bucket
+                          - Arn
+                        - "*"
+
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
+    StepFunctionRulesetProcessorRole:
+      Type: AWS::IAM::Role
+      DependsOn:
+        - Stage3DataS3Bucket
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - states.amazonaws.com
+              Action: sts:AssumeRole
+        Path: /
+        Policies:
+          - PolicyName: AllowXRayTracePush
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - xray:PutTraceSegments
+                    - xray:PutTelemetryRecords
+                    - xray:GetSamplingRules
+                    - xray:GetSamplingTargets
+                  Resource: '*'
+          - PolicyName: AllowDistributedMapStepFunctionExecution
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - states:StartExecution
+                    - states:DescribeExecution
+                    - states:StopExecution
+                  Resource: '*'
+          - PolicyName: AllowStage3DataS3ListBucket
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:ListBucket
+                  Resource:
+                    Fn::GetAtt:
+                      - Stage3DataS3Bucket
+                      - Arn
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
+    Stage3DataS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties: {}
 
     CognitoUserPoolUserPool:
       Type: AWS::Cognito::UserPool
@@ -328,11 +444,21 @@ resources:
           - LambdaApiRole
           - Arn
 
-    ApiGatewayCloudwatchLogsRoleArn:
+    LambdaRulesetProcessorRoleArn:
       Value:
         Fn::GetAtt:
-          - ApiGatewayCloudwatchLogsRole
+          - LambdaRulesetProcessorRole
           - Arn
+
+    StepFunctionRulesetProcessorRoleArn:
+      Value:
+        Fn::GetAtt:
+          - StepFunctionRulesetProcessorRole
+          - Arn
+
+    Stage3DataS3BucketName:
+      Value:
+        Ref: Stage3DataS3Bucket
 
     UserPoolArn:
       Value:
