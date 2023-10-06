@@ -1,7 +1,7 @@
 {
   "name": "@cats/cognito-trigger",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "main": "handler.js",
   "scripts": {
     "lint": "eslint .",
@@ -9,8 +9,6 @@
     "deploy": "serverless deploy --stage=${STAGE}",
     "remove": "serverless remove --stage=${STAGE}"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "@cats/log": "1.0.0",
     "@cats/models": "1.0.0",

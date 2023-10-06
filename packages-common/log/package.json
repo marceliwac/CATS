@@ -7,8 +7,6 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "devDependencies": {
     "@cats/eslint-config": "1.0.0"
   }

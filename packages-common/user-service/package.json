@@ -7,8 +7,6 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.85.0",
     "@cats/log": "1.0.0"

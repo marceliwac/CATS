@@ -7,8 +7,6 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix"
   },
-  "author": "Marceli Wac",
-  "license": "UNLICENSED",
   "dependencies": {
     "@cats/log": "1.0.0",
     "@cats/models": "1.0.0",
