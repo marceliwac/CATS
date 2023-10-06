@@ -1,0 +1,31 @@
+.helpSectionImage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  margin: 1.5em 1em;
+
+  img {
+    display: block;
+    margin: .5em auto;
+    max-width: 100%;
+    border: $border;
+    border-radius: $border-radius;
+  }
+
+  p {
+    width: 70%;
+    text-align: center;
+    color: $text-primary-lighter;
+    margin: .75em auto 0 auto;
+  }
+}
+
+
+
+@media print {
+  .helpSectionImage {
+    break-inside: avoid;
+  }
+}

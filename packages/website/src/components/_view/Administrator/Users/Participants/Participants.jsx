@@ -71,6 +71,7 @@ export default function Participants() {
         },
       ]}
       linkFunction={(id) => `/administrator/stayAssignments/${id}`}
+      allowSort
       allowSelect
       selectedActions={[
         {

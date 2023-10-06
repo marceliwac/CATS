@@ -1,11 +1,11 @@
 const knex = require('knex');
-const knexfile = require('@wls/knexfile');
+const knexfile = require('@cats/knexfile');
 const assert = require('assert');
-const models = require('@wls/models');
-const log = require('@wls/log');
+const models = require('@cats/models');
+const log = require('@cats/log');
 const { knexSnakeCaseMappers } = require('objection');
 
-// Explicitly define models as the dependency for the @wls/migrations package.
+// Explicitly define models as the dependency for the @cats/migrations package.
 assert(models);
 
 async function initialiseDatabaseConnection() {

@@ -1,6 +1,6 @@
-const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment } = require('@wls/models');
-const { UserService } = require('@wls/user-service');
+const { lambda, yup } = require('@cats/middleware');
+const { StayAssignment } = require('@cats/models');
+const { UserService } = require('@cats/user-service');
 
 module.exports.listAdministrators = lambda(
   {

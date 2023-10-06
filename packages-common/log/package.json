@@ -1,5 +1,5 @@
 {
-  "name": "@wls/log",
+  "name": "@cats/log",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
@@ -10,6 +10,6 @@
   "author": "Marceli Wac",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@wls/eslint-config": "1.0.0"
+    "@cats/eslint-config": "1.0.0"
   }
 }

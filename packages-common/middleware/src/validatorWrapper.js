@@ -1,5 +1,5 @@
 const yup = require('yup');
-const log = require('@wls/log');
+const log = require('@cats/log');
 const { HttpResponse } = require('micro-aws-lambda');
 const ValidatorError = require('./errors/ValidatorError');
 const handleMiddlewareError = require('./helpers/handleMiddlewareError');
@@ -156,8 +156,16 @@ function validatePath(schema) {
 
 function validateResponse(schema) {
   return ({ shared }) => {
-    log.debug('Stripping the response body from the additional properties.');
+    log.debug(
+      'Stripping the response body from the additional properties.',
+      shared.body
+    );
     // eslint-disable-next-line no-return-await
+    if (!shared.body) {
+      log.debug('Response body is not set. Skipping validation.');
+      return;
+    }
+    // eslint-disable-next-line consistent-return
     return schema
       .validate(shared.body, { stripUnknown: true })
       .then((valid) => {

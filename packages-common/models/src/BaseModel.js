@@ -1,5 +1,5 @@
 const { Model, snakeCaseMappers, AjvValidator } = require('objection');
-const log = require('@wls/log');
+const log = require('@cats/log');
 const addFormats = require('ajv-formats');
 const BaseQueryBuilder = require('./BaseQueryBuilder');
 

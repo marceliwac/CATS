@@ -1,0 +1,73 @@
+.rulesets {
+  margin: 0 auto;
+  width: 60em;
+  max-width: 100%;
+  //border: $border;
+  //border-radius: $border-radius;
+
+  .topRow {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 1.5em;
+      color: $text-primary;
+    }
+
+    .button {
+      margin: 1em 0 3em 0;
+    }
+  }
+
+  .description {
+    line-height: 1.5;
+    margin: 2em 0;
+
+    a {
+      text-decoration: underline;
+      font-weight: 400;
+      color: $primary;
+    }
+  }
+
+  .subgroup {
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      width: 100%;
+      font-size: 1.25em;
+      color: $text-primary;
+
+    }
+
+    .rulesetEntries {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 2em 0;
+    }
+
+    .noData {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5em 0;
+
+      p {
+        text-align: center;
+        margin: 0 0 1em 0;
+      }
+
+      a {
+        text-decoration: underline;
+        font-weight: 400;
+        color: $primary;
+      }
+    }
+  }
+}

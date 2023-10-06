@@ -67,7 +67,6 @@ export function AuthenticationProvider(props) {
         case 'signIn':
         case 'tokenRefresh':
           updateCurrentAuthenticatedUser();
-          // TODO: Redirect the user to mobile app if needed!
           break;
         case 'signOut':
         case 'signIn_failure':

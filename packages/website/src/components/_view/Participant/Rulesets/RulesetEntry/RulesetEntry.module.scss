@@ -1,0 +1,40 @@
+.rulesetEntry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 4em;
+  padding: .5em 1em;
+  box-sizing: border-box;
+  border-bottom: $border-light;
+
+  &:first-of-type {
+    border-top: $border-light;
+  }
+
+  .data {
+    flex-grow: 1;
+    margin-right: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+
+    .name {
+      font-weight: normal;
+      color: $text-primary;
+      flex-grow: 1;
+    }
+
+    .counts {
+      color: $text-primary;
+      margin: 0 4em 0 1em;
+    }
+  }
+
+  .controls {
+
+  }
+}

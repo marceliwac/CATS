@@ -1,6 +1,6 @@
-const { lambda, yup } = require('@wls/middleware');
-const { StayAssignment } = require('@wls/models');
-const { Row, RawQuery } = require('@wls/models-mimic');
+const { lambda, yup } = require('@cats/middleware');
+const { StayAssignment } = require('@cats/models');
+const { Row, RawQuery } = require('@cats/models-mimic');
 
 module.exports.list = lambda(
   {

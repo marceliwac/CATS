@@ -1,0 +1,71 @@
+.ruleset {
+  border: $border;
+  border-radius: $border-radius;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  .topRow {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2em;
+    border-bottom: $border;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+      font-size: 1.5em;
+      color: $text-primary-darker;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      & > * {
+          margin-right: 1em;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      .status {
+        margin-right: 2em;
+      }
+    }
+  }
+
+  .topStatistics {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em;
+  }
+
+  .failedRuleset {
+    padding: 2em;
+    width: 30em;
+    margin: 4em auto;
+
+    h3 {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: normal;
+      color: $text-primary-lighter;
+      margin-bottom: 1em;
+    }
+
+    p {
+      line-height: 1.5;
+      text-align: center;
+      font-size: 1.1em;
+      color: $text-primary;
+    }
+  }
+}

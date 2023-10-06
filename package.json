@@ -1,8 +1,8 @@
 {
-  "name": "wls",
+  "name": "@marceliwac/cats",
   "version": "1.0.0",
   "private": true,
-  "description": "Experience Sampling Method (ESM) Platform for research.",
+  "description": "Cloud-native time-series data annotation platform for clinical settings.",
   "main": "index.js",
   "scripts": {
     "prettier": "prettier -c --ignore-path .gitignore \"**/*.{css,html,js,ts,json,yaml,yml,jsx}\"",

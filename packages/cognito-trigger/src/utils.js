@@ -1,17 +1,17 @@
-const log = require('@wls/log');
+const log = require('@cats/log');
 const {
   destroyConnection,
   bindDatabase,
   OrderedGroupAssignment,
   GroupAssignment,
   StayAssignment,
-} = require('@wls/models');
+} = require('@cats/models');
 const {
   destroyConnection: destroyMimicConnection,
   bindDatabase: bindMimicDatabase,
   Row,
   RawQuery,
-} = require('@wls/models-mimic');
+} = require('@cats/models-mimic');
 
 function getWeightedStays(stays, distinctStayAssignments) {
   const distinctStayAssignmentStayIds = Array.from(

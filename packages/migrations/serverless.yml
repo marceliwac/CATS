@@ -13,7 +13,7 @@ plugins:
 package:
   patterns:
     # Include since it's not used by any of the handlers and can't be bundled automatically
-    - '../../node_modules/@wls/models'
+    - '../../node_modules/@cats/models'
 
 provider:
   name: aws

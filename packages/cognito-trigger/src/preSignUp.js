@@ -1,4 +1,4 @@
-const log = require('@wls/log');
+const log = require('@cats/log');
 const { createNeededResources } = require('./utils');
 
 async function handler(event) {
